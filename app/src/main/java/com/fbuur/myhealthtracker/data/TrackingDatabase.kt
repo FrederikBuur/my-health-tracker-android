@@ -5,9 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.fbuur.myhealthtracker.data.model.Parameter
+import com.fbuur.myhealthtracker.data.model.Registration
+import com.fbuur.myhealthtracker.data.model.Template
+import com.fbuur.myhealthtracker.data.model.TemplateType
 
 @Database(
-    entities = [Registration::class],
+    entities = [Registration::class, Parameter.Note::class, Parameter.Slider::class,
+        Template::class, TemplateType::class],
     version = 1,
     exportSchema = false
 )
