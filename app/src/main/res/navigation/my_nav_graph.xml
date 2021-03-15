@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav_graph"
-    app:startDestination="@id/registerFragment">
+    app:startDestination="@id/eventsFragment">
     <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.fbuur.myhealthtracker.pages.registration.RegisterFragment"
-        android:label="Register"
-        tools:layout="@layout/fragment_register" />
+        android:id="@+id/eventsFragment"
+        android:name="com.fbuur.myhealthtracker.pages.events.EventsFragment"
+        android:label="Events"
+        tools:layout="@layout/fragment_events" />
     <fragment
         android:id="@+id/statisticsFragment"
         android:name="com.fbuur.myhealthtracker.pages.statistics.StatisticsFragment"
