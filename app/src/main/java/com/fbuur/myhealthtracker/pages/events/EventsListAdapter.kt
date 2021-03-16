@@ -34,6 +34,7 @@ class EventsListAdapter(
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         diffResults.dispatchUpdatesTo(this)
         eventsList = newEvents
+
 //        notifyDataSetChanged()
     }
 

@@ -54,6 +54,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             eventItemEntries?.let {
                 this.eventItemEntries = it
                 adapter.setData(this.eventItemEntries)
+                binding.eventsRecyclerView.scrollToPosition(0)
             }
 
             // if 0 set empty list og hav default med loading
