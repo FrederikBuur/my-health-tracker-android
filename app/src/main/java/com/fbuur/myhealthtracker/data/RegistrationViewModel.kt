@@ -15,7 +15,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     private val repository: RegistrationRepository
 
     val readAllEventItemEntries: LiveData<List<EventItemEntry>>
-//    val readAllQuickRegisterEntries: LiveData<QuickRegisterEntry>
+    val readAllQuickRegisterEntries: LiveData<List<QuickRegisterEntry>>
 
     init {
         val registrationDao = TrackingDatabase.getTrackingDatabase(application).registrationDao()
@@ -28,6 +28,10 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                 val templates = repository.readAllTemplates()
                 emit(mapToEventItemEntities(registrations, templates))
             }
+        }
+
+        readAllQuickRegisterEntries = repository.readAllTemplatesLD.map { templates ->
+            mapToQuickRegisterEntries(templates)
         }
 
     }
@@ -48,6 +52,19 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
             } ?: run {
                 throw Exception(" test123 cant find template id: ${registration.temId}, for registration id: ${registration.id}")
             }
+        }
+    }
+
+    private fun mapToQuickRegisterEntries(
+        templates: List<Template>
+    ): List<QuickRegisterEntry> {
+        return templates.map { t ->
+            QuickRegisterEntry(
+                id = t.id,
+                name = t.name,
+                color = t.color,
+                templateTypes = emptyList() // todo
+            )
         }
     }
 

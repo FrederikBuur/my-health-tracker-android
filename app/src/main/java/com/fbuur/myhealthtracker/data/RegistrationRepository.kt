@@ -10,6 +10,9 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     val readAllRegistrationsLD: LiveData<List<Registration>> =
         registrationDAO.readAllRegistrationsLD()
 
+    val readAllTemplatesLD: LiveData<List<Template>> =
+        registrationDAO.readAllTemplatesLD()
+
     // suspend read
     suspend fun readAllRegistrations() =
         registrationDAO.readAllRegistrations()

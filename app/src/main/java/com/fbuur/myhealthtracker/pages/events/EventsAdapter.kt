@@ -10,8 +10,7 @@ import com.fbuur.myhealthtracker.util.DiffUtilEventItems
 import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
 
-class EventsListAdapter(
-) : RecyclerView.Adapter<EventViewHolder>() {
+class EventsListAdapter: RecyclerView.Adapter<EventViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
 
@@ -22,8 +21,8 @@ class EventsListAdapter(
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        val registration = eventsList[position]
-        holder.bind(registration)
+        val event = eventsList[position]
+        holder.bind(event)
     }
 
     override fun getItemCount() = eventsList.size

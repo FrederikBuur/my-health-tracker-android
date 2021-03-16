@@ -20,6 +20,9 @@ interface RegistrationDAO {
     @Query("SELECT * FROM registration ORDER BY date DESC")
     fun readAllRegistrationsLD(): LiveData<List<Registration>>
 
+    @Query("SELECT * FROM template ORDER BY lastUsed DESC LIMIT 8")
+    fun readAllTemplatesLD(): LiveData<List<Template>>
+
     @Query("SELECT * FROM registration ORDER BY date DESC")
     suspend fun readAllRegistrations(): List<Registration>
 

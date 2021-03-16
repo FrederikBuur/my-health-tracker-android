@@ -18,4 +18,18 @@
     <color name="text_primary_onwhite">#3E3E3E</color>
     <color name="text_secondary_onwhite">#8E8E8E</color>
 
+
+    <string-array name="eventColors">
+        <item>#EE5959</item>
+        <item>#F2A340</item>
+        <item>#BEB541</item>
+        <item>#86B968</item>
+        <item>#75C833</item>
+        <item>#3BC8A6</item>
+        <item>#6D64EA</item>
+        <item>#98A0DF</item>
+        <item>#B398DF</item>
+        <item>#C33468</item>
+    </string-array>
+
 </resources>

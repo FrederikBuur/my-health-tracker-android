@@ -5,5 +5,6 @@ import com.fbuur.myhealthtracker.data.model.TemplateType
 data class QuickRegisterEntry(
     val id: Long,
     val name: String,
+    val color: String,
     val templateTypes: List<TemplateType>
 )

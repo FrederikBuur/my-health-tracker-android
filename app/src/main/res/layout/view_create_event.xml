@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="8dp"
-    android:paddingBottom="8dp">
+    android:background="@color/blue_500"
+    android:padding="8dp">
 
     <FrameLayout
         android:id="@+id/inputCreateEventContainer"
