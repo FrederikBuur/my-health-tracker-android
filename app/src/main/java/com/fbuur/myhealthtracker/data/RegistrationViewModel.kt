@@ -12,31 +12,14 @@ import kotlinx.coroutines.launch
 
 class RegistrationViewModel(application: Application) : AndroidViewModel(application) {
 
-    val readAllEventItemEntries: LiveData<List<EventItemEntry>>
-
-//    val readAllQuickRegisterEntries: LiveData<QuickRegisterEntry>
-
-    var newTemplateHasBeenAdded = true
-    private var didRegistrationsUpdate = false
-    private var didTemplatesUpdate = false
-
     private val repository: RegistrationRepository
+
+    val readAllEventItemEntries: LiveData<List<EventItemEntry>>
+//    val readAllQuickRegisterEntries: LiveData<QuickRegisterEntry>
 
     init {
         val registrationDao = TrackingDatabase.getTrackingDatabase(application).registrationDao()
         repository = RegistrationRepository(registrationDao)
-
-        // map event item entries
-        var tempRegistrations = emptyList<Registration>()
-        var tempTemplates = emptyList<Template>()
-
-
-//        readAllEventItemEntries = liveData {
-//            val registrations = repository.readAllRegistrations()
-//            val templates = repository.readAllTemplates()
-//            val result = mapToEventItemEntities(registrations, templates)
-//            emit(result)
-//        }
 
 //        https://developer.android.com/topic/libraries/architecture/coroutines#livedata
 //        https://medium.com/androiddevelopers/livedata-with-coroutines-and-flow-part-ii-launching-coroutines-with-architecture-components-337909f37ae7
@@ -79,19 +62,5 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
             templateId(repository.addTemplate(template))
         }
     }
-
-//    fun <T, K, R> LiveData<T>.combineWith(
-//        liveData: LiveData<K>,
-//        block: (T?, K?) -> R
-//    ): LiveData<R> {
-//        val result = MediatorLiveData<R>()
-//        result.addSource(this) {
-//            result.value = block(this.value, liveData.value)
-//        }
-//        result.addSource(liveData) {
-//            result.value = block(this.value, liveData.value)
-//        }
-//        return result
-//    }
 
 }

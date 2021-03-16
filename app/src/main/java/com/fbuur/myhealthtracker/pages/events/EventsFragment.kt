@@ -37,13 +37,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEventsBinding.inflate(inflater, container, false)
-
         setup()
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun setup() {
@@ -88,7 +83,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 temId = temId,
                 date = Date()
             )
-            registrationViewModel.newTemplateHasBeenAdded = true
             registrationViewModel.addRegistration(registration)
         }
         binding.createEventView.inputCreateEvent.text?.clear()
@@ -106,6 +100,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     }
                 })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideKeyboard()
     }
 
     override fun onDestroy() {
