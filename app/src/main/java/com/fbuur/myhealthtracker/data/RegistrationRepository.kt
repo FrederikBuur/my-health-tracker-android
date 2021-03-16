@@ -6,8 +6,14 @@ import com.fbuur.myhealthtracker.data.model.Template
 
 class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
 
-    val readAllRegistrations: LiveData<List<Registration>> = registrationDAO.readAllRegistrations()
-    val readAllTemplates: LiveData<List<Template>> = registrationDAO.readAllTemplates()
+    val readAllRegistrationsLD: LiveData<List<Registration>> = registrationDAO.readAllRegistrationsLD()
+
+    suspend fun readAllRegistrations() = registrationDAO.readAllRegistrations()
+    suspend fun readAllTemplates() = registrationDAO.readAllTemplates()
+
+    suspend fun readTemplateById(id: Long): Template {
+        return registrationDAO.readTemplateById(id)
+    }
 
     suspend fun addRegistration(registration: Registration): Long =
         registrationDAO.addRegistration(registration)

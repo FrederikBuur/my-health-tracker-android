@@ -29,11 +29,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private var _binding: FragmentEventsBinding? = null
     private val binding get() = _binding!!
 
-    private var registrationList = emptyList<Registration>()
-    private var templateList = emptyList<Template>()
-    private var parameterList = emptyList<Parameter>()
-
-    private var realList = arrayListOf<EventItemEntry>()
+    private var eventItemEntries = emptyList<EventItemEntry>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,34 +55,13 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         // setup view models
         registrationViewModel = ViewModelProvider(this).get(RegistrationViewModel::class.java)
-        registrationViewModel.readAllTemplates.observe(viewLifecycleOwner, { templates ->
-            this.templateList = templates
-            // update relevant event // todo
-        })
-
-
-        registrationViewModel.readAllRegistrations.observe(viewLifecycleOwner, { registrations ->
-            this.registrationList = registrations
-
-            // make registration + template + parameter mapping
-            val tempList = arrayListOf<EventItemEntry>()
-            this.registrationList.forEach { registration ->
-                this.templateList.firstOrNull { t -> t.id == registration.temId }?.let { t ->
-                    tempList.add(
-                        EventItemEntry(
-                            id = "${registration.id}${t.id}",
-                            name = t.name,
-                            date = registration.date,
-                            iconColor = t.color,
-                            parameterList = emptyList() // todo
-                        )
-                    )
-                } ?: run {
-                    println(" test123 cant find template id: ${registration.temId}, for registration id: ${registration.id}")
-                }
+        registrationViewModel.readAllEventItemEntries.observe(viewLifecycleOwner, { eventItemEntries ->
+            eventItemEntries?.let {
+                this.eventItemEntries = it
+                adapter.setData(this.eventItemEntries)
             }
-            realList = tempList
-            adapter.setData(this.realList)
+
+            // if 0 set empty list og hav default med loading
 
         })
 
@@ -94,12 +69,10 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         binding.createEventView.createEventBtn.setOnClickListener { v ->
             onCreateNewEventClicked()
         }
-
         binding.eventsRecyclerView.adapter = adapter
     }
 
     private fun onCreateNewEventClicked() {
-
         val name = binding.createEventView.inputCreateEvent.text.toString()
         if (name.isBlank()) return
 
@@ -115,6 +88,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 temId = temId,
                 date = Date()
             )
+            registrationViewModel.newTemplateHasBeenAdded = true
             registrationViewModel.addRegistration(registration)
         }
         binding.createEventView.inputCreateEvent.text?.clear()

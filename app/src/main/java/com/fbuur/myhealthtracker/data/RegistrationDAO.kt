@@ -18,9 +18,15 @@ interface RegistrationDAO {
     suspend fun addTemplate(template: Template): Long
 
     @Query("SELECT * FROM registration ORDER BY date DESC")
-    fun readAllRegistrations(): LiveData<List<Registration>>
+    fun readAllRegistrationsLD(): LiveData<List<Registration>>
+
+    @Query("SELECT * FROM registration ORDER BY date DESC")
+    suspend fun readAllRegistrations(): List<Registration>
 
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
-    fun readAllTemplates(): LiveData<List<Template>>
+    suspend fun readAllTemplates(): List<Template>
+
+    @Query("SELECT * FROM template WHERE id=:id")
+    suspend fun readTemplateById(id: Long): Template
 
 }
