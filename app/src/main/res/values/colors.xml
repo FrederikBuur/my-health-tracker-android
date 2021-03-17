@@ -20,6 +20,7 @@
 
 
     <string-array name="eventColors">
+        <item>#C33468</item>
         <item>#EE5959</item>
         <item>#F2A340</item>
         <item>#BEB541</item>
@@ -29,7 +30,6 @@
         <item>#6D64EA</item>
         <item>#98A0DF</item>
         <item>#B398DF</item>
-        <item>#C33468</item>
     </string-array>
 
 </resources>

@@ -44,7 +44,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         setupInputListener()
 
         val eventsAdapter = EventsListAdapter()
-        val quickRegisterAdapter = QuickRegisterAdapter()
+        val quickRegisterAdapter = QuickRegisterAdapter(onQuickRegisterClicked)
 
         // setup view models
         registrationViewModel = ViewModelProvider(this).get(RegistrationViewModel::class.java)
@@ -102,7 +102,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         hideKeyboard()
     }
 
-    private fun onCreateQuickEventClicked(temId: Long) {
+
+    private val onQuickRegisterClicked: (Long) -> Unit = { temId ->
+        createQuickEvent(temId)
+    }
+
+    private fun createQuickEvent(temId: Long) {
         registrationViewModel.addRegistration(
             Registration(
                 id = 0,
@@ -127,8 +132,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private fun genColorForTemplate(): String {
         val colors = resources.getStringArray(R.array.eventColors)
-        val color = colors.toList().shuffled().first()
-        return color
+        return colors.toList().shuffled().first()
     }
 
     override fun onResume() {

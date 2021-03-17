@@ -29,6 +29,7 @@
             android:hint="Type in new event to track"
             android:imeOptions="actionNone"
             android:maxLines="1"
+            android:inputType="textCapSentences"
             android:textColor="@color/black"
             android:textColorHint="@color/text_secondary_onwhite"
             android:textSize="14sp" />

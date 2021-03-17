@@ -60,7 +60,8 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     ): List<QuickRegisterEntry> {
         return templates.map { t ->
             QuickRegisterEntry(
-                id = t.id,
+                id = "${t.id}${t.name}",
+                temId = t.id,
                 name = t.name,
                 color = t.color,
                 templateTypes = emptyList() // todo
@@ -70,6 +71,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
 
     fun addRegistration(registration: Registration) {
         viewModelScope.launch(Dispatchers.IO) {
+            // TODO update template last used date
             repository.addRegistration(registration)
         }
     }

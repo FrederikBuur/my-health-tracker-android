@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.databinding.ItemQuickRegisterBinding
 
-class QuickRegisterAdapter : RecyclerView.Adapter<QuickRegisterViewHolder>() {
+class QuickRegisterAdapter(
+    private val onQuickRegisterClicked: (Long) -> Unit
+) : RecyclerView.Adapter<QuickRegisterViewHolder>() {
 
     private var quickRegistersList = emptyList<QuickRegisterEntry>()
 
@@ -19,7 +21,7 @@ class QuickRegisterAdapter : RecyclerView.Adapter<QuickRegisterViewHolder>() {
 
     override fun onBindViewHolder(holder: QuickRegisterViewHolder, position: Int) {
         val quickRegister = quickRegistersList[position]
-        holder.bind(quickRegister)
+        holder.bind(quickRegister, onQuickRegisterClicked)
     }
 
     override fun getItemCount() = quickRegistersList.size
@@ -36,10 +38,17 @@ class QuickRegisterViewHolder(
     private val itemBinding: ItemQuickRegisterBinding
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
-    fun bind(quickRegisterEntry: QuickRegisterEntry) {
+    fun bind(
+        quickRegisterEntry: QuickRegisterEntry,
+        onQuickRegisterClicked: (Long) -> Unit
+    ) {
         itemBinding.apply {
             name.text = quickRegisterEntry.name
             container.setCardBackgroundColor(Color.parseColor(quickRegisterEntry.color))
+            container.setOnClickListener {
+                onQuickRegisterClicked(quickRegisterEntry.temId)
+            }
+
         }
     }
 

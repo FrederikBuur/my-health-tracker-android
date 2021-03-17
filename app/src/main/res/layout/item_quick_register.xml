@@ -24,7 +24,7 @@
             android:minWidth="24dp"
             android:textAlignment="center"
             android:textSize="12sp"
-            tools:text="n" />
+            tools:text="Wrist pain" />
 
     </androidx.cardview.widget.CardView>
 
