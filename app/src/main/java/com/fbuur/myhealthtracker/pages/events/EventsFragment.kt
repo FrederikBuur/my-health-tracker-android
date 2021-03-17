@@ -48,6 +48,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         // setup view models
         registrationViewModel = ViewModelProvider(this).get(RegistrationViewModel::class.java)
+
+        // events data
         registrationViewModel.readAllEventItemEntries.observe(
             viewLifecycleOwner,
             { eventItemEntries ->
@@ -63,6 +65,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
             })
 
+        // quick register data
         registrationViewModel.readAllQuickRegisterEntries.observe(
             viewLifecycleOwner,
             { quickRegisterEntries ->
@@ -71,10 +74,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 binding.quickRegister.quickRegisterRecyclerView.scrollToPosition(0)
             })
 
-        // setup view
-        binding.createEventView.createEventBtn.setOnClickListener { v ->
-            onCreateNewEventClicked()
-        }
+        // setup view binding
+        binding.createEventView.createEventBtn.setOnClickListener { v -> onCreateNewEventClicked() }
         binding.eventsRecyclerView.adapter = eventsAdapter
         binding.quickRegister.quickRegisterRecyclerView.adapter = quickRegisterAdapter
     }
@@ -107,7 +108,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 id = 0,
                 temId = temId,
                 date = Date()
-                )
+            )
         )
     }
 
