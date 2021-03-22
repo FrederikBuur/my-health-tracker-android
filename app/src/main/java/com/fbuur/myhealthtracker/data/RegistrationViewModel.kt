@@ -101,6 +101,20 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun updateTemplateName(temId: Long, newName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val temp = repository.readTemplateById(temId)
+            repository.updateTemplate(
+                Template(
+                    id = temp.id,
+                    name = newName,
+                    lastUsed = temp.lastUsed,
+                    color = temp.color
+                )
+            )
+        }
+    }
+
     fun deleteTemplateById(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTemplateById(id)

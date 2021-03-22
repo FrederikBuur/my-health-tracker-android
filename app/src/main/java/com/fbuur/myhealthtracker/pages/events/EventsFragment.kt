@@ -3,6 +3,7 @@ package com.fbuur.myhealthtracker.pages.events
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
@@ -18,6 +19,7 @@ import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
+import com.fbuur.myhealthtracker.util.MyDialog
 import com.fbuur.myhealthtracker.util.SwipeToDeleteCallback
 import com.fbuur.myhealthtracker.util.hideKeyboard
 import java.util.*
@@ -33,6 +35,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private var eventItemEntries = emptyList<EventItemEntry>()
     private var quickRegisterEntries = emptyList<QuickRegisterEntry>()
 
+    private var quickRegisterIdLongClicked = -1L
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,17 +47,21 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+//        registerForContextMenu(binding.quickRegister.quickRegisterRecyclerView)
+    }
+
     private fun setup() {
 
         //setup listeners
         setupInputListener()
 
         val eventsAdapter = EventsListAdapter()
-        val quickRegisterAdapter = QuickRegisterAdapter(onQuickRegisterClicked)
+        val quickRegisterAdapter = QuickRegisterAdapter(onQuickRegisterClicked, onQuickRegisterLongClicked)
 
         // setup view models
         registrationViewModel = ViewModelProvider(this).get(RegistrationViewModel::class.java)
-
         // events data
         registrationViewModel.readAllEventItemEntries.observe(
             viewLifecycleOwner,
@@ -69,7 +77,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 }
 
             })
-
         // quick register data
         registrationViewModel.readAllQuickRegisterEntries.observe(
             viewLifecycleOwner,
@@ -87,6 +94,30 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         onSwipeListener.attachToRecyclerView(binding.eventsRecyclerView)
     }
 
+    private val onQuickRegisterClicked: (Long) -> Unit = { temId ->
+        registrationViewModel.addRegistration(
+            Registration(
+                id = 0,
+                temId = temId,
+                date = Date()
+            )
+        )
+        registrationViewModel.updateTemplateLastUsed(temId)
+    }
+
+    private val onQuickRegisterLongClicked: (Long) -> Unit = { temId ->
+        this.quickRegisterIdLongClicked = temId
+    }
+
+    private val onSwipeListener =
+        ItemTouchHelper(object : SwipeToDeleteCallback() {
+            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
+                val event = this@EventsFragment.eventItemEntries[viewHolder.adapterPosition]
+                val id = event.id.split(':').first().toLong()
+                registrationViewModel.deleteRegistrationById(id)
+            }
+        })
+
     private fun onCreateNewEventClicked() {
         val name = binding.createEventView.inputCreateEvent.text.toString()
         if (name.isBlank()) return
@@ -95,7 +126,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             id = 0,
             name = name,
             lastUsed = Date(),
-            color = genColorForTemplate() // todo get random color from int array in resources
+            color = genColorForTemplate()
         )
         registrationViewModel.addTemplate(template) { temId ->
             val registration = Registration(
@@ -107,22 +138,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
         binding.createEventView.inputCreateEvent.text?.clear()
         hideKeyboard()
-    }
-
-
-    private val onQuickRegisterClicked: (Long) -> Unit = { temId ->
-        createQuickEvent(temId)
-    }
-
-    private fun createQuickEvent(temId: Long) {
-        registrationViewModel.addRegistration(
-            Registration(
-                id = 0,
-                temId = temId,
-                date = Date()
-            )
-        )
-        registrationViewModel.updateTemplateLastUsed(temId)
     }
 
     private fun setupInputListener() {
@@ -138,18 +153,24 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
-    private val onSwipeListener =
-        ItemTouchHelper(object : SwipeToDeleteCallback() {
-            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-                val event = this@EventsFragment.eventItemEntries[viewHolder.adapterPosition]
-                val id = event.id.split(':').first().toLong()
-                registrationViewModel.deleteRegistrationById(id)
-            }
-        })
-
     private fun genColorForTemplate(): String {
         val colors = resources.getStringArray(R.array.eventColors)
         return colors.toList().shuffled().first()
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val temId = this.quickRegisterIdLongClicked
+        when(item.itemId) {
+            R.id.rename_template -> {
+                MyDialog { newName ->
+                    registrationViewModel.updateTemplateName(temId, newName)
+                }.show(parentFragmentManager, this.javaClass.toString())
+            }
+            R.id.delete_template -> {
+                registrationViewModel.deleteTemplateById(temId)
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 
     override fun onResume() {
