@@ -28,4 +28,9 @@ interface RegistrationDAO {
     @Update
     suspend fun updateTemplate(template: Template)
 
+    @Query("DELETE FROM template WHERE id= :id")
+    suspend fun deleteTemplateById(id: Long)
+    @Query("DELETE FROM registration WHERE id= :id")
+    suspend fun deleteRegistrationById(id: Long)
+
 }

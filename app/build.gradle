@@ -79,4 +79,9 @@ dependencies {
 	// coroutines
 	def coroutines_version = "1.4.3"
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+	// swipe decorator
+	def swipedecorator_version = "1.2.3"
+	implementation "it.xabaras.android:recyclerview-swipedecorator:$swipedecorator_version"
+
 }

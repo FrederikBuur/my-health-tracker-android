@@ -1,5 +1,6 @@
 package com.fbuur.myhealthtracker.pages.events
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,9 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.RegistrationViewModel
 import com.fbuur.myhealthtracker.data.model.Registration
@@ -14,6 +18,7 @@ import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
+import com.fbuur.myhealthtracker.util.SwipeToDeleteCallback
 import com.fbuur.myhealthtracker.util.hideKeyboard
 import java.util.*
 
@@ -78,6 +83,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         binding.createEventView.createEventBtn.setOnClickListener { v -> onCreateNewEventClicked() }
         binding.eventsRecyclerView.adapter = eventsAdapter
         binding.quickRegister.quickRegisterRecyclerView.adapter = quickRegisterAdapter
+
+        onSwipeListener.attachToRecyclerView(binding.eventsRecyclerView)
     }
 
     private fun onCreateNewEventClicked() {
@@ -130,6 +137,15 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 })
         }
     }
+
+    private val onSwipeListener =
+        ItemTouchHelper(object : SwipeToDeleteCallback(context) {
+            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
+                val event = this@EventsFragment.eventItemEntries[viewHolder.adapterPosition]
+                val id = event.id.split(':').first().toLong()
+                registrationViewModel.deleteRegistrationById(id)
+            }
+        })
 
     private fun genColorForTemplate(): String {
         val colors = resources.getStringArray(R.array.eventColors)

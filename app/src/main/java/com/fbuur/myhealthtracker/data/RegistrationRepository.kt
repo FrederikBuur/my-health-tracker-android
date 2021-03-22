@@ -27,6 +27,13 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     suspend fun updateTemplate(template: Template) =
         registrationDAO.updateTemplate(template)
 
+    // suspend delete
+    suspend fun deleteTemplateById(id: Long) =
+        registrationDAO.deleteTemplateById(id)
+
+    suspend fun deleteRegistrationById(id: Long) =
+        registrationDAO.deleteRegistrationById(id)
+
     // suspend write
     suspend fun addRegistration(registration: Registration) =
         registrationDAO.addRegistration(registration)

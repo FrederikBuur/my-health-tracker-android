@@ -49,7 +49,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         return registrations.map { registration ->
             templates.firstOrNull { t -> t.id == registration.temId }?.let { t ->
                 EventItemEntry(
-                    id = "${registration.id}${t.id}",
+                    id = "${registration.id}:${t.id}",
                     name = t.name,
                     date = registration.date,
                     iconColor = t.color,
@@ -98,6 +98,18 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     color = temp.color
                 )
             )
+        }
+    }
+
+    fun deleteTemplateById(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteTemplateById(id)
+        }
+    }
+
+    fun deleteRegistrationById(id:Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteRegistrationById(id)
         }
     }
 
