@@ -8,6 +8,7 @@ import com.fbuur.myhealthtracker.pages.events.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class RegistrationViewModel(application: Application) : AndroidViewModel(application) {
@@ -21,20 +22,25 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         val registrationDao = TrackingDatabase.getTrackingDatabase(application).registrationDao()
         repository = RegistrationRepository(registrationDao)
 
-//        https://developer.android.com/topic/libraries/architecture/coroutines#livedata
-//        https://medium.com/androiddevelopers/livedata-with-coroutines-and-flow-part-ii-launching-coroutines-with-architecture-components-337909f37ae7
-        readAllEventItemEntries = repository.readAllRegistrationsLD.switchMap { registrations ->
+        readAllEventItemEntries = setupEventItemEntryLiveData()
+        readAllQuickRegisterEntries = setupQuickRegisterEntryLiveData()
+
+    }
+
+    //    https://developer.android.com/topic/libraries/architecture/coroutines#livedata
+    //    https://medium.com/androiddevelopers/livedata-with-coroutines-and-flow-part-ii-launching-coroutines-with-architecture-components-337909f37ae7
+    private fun setupEventItemEntryLiveData() =
+        repository.readAllRegistrationsLD.switchMap { registrations ->
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 val templates = repository.readAllTemplates()
                 emit(mapToEventItemEntities(registrations, templates))
             }
         }
 
-        readAllQuickRegisterEntries = repository.readAllTemplatesLD.map { templates ->
+    private fun setupQuickRegisterEntryLiveData() =
+        repository.readAllTemplatesLD.map { templates ->
             mapToQuickRegisterEntries(templates)
         }
-
-    }
 
     private fun mapToEventItemEntities(
         registrations: List<Registration>,
@@ -71,7 +77,6 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
 
     fun addRegistration(registration: Registration) {
         viewModelScope.launch(Dispatchers.IO) {
-            // TODO update template last used date
             repository.addRegistration(registration)
         }
     }
@@ -79,6 +84,20 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     fun addTemplate(template: Template, templateId: (Long) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             templateId(repository.addTemplate(template))
+        }
+    }
+
+    fun updateTemplateLastUsed(temId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val temp = repository.readTemplateById(temId)
+            repository.updateTemplate(
+                Template(
+                    id = temp.id,
+                    name = temp.name,
+                    lastUsed = Date(),
+                    color = temp.color
+                )
+            )
         }
     }
 

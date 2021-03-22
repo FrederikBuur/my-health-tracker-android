@@ -23,6 +23,10 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     suspend fun readTemplateById(id: Long) =
         registrationDAO.readTemplateById(id)
 
+    // suspend update
+    suspend fun updateTemplate(template: Template) =
+        registrationDAO.updateTemplate(template)
+
     // suspend write
     suspend fun addRegistration(registration: Registration) =
         registrationDAO.addRegistration(registration)

@@ -115,6 +115,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 date = Date()
             )
         )
+        registrationViewModel.updateTemplateLastUsed(temId)
     }
 
     private fun setupInputListener() {
