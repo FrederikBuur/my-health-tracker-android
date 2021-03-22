@@ -84,4 +84,8 @@ dependencies {
 	def swipedecorator_version = "1.2.3"
 	implementation "it.xabaras.android:recyclerview-swipedecorator:$swipedecorator_version"
 
+	// soft keyboard events
+	def keyboard_visibility_version = "3.0.0-RC3"
+	implementation "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:$keyboard_visibility_version"
+
 }
