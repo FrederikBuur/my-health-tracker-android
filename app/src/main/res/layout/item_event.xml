@@ -10,8 +10,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,12 +35,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textColor="@color/text_primary_onwhite"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/eventDate"
         app:layout_constraintEnd_toStartOf="@id/expandArrow"
         app:layout_constraintHorizontal_bias="0"
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textSize="9sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@id/eventIcon"
         app:layout_constraintStart_toEndOf="@id/eventIcon"
         app:layout_constraintTop_toBottomOf="@id/eventName"
@@ -79,13 +79,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventIcon" />
 
-    <!--    <View-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0.5dp"-->
-    <!--        android:alpha="0.1"-->
-    <!--        android:background="#000000"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="16dp"
+        android:alpha="0.1"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/eventIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
