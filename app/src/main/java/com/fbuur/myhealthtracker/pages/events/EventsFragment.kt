@@ -139,7 +139,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     private val onSwipeListener =
-        ItemTouchHelper(object : SwipeToDeleteCallback(context) {
+        ItemTouchHelper(object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
                 val event = this@EventsFragment.eventItemEntries[viewHolder.adapterPosition]
                 val id = event.id.split(':').first().toLong()
