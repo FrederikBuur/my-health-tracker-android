@@ -3,6 +3,7 @@ package com.fbuur.myhealthtracker.data
 import androidx.room.TypeConverter
 import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.ParameterType
+import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.google.gson.Gson
 import java.util.*
 
@@ -16,6 +17,16 @@ class RegistrationTypeConverters {
     @TypeConverter
     fun toParameterType(value: Int): ParameterType{
         return ParameterType.valueOf(value.toString())
+    }
+
+    // Registration type enum type converters
+    @TypeConverter
+    fun fromRegistrationType(value: RegistrationType): Int{
+        return value.ordinal
+    }
+    @TypeConverter
+    fun toRegistrationType(value: Int): RegistrationType{
+        return RegistrationType.valueOf(value.toString())
     }
 
     // Parameter type list type converters

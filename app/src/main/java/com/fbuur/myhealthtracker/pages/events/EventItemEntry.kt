@@ -8,5 +8,6 @@ data class EventItemEntry(
     val name: String,
     val date: Date,
     val iconColor: String,
-    val parameterList: List<Parameter>
+    val parameterList: List<Parameter>,
+    val description: String? = null
 )

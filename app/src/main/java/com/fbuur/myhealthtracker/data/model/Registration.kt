@@ -17,7 +17,12 @@ data class Registration(
     val id: Long,
     val temId: Long,
     val date: Date,
+    val type: RegistrationType
 )
+
+enum class RegistrationType {
+    NOTE, EVENT
+}
 
 enum class ParameterType {
     NOTE, SLIDER, LOCATION, BINARY

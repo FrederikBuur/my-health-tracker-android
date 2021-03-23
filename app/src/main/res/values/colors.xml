@@ -21,11 +21,11 @@
     <color name="delete">#D80707</color>
 
 
+    <color name="quick_register_note_background">#BEB541</color>
     <string-array name="eventColors">
         <item>#C33468</item>
         <item>#EE5959</item>
         <item>#F2A340</item>
-        <item>#BEB541</item>
         <item>#86B968</item>
         <item>#75C833</item>
         <item>#3BC8A6</item>

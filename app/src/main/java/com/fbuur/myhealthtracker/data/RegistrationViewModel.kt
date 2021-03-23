@@ -1,7 +1,10 @@
 package com.fbuur.myhealthtracker.data
 
 import android.app.Application
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
+import com.fbuur.myhealthtracker.MyApplication
+import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.pages.events.EventItemEntry
@@ -64,7 +67,16 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     private fun mapToQuickRegisterEntries(
         templates: List<Template>
     ): List<QuickRegisterEntry> {
-        return templates.map { t ->
+
+        val noteEntry = QuickRegisterEntry(
+            id = QUICK_REGISTER_NOTE,
+            temId = -1,
+            name = "note",
+            color = "",
+            templateTypes = emptyList()
+        )
+
+        val temList = templates.map { t ->
             QuickRegisterEntry(
                 id = "${t.id}${t.name}",
                 temId = t.id,
@@ -73,6 +85,10 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                 templateTypes = emptyList() // todo
             )
         }
+
+        val list = arrayListOf(noteEntry)
+        list.addAll(temList)
+        return list
     }
 
     fun addRegistration(registration: Registration) {
@@ -121,10 +137,14 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun deleteRegistrationById(id:Long) {
+    fun deleteRegistrationById(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteRegistrationById(id)
         }
+    }
+
+    companion object {
+        const val QUICK_REGISTER_NOTE = "quick_register_note"
     }
 
 }

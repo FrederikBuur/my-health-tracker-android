@@ -6,23 +6,56 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.ItemQuickRegisterBinding
+import com.fbuur.myhealthtracker.databinding.ItemQuickRegisterNoteBinding
 
 class QuickRegisterAdapter(
     private val onQuickRegisterClicked: (Long) -> Unit,
+    private val onQuickRegisterNoteClicked: () -> Unit,
     private val onQuickRegisterLongClicked: (Long) -> Unit
-) : RecyclerView.Adapter<QuickRegisterViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var quickRegistersList = emptyList<QuickRegisterEntry>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickRegisterViewHolder {
-        return QuickRegisterViewHolder(
-            ItemQuickRegisterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ViewType.NOTE.ordinal -> QuickRegisterNoteViewHolder(
+                ItemQuickRegisterNoteBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+            else -> QuickRegisterEventViewHolder(
+                ItemQuickRegisterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+        }
+
     }
 
-    override fun onBindViewHolder(holder: QuickRegisterViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val quickRegister = quickRegistersList[position]
-        holder.bind(quickRegister, onQuickRegisterClicked, onQuickRegisterLongClicked)
+
+        when (holder.itemViewType) {
+            ViewType.NOTE.ordinal -> {
+                (holder as QuickRegisterNoteViewHolder).bind(
+                    onQuickRegisterNoteClicked
+                )
+            }
+            ViewType.EVENT.ordinal -> {
+                (holder as QuickRegisterEventViewHolder).bind(
+                    quickRegister,
+                    onQuickRegisterClicked,
+                    onQuickRegisterLongClicked
+                )
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) ViewType.NOTE.ordinal else ViewType.EVENT.ordinal
     }
 
     override fun getItemCount() = quickRegistersList.size
@@ -33,44 +66,7 @@ class QuickRegisterAdapter(
         diffResults.dispatchUpdatesTo(this)
         quickRegistersList = newQuickRegisters
     }
-}
 
-class QuickRegisterViewHolder(
-    private val itemBinding: ItemQuickRegisterBinding
-) : RecyclerView.ViewHolder(itemBinding.root), View.OnCreateContextMenuListener {
+    enum class ViewType { NOTE, EVENT }
 
-    private var title = ""
-
-    fun bind(
-        quickRegisterEntry: QuickRegisterEntry,
-        onQuickRegisterClicked: (Long) -> Unit,
-        onQuickRegisterLongClicked: (Long) -> Unit
-    ) {
-        title = quickRegisterEntry.name
-
-        itemBinding.apply {
-            name.text = quickRegisterEntry.name
-            container.setCardBackgroundColor(Color.parseColor(quickRegisterEntry.color))
-            container.setOnClickListener {
-                onQuickRegisterClicked(quickRegisterEntry.temId)
-            }
-            container.setOnLongClickListener {
-                onQuickRegisterLongClicked(quickRegisterEntry.temId)
-                false
-            }
-            root.setOnCreateContextMenuListener(this@QuickRegisterViewHolder)
-
-        }
-    }
-
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        menu?.setHeaderTitle(this.title)
-        menu?.add(Menu.NONE, R.id.rename_template, Menu.NONE, "Rename")
-        menu?.add(Menu.NONE, R.id.delete_template, Menu.NONE, "Delete all instances")
-
-    }
 }

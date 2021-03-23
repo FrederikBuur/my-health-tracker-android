@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.RegistrationViewModel
 import com.fbuur.myhealthtracker.data.model.Registration
+import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
@@ -53,7 +54,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         setupInputListener()
 
         val eventsAdapter = EventsListAdapter()
-        val quickRegisterAdapter = QuickRegisterAdapter(onQuickRegisterClicked, onQuickRegisterLongClicked)
+        val quickRegisterAdapter = QuickRegisterAdapter(
+            onQuickRegisterClicked,
+            onQuickRegisterNoteClicked,
+            onQuickRegisterLongClicked
+        )
 
         // setup view models
         registrationViewModel = ViewModelProvider(this).get(RegistrationViewModel::class.java)
@@ -94,7 +99,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             Registration(
                 id = 0,
                 temId = temId,
-                date = Date()
+                date = Date(),
+                type = RegistrationType.EVENT
             )
         )
         registrationViewModel.updateTemplateLastUsed(temId)
@@ -102,6 +108,18 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val onQuickRegisterLongClicked: (Long) -> Unit = { temId ->
         this.quickRegisterIdLongClicked = temId
+    }
+
+    private val onQuickRegisterNoteClicked: () -> Unit = {
+        // create note
+        val registration = Registration(
+            id = 0,
+            temId = -1,
+            date = Date(),
+            type = RegistrationType.NOTE
+        )
+        registrationViewModel.addRegistration(registration)
+
     }
 
     private val onSwipeListener =
@@ -127,7 +145,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             val registration = Registration(
                 id = 0,
                 temId = temId,
-                date = Date()
+                date = Date(),
+                type = RegistrationType.EVENT
             )
             registrationViewModel.addRegistration(registration)
         }
