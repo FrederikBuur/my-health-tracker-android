@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
-        android:text="Quick register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_quick_register_header"
         android:paddingHorizontal="8dp"
         android:paddingTop="4dp"
-        android:textSize="11sp"
+        android:text="Quick register"
         android:textColor="@color/white"
-        android:background="@drawable/background_quick_register_header"/>
+        android:textSize="11sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/quickRegisterRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="8dp"
         android:background="@color/blue_300"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:layoutAnimation="@anim/quick_register_item_animation"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_quick_register"/>
+        tools:listitem="@layout/item_quick_register" />
 
 </LinearLayout>

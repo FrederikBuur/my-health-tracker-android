@@ -10,7 +10,7 @@
         android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:foreground="@android:drawable/list_selector_background"
+        android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="15dp"
         app:cardElevation="0dp"
         tools:cardBackgroundColor="#EE5959">
