@@ -47,11 +47,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        registerForContextMenu(binding.quickRegister.quickRegisterRecyclerView)
-    }
-
     private fun setup() {
 
         //setup listeners
