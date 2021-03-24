@@ -1,6 +1,7 @@
 package com.fbuur.myhealthtracker.pages.events
 
 import com.fbuur.myhealthtracker.data.model.Parameter
+import com.fbuur.myhealthtracker.data.model.RegistrationType
 import java.util.*
 
 data class EventItemEntry(
@@ -8,6 +9,6 @@ data class EventItemEntry(
     val name: String,
     val date: Date,
     val iconColor: String,
+    val type: RegistrationType,
     val parameterList: List<Parameter>,
-    val description: String? = null
 )

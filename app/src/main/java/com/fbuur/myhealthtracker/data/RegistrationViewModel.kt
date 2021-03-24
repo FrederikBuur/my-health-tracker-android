@@ -56,6 +56,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     name = t.name,
                     date = registration.date,
                     iconColor = t.color,
+                    type = registration.type,
                     parameterList = emptyList() // todo
                 )
             } ?: run {
@@ -76,14 +77,18 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
             templateTypes = emptyList()
         )
 
-        val temList = templates.map { t ->
-            QuickRegisterEntry(
-                id = "${t.id}${t.name}",
-                temId = t.id,
-                name = t.name,
-                color = t.color,
-                templateTypes = emptyList() // todo
-            )
+        val temList = templates.mapNotNull { t ->
+            if (t.id == -1L) {
+                null
+            } else {
+                QuickRegisterEntry(
+                    id = "${t.id}${t.name}",
+                    temId = t.id,
+                    name = t.name,
+                    color = t.color,
+                    templateTypes = emptyList() // todo
+                )
+            }
         }
 
         val list = arrayListOf(noteEntry)

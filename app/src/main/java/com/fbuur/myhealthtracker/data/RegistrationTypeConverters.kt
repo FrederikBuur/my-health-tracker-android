@@ -16,7 +16,7 @@ class RegistrationTypeConverters {
     }
     @TypeConverter
     fun toParameterType(value: Int): ParameterType{
-        return ParameterType.valueOf(value.toString())
+        return ParameterType.values()[value]
     }
 
     // Registration type enum type converters
@@ -26,7 +26,7 @@ class RegistrationTypeConverters {
     }
     @TypeConverter
     fun toRegistrationType(value: Int): RegistrationType{
-        return RegistrationType.valueOf(value.toString())
+        return RegistrationType.values()[value]
     }
 
     // Parameter type list type converters

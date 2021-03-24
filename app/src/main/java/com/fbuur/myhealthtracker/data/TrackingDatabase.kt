@@ -1,14 +1,14 @@
 package com.fbuur.myhealthtracker.data
 
+import android.content.ContentValues
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.data.model.TemplateType
+import java.util.*
 
 @Database(
     entities = [Registration::class, Parameter.Note::class, Parameter.Slider::class,
@@ -36,7 +36,24 @@ abstract class TrackingDatabase : RoomDatabase() {
                     context.applicationContext,
                     TrackingDatabase::class.java,
                     "tracking_database"
-                ).build()
+                )
+                    .addCallback(object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            val values = ContentValues()
+                            values.put("id", -1L)
+                            values.put("name", "Note")
+                            values.put("lastUsed", Date().toString())
+                            values.put("color", "#BEB541")
+
+                            db.insert(
+                                "template",
+                                OnConflictStrategy.IGNORE,
+                                values
+                            )
+                        }
+                    })
+                    .build()
                 INSTANCE = instance
                 return instance
             }

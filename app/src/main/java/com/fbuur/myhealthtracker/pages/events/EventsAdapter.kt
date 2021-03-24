@@ -5,24 +5,60 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.fbuur.myhealthtracker.data.model.Parameter
+import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.databinding.ItemEventBinding
+import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
 import com.fbuur.myhealthtracker.util.DiffUtilEventItems
 import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
 
-class EventsListAdapter: RecyclerView.Adapter<EventViewHolder>() {
+class EventsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
-        return EventViewHolder(
-            ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
+        return when (viewType) {
+            RegistrationType.EVENT.ordinal -> EventViewHolder(
+                ItemEventBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false)
+            )
+            RegistrationType.NOTE.ordinal -> NoteViewHolder(
+                ItemNoteBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false)
+            )
+            else -> {
+                throw Exception("event list adapter: unknown view type")
+            }
+        }
+
+
     }
 
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val event = eventsList[position]
-        holder.bind(event)
+
+        when(holder.itemViewType) {
+            RegistrationType.NOTE.ordinal -> {
+                (holder as NoteViewHolder).bind(
+                    event
+                )
+            }
+            RegistrationType.EVENT.ordinal -> {
+                (holder as EventViewHolder).bind(
+                    event
+                )
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return eventsList[position].type.ordinal
     }
 
     override fun getItemCount() = eventsList.size
@@ -33,8 +69,6 @@ class EventsListAdapter: RecyclerView.Adapter<EventViewHolder>() {
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         diffResults.dispatchUpdatesTo(this)
         eventsList = newEvents
-
-//        notifyDataSetChanged()
     }
 
 }
@@ -43,12 +77,26 @@ class EventViewHolder(
     private val itemBinding: ItemEventBinding
 ) : RecyclerView.ViewHolder(itemBinding.root) {
     fun bind(eventItemEntry: EventItemEntry) {
-
         itemBinding.apply {
             eventName.text = eventItemEntry.name
             eventDate.text = eventItemEntry.date.toDateString()
             eventIcon.setCardBackgroundColor(Color.parseColor(eventItemEntry.iconColor))
             eventIconInitials.text = eventItemEntry.name.getInitials()
+        }
+    }
+}
+
+class NoteViewHolder(
+    private val itemBinding: ItemNoteBinding
+) : RecyclerView.ViewHolder(itemBinding.root) {
+    fun bind(eventItemEntry: EventItemEntry) {
+
+        val text = (eventItemEntry.parameterList.firstOrNull() as? Parameter.Note)?.description
+
+        itemBinding.apply {
+            eventName.text = eventItemEntry.name
+            eventDate.text = eventItemEntry.date.toDateString()
+            noteDescription.text = text
         }
     }
 }
