@@ -88,4 +88,7 @@ dependencies {
 	def keyboard_visibility_version = "3.0.0-RC3"
 	implementation "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:$keyboard_visibility_version"
 
+	// room explorer
+	implementation 'com.wajahatkarim3:roomexplorer:0.0.2'
+
 }
