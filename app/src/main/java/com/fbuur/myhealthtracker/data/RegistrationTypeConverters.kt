@@ -29,15 +29,14 @@ class RegistrationTypeConverters {
         return RegistrationType.values()[value]
     }
 
-    // Parameter type list type converters
+
+    // Sealed class Parameter type converters
 //    @TypeConverter
-//    fun fromParameterTypeList(list: List<ParameterType>): String {
-//        return Gson().toJson(list)
-//    }
+//    fun sealedClassToString(sealedClass: SealedClass) : String = GsonExtension.toJson(sealedClass)
+//
+//
 //    @TypeConverter
-//    fun toParameterTypeList(value: String): List<ParameterType> {
-//        return Gson().fromJson(value, Array<ParameterType>::class.java).toList()
-//    }
+//    fun sealedClassFromString(sealedClass: String) : SealedClass = sealedClass.let { GsonExtension.fromJson(it) }
 
     // Date type converters
     @TypeConverter
@@ -48,25 +47,5 @@ class RegistrationTypeConverters {
     fun toTimestamp(date: Date?): Long? {
         return date?.time
     }
-
-    // Parameter type converters
-//    @TypeConverter
-//    fun fromParameter(parameter: Parameter): String {
-//        return Gson().toJson(parameter)
-//    }
-//    @TypeConverter
-//    fun toParameter(value: String): Parameter {
-//        return Gson().fromJson(value, Parameter::class.java)
-//    }
-
-    // Parameter list type converters
-//    @TypeConverter
-//    fun fromParameterList(list: List<Parameter>): String {
-//        return Gson().toJson(list)
-//    }
-//    @TypeConverter
-//    fun toParameterList(value: String): List<Parameter> {
-//        return Gson().fromJson(value, Array<Parameter>::class.java).toList()
-//    }
 
 }

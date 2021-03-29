@@ -2,6 +2,7 @@ package com.fbuur.myhealthtracker.data
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
@@ -93,15 +94,21 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         return list
     }
 
-    fun addRegistration(registration: Registration) {
+    fun addRegistration(registration: Registration, registrationId: (Long) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addRegistration(registration)
+            registrationId(repository.addRegistration(registration))
         }
     }
 
     fun addTemplate(template: Template, templateId: (Long) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             templateId(repository.addTemplate(template))
+        }
+    }
+
+    fun addParameter(parameter: Parameter) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addParameter(parameter)
         }
     }
 

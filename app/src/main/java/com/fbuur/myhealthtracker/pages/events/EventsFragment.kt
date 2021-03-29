@@ -101,7 +101,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 date = Date(),
                 type = RegistrationType.EVENT
             )
-        )
+        ) { regId ->
+            // todo find and add parameters according to the template
+        }
         registrationViewModel.updateTemplateLastUsed(temId)
     }
 
@@ -117,7 +119,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             date = Date(),
             type = RegistrationType.NOTE
         )
-        registrationViewModel.addRegistration(registration)
+        registrationViewModel.addRegistration(registration) { regId ->
+            // todo add empty note parameter
+        }
 
     }
 
@@ -147,7 +151,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 date = Date(),
                 type = RegistrationType.EVENT
             )
-            registrationViewModel.addRegistration(registration)
+            registrationViewModel.addRegistration(registration) { regId ->
+                // don't do anything, no parameters should be attached
+            }
         }
         binding.createEventView.inputCreateEvent.text?.clear()
         hideKeyboard()
@@ -158,9 +164,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             inputCreateEvent.addTextChangedListener(
                 onTextChanged = { text, _, _, _ ->
                     if (text?.toString()?.length ?: 0 > 0) {
-                        createEventBtn.visibility = View.VISIBLE
+                        createEventContainer.transitionToEnd()
                     } else {
-                        createEventBtn.visibility = View.GONE
+                        createEventContainer.transitionToStart()
                     }
                 })
         }

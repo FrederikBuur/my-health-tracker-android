@@ -1,6 +1,7 @@
 package com.fbuur.myhealthtracker.data
 
 import androidx.lifecycle.LiveData
+import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
 
@@ -40,4 +41,15 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
 
     suspend fun addTemplate(template: Template): Long =
         registrationDAO.addTemplate(template)
+
+    suspend fun addParameter(parameter: Parameter): Long {
+        return when(parameter) {
+            is Parameter.Note -> {
+                registrationDAO.addParameterNote(parameter)
+            }
+            is Parameter.Slider -> {
+                registrationDAO.addParameterSlider(parameter)
+            }
+        }
+    }
 }

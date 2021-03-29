@@ -2,6 +2,7 @@ package com.fbuur.myhealthtracker.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
 
@@ -12,6 +13,10 @@ interface RegistrationDAO {
     suspend fun addRegistration(registration: Registration): Long
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTemplate(template: Template): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addParameterNote(parameter: Parameter.Note): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addParameterSlider(parameter: Parameter.Slider): Long
 
     @Query("SELECT * FROM registration ORDER BY date DESC")
     fun readAllRegistrationsLD(): LiveData<List<Registration>>
