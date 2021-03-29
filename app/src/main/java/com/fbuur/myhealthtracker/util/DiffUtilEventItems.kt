@@ -1,7 +1,7 @@
 package com.fbuur.myhealthtracker.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.fbuur.myhealthtracker.pages.events.EventItemEntry
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 
 class DiffUtilEventItems(
     private val oldList: List<EventItemEntry>,
@@ -23,6 +23,6 @@ class DiffUtilEventItems(
         return oldList[oldItemPosition].name == newList[newItemPosition].name &&
                 oldList[oldItemPosition].date == newList[newItemPosition].date &&
                 oldList[oldItemPosition].iconColor == newList[newItemPosition].iconColor &&
-                oldList[oldItemPosition].parameterList == newList[newItemPosition].parameterList
+                oldList[oldItemPosition].eventParameterList == newList[newItemPosition].eventParameterList
     }
 }

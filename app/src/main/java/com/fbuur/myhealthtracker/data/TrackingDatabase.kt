@@ -4,10 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.fbuur.myhealthtracker.data.model.Parameter
-import com.fbuur.myhealthtracker.data.model.Registration
-import com.fbuur.myhealthtracker.data.model.Template
-import com.fbuur.myhealthtracker.data.model.TemplateType
+import com.fbuur.myhealthtracker.data.model.*
 import java.util.*
 
 @Database(
@@ -40,17 +37,19 @@ abstract class TrackingDatabase : RoomDatabase() {
                     .addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
-                            val values = ContentValues()
-                            values.put("id", -1L)
-                            values.put("name", "Note")
-                            values.put("lastUsed", Date().toString())
-                            values.put("color", "#BEB541")
 
                             db.insert(
                                 "template",
                                 OnConflictStrategy.IGNORE,
-                                values
+                                addNoteTemplate()
                             )
+
+                            db.insert(
+                                "templatetype",
+                                OnConflictStrategy.IGNORE,
+                                addNoteParameterTemplate()
+                            )
+
                         }
                     })
                     .build()
@@ -60,6 +59,25 @@ abstract class TrackingDatabase : RoomDatabase() {
 
         }
 
+        // insert initial data
+        private fun addNoteTemplate(): ContentValues {
+            val values = ContentValues()
+            values.put("id", -1L)
+            values.put("name", "Note")
+            values.put("lastUsed", Date().toString())
+            values.put("color", "#BEB541")
+            return values
+        }
+
+        private fun addNoteParameterTemplate() : ContentValues {
+            val values = ContentValues()
+
+            values.put("id", -1L)
+            values.put("temId", -1L)
+            values.put("type", ParameterType.NOTE.name)
+
+            return values
+        }
 
     }
 

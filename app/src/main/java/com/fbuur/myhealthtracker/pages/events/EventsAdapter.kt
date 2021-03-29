@@ -9,6 +9,7 @@ import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.databinding.ItemEventBinding
 import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.util.DiffUtilEventItems
 import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
@@ -76,12 +77,28 @@ class EventsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 class EventViewHolder(
     private val itemBinding: ItemEventBinding
 ) : RecyclerView.ViewHolder(itemBinding.root) {
+
+    private var isExpanded = false
+
+    private fun expansionCollapseView() {
+        if (isExpanded) {
+            isExpanded = !isExpanded
+            itemBinding.eventItemContainer.transitionToStart()
+        } else {
+            isExpanded = !isExpanded
+            itemBinding.eventItemContainer.transitionToEnd()
+        }
+    }
+
     fun bind(eventItemEntry: EventItemEntry) {
         itemBinding.apply {
             eventName.text = eventItemEntry.name
             eventDate.text = eventItemEntry.date.toDateString()
             eventIcon.setCardBackgroundColor(Color.parseColor(eventItemEntry.iconColor))
             eventIconInitials.text = eventItemEntry.name.getInitials()
+            eventItemContainer.setOnClickListener {
+                expansionCollapseView()
+            }
         }
     }
 }
@@ -91,7 +108,7 @@ class NoteViewHolder(
 ) : RecyclerView.ViewHolder(itemBinding.root) {
     fun bind(eventItemEntry: EventItemEntry) {
 
-        val text = (eventItemEntry.parameterList.firstOrNull() as? Parameter.Note)?.description
+        val text = (eventItemEntry.eventParameterList.firstOrNull() as? Parameter.Note)?.description
 
         itemBinding.apply {
             eventName.text = eventItemEntry.name

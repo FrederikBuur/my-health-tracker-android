@@ -1,13 +1,10 @@
 package com.fbuur.myhealthtracker.data
 
 import android.app.Application
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
-import com.fbuur.myhealthtracker.MyApplication
-import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
-import com.fbuur.myhealthtracker.pages.events.EventItemEntry
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,7 +54,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     date = registration.date,
                     iconColor = t.color,
                     type = registration.type,
-                    parameterList = emptyList() // todo
+                    eventParameterList = emptyList() // todo
                 )
             } ?: run {
                 throw Exception(" test123 cant find template id: ${registration.temId}, for registration id: ${registration.id}")

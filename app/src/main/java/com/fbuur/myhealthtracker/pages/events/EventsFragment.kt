@@ -16,6 +16,7 @@ import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import com.fbuur.myhealthtracker.util.MyDialog
