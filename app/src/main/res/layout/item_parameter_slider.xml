@@ -16,8 +16,8 @@
         android:textColor="@color/text_primary_onwhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/parameterNoteText"
-        tools:text="Note"/>
+        app:layout_constraintBottom_toTopOf="@id/parameterSlider"
+        tools:text="Slider"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="20dp"
@@ -37,19 +37,15 @@
         app:srcCompat="@drawable/ic_close"/>
 
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/parameterNoteText"
+    <com.google.android.material.slider.Slider
+        android:id="@+id/parameterSlider"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:gravity="top|start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/parameterHeader"
-        tools:text="today something happened, this was interesting" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

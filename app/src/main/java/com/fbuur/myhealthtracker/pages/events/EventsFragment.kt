@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
@@ -41,7 +42,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEventsBinding.inflate(inflater, container, false)
         setup()
         return binding.root
@@ -52,7 +53,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         //setup listeners
         setupInputListener()
 
-        val eventsAdapter = EventsListAdapter()
+        val eventsAdapter = EventsListAdapter(
+            onAddParameterClicked
+        )
         val quickRegisterAdapter = QuickRegisterAdapter(
             onQuickRegisterClicked,
             onQuickRegisterNoteClicked,
@@ -125,6 +128,14 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     }
 
+    private val onAddParameterClicked: (Long, Long) -> Unit = { regId, temId ->
+        // open add parameter fragment and pass to id's
+        val action = EventsFragmentDirections.actionEventsFragmentToAddParametersFragment(
+            regId, temId
+        )
+        findNavController().navigate(action)
+    }
+
     private val onSwipeListener =
         ItemTouchHelper(object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
@@ -179,7 +190,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val temId = this.quickRegisterIdLongClicked
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.rename_template -> {
                 MyDialog { newName ->
                     registrationViewModel.updateTemplateName(temId, newName)

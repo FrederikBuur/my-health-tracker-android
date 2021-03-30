@@ -14,7 +14,9 @@ import com.fbuur.myhealthtracker.util.DiffUtilEventItems
 import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
 
-class EventsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class EventsListAdapter(
+    private val onAddParameterClicked: (Long, Long) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
 
@@ -52,7 +54,8 @@ class EventsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             RegistrationType.EVENT.ordinal -> {
                 (holder as EventViewHolder).bind(
-                    event
+                    event,
+                    onAddParameterClicked
                 )
             }
         }
@@ -80,17 +83,10 @@ class EventViewHolder(
 
     private var isExpanded = false
 
-    private fun expansionCollapseView() {
-        if (isExpanded) {
-            isExpanded = !isExpanded
-            itemBinding.eventItemContainer.transitionToStart()
-        } else {
-            isExpanded = !isExpanded
-            itemBinding.eventItemContainer.transitionToEnd()
-        }
-    }
-
-    fun bind(eventItemEntry: EventItemEntry) {
+    fun bind(
+        eventItemEntry: EventItemEntry,
+        onAddParameterClicked: (Long, Long) -> Unit
+    ) {
         itemBinding.apply {
             eventName.text = eventItemEntry.name
             eventDate.text = eventItemEntry.date.toDateString()
@@ -99,6 +95,20 @@ class EventViewHolder(
             eventItemContainer.setOnClickListener {
                 expansionCollapseView()
             }
+            addParametersButton.setOnClickListener {
+                val ids = eventItemEntry.id.split(':')
+                onAddParameterClicked.invoke(ids[0].toLong(), ids[1].toLong())
+            }
+        }
+    }
+
+    private fun expansionCollapseView() {
+        if (isExpanded) {
+            isExpanded = !isExpanded
+            itemBinding.eventItemContainer.transitionToStart()
+        } else {
+            isExpanded = !isExpanded
+            itemBinding.eventItemContainer.transitionToEnd()
         }
     }
 }
