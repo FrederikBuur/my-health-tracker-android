@@ -14,6 +14,7 @@ interface RegistrationDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTemplate(template: Template): Long
     @Insert(onConflict = OnConflictStrategy.IGNORE)
+
     suspend fun addParameterNote(parameter: Parameter.Note): Long
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addParameterSlider(parameter: Parameter.Slider): Long
@@ -29,6 +30,11 @@ interface RegistrationDAO {
     suspend fun readAllTemplates(): List<Template>
     @Query("SELECT * FROM template WHERE id=:id")
     suspend fun readTemplateById(id: Long): Template
+
+    @Query("SELECT * FROM slider WHERE regId=:regId")
+    suspend fun readAllSliderByRegId(regId: Long): List<Parameter.Slider>
+    @Query("SELECT * FROM note WHERE regId=:regId")
+    suspend fun readAllNoteByRegId(regId: Long): List<Parameter.Note>
 
     @Update
     suspend fun updateTemplate(template: Template)

@@ -2,10 +2,9 @@ package com.fbuur.myhealthtracker.data
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.fbuur.myhealthtracker.data.model.Parameter
-import com.fbuur.myhealthtracker.data.model.Registration
-import com.fbuur.myhealthtracker.data.model.Template
+import com.fbuur.myhealthtracker.data.model.*
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,10 +39,10 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
 
     private fun setupQuickRegisterEntryLiveData() =
         repository.readAllTemplatesLD.map { templates ->
-            mapToQuickRegisterEntries(templates)
+            templates.mapToQuickRegisterEntries()
         }
 
-    private fun mapToEventItemEntities(
+    private suspend fun mapToEventItemEntities(
         registrations: List<Registration>,
         templates: List<Template>
     ): List<EventItemEntry> {
@@ -55,7 +54,11 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     date = registration.date,
                     iconColor = t.color,
                     type = registration.type,
-                    eventParameterList = emptyList() // todo
+                    eventParameterList = mapToEventParameterList(
+                        repository.readAllParametersByRegId(
+                            registration.id
+                        )
+                    )
                 )
             } ?: run {
                 throw Exception(" test123 cant find template id: ${registration.temId}, for registration id: ${registration.id}")
@@ -63,35 +66,37 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private fun mapToQuickRegisterEntries(
-        templates: List<Template>
-    ): List<QuickRegisterEntry> {
-
-        val noteEntry = QuickRegisterEntry(
-            id = QUICK_REGISTER_NOTE,
-            temId = -1,
-            name = "note",
-            color = "",
-            templateTypes = emptyList()
-        )
-
-        val temList = templates.mapNotNull { t ->
-            if (t.id == -1L) {
-                null
-            } else {
-                QuickRegisterEntry(
-                    id = "${t.id}${t.name}",
-                    temId = t.id,
-                    name = t.name,
-                    color = t.color,
-                    templateTypes = emptyList() // todo
-                )
+    private fun mapToEventParameterList(
+        paramList: List<Parameter>
+    ): List<EventItemParameter> {
+        return paramList.map { p ->
+            when (p) {
+                is Parameter.Note -> {
+                    EventItemParameter.Note(
+                        id = p.id,
+                        regId =  p.regId,
+                        title = p.title,
+                        type = ParameterType.NOTE,
+                        description = p.description
+                    )
+                }
+                is Parameter.Slider -> {
+                    EventItemParameter.Slider(
+                        id = p.id,
+                        regId = p.regId,
+                        title = p.title,
+                        type = ParameterType.SLIDER,
+                        value = p.value,
+                        lowest = p.lowestValue,
+                        highest = p.highestValue
+                    )
+                }
+                else -> {
+                    // todo binary and location not implemented yet
+                    throw NotImplementedError("Binary and Location not implemented yet: $p")
+                }
             }
         }
-
-        val list = arrayListOf(noteEntry)
-        list.addAll(temList)
-        return list
     }
 
     fun addRegistration(registration: Registration, registrationId: (Long) -> Unit) {

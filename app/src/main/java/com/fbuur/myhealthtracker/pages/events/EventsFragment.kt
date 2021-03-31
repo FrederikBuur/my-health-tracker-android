@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.RegistrationViewModel
+import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.data.model.Template
@@ -115,7 +116,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     private val onQuickRegisterNoteClicked: () -> Unit = {
-        // create note
         val registration = Registration(
             id = 0,
             temId = -1,
@@ -123,18 +123,49 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             type = RegistrationType.NOTE
         )
         registrationViewModel.addRegistration(registration) { regId ->
-            // todo add empty note parameter
+            registrationViewModel.addParameter(
+                Parameter.Note(
+                    regId = regId,
+                    title = "Note",
+                    description = "Placeholder text" // todo don't set this or make a popup
+                )
+            )
         }
 
     }
 
     private val onAddParameterClicked: (Long, Long) -> Unit = { regId, temId ->
-        // open add parameter fragment and pass to id's
         val action = EventsFragmentDirections.actionEventsFragmentToAddParametersFragment(
             regId, temId
         )
         findNavController().navigate(action)
     }
+
+    private val onCreateNewEventClicked: () -> Unit = {
+        val name = binding.createEventView.inputCreateEvent.text.toString()
+        if (name.isNotBlank()) {
+            val template = Template(
+                id = 0,
+                name = name,
+                lastUsed = Date(),
+                color = genColorForTemplate()
+            )
+            registrationViewModel.addTemplate(template) { temId ->
+                val registration = Registration(
+                    id = 0,
+                    temId = temId,
+                    date = Date(),
+                    type = RegistrationType.EVENT
+                )
+                registrationViewModel.addRegistration(registration) { regId ->
+                    // don't do anything, no parameters should be attached
+                }
+            }
+            binding.createEventView.inputCreateEvent.text?.clear()
+            hideKeyboard()
+        }
+    }
+
 
     private val onSwipeListener =
         ItemTouchHelper(object : SwipeToDeleteCallback() {
@@ -144,31 +175,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 registrationViewModel.deleteRegistrationById(id)
             }
         })
-
-    private fun onCreateNewEventClicked() {
-        val name = binding.createEventView.inputCreateEvent.text.toString()
-        if (name.isBlank()) return
-
-        val template = Template(
-            id = 0,
-            name = name,
-            lastUsed = Date(),
-            color = genColorForTemplate()
-        )
-        registrationViewModel.addTemplate(template) { temId ->
-            val registration = Registration(
-                id = 0,
-                temId = temId,
-                date = Date(),
-                type = RegistrationType.EVENT
-            )
-            registrationViewModel.addRegistration(registration) { regId ->
-                // don't do anything, no parameters should be attached
-            }
-        }
-        binding.createEventView.inputCreateEvent.text?.clear()
-        hideKeyboard()
-    }
 
     private fun setupInputListener() {
         binding.createEventView.apply {

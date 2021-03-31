@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 
 class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
+
 
     // live data
     val readAllRegistrationsLD: LiveData<List<Registration>> =
@@ -17,6 +19,17 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     // suspend read
     suspend fun readAllRegistrations() =
         registrationDAO.readAllRegistrations()
+
+    suspend fun readAllParametersByRegId(regId: Long): List<Parameter> {
+        val notes = registrationDAO.readAllNoteByRegId(regId)
+        val sliders = registrationDAO.readAllSliderByRegId(regId)
+
+        val parameterList = ArrayList<Parameter>()
+        parameterList.addAll(notes)
+        parameterList.addAll(sliders)
+
+        return parameterList.toList()
+    }
 
     suspend fun readAllTemplates() =
         registrationDAO.readAllTemplates()

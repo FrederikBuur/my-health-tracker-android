@@ -35,5 +35,8 @@
         <argument
             android:name="temId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_addParametersFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment" />
     </fragment>
 </navigation>

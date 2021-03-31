@@ -56,9 +56,9 @@ class AddParametersAdapter(
             ParameterType.LOCATION -> {
                 R.drawable.ic_location
             }
-            else -> {
-                android.R.drawable.stat_notify_error
-            }
+//            else -> {
+//                android.R.drawable.stat_notify_error
+//            }
         }
 
 }
