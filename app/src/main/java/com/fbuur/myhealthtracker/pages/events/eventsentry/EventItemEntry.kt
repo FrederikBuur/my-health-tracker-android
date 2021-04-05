@@ -11,6 +11,7 @@ data class EventItemEntry(
     val iconColor: String,
     val type: RegistrationType,
     val eventParameterList: List<EventItemParameter>,
+    var isExpanded: Boolean = false
 )
 
 sealed class EventItemParameter(

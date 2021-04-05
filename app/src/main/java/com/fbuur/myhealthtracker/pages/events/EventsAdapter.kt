@@ -28,13 +28,15 @@ class EventsListAdapter(
                 ItemEventBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
-                    false)
+                    false
+                )
             )
             RegistrationType.NOTE.ordinal -> NoteViewHolder(
                 ItemNoteBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
-                    false)
+                    false
+                )
             )
             else -> {
                 throw Exception("event list adapter: unknown view type")
@@ -47,7 +49,7 @@ class EventsListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val event = eventsList[position]
 
-        when(holder.itemViewType) {
+        when (holder.itemViewType) {
             RegistrationType.NOTE.ordinal -> {
                 (holder as NoteViewHolder).bind(
                     event
@@ -82,19 +84,19 @@ class EventViewHolder(
     private val itemBinding: ItemEventBinding
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
-    private var isExpanded = false
-
     fun bind(
         eventItemEntry: EventItemEntry,
         onAddParameterClicked: (Long, Long) -> Unit
     ) {
         itemBinding.apply {
+            expansionCollapseView(eventItemEntry.isExpanded)
             eventName.text = eventItemEntry.name
             eventDate.text = eventItemEntry.date.toDateString()
             eventIcon.setCardBackgroundColor(Color.parseColor(eventItemEntry.iconColor))
             eventIconInitials.text = eventItemEntry.name.getInitials()
             eventItemContainer.setOnClickListener {
-                expansionCollapseView()
+                eventItemEntry.isExpanded = !eventItemEntry.isExpanded
+                expansionCollapseView(eventItemEntry.isExpanded)
             }
             addParametersButton.setOnClickListener {
                 val ids = eventItemEntry.id.split(':')
@@ -103,13 +105,11 @@ class EventViewHolder(
         }
     }
 
-    private fun expansionCollapseView() {
+    private fun expansionCollapseView(isExpanded: Boolean) {
         if (isExpanded) {
-            isExpanded = !isExpanded
-            itemBinding.eventItemContainer.transitionToStart()
-        } else {
-            isExpanded = !isExpanded
             itemBinding.eventItemContainer.transitionToEnd()
+        } else {
+            itemBinding.eventItemContainer.transitionToStart()
         }
     }
 }
@@ -119,7 +119,8 @@ class NoteViewHolder(
 ) : RecyclerView.ViewHolder(itemBinding.root) {
     fun bind(eventItemEntry: EventItemEntry) {
 
-        val text = (eventItemEntry.eventParameterList.firstOrNull() as? EventItemParameter.Note)?.description
+        val text =
+            (eventItemEntry.eventParameterList.firstOrNull() as? EventItemParameter.Note)?.description
 
         itemBinding.apply {
             eventName.text = eventItemEntry.name
