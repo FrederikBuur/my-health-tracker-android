@@ -9,16 +9,18 @@ import com.fbuur.myhealthtracker.data.model.Template
 @Dao
 interface RegistrationDAO {
 
+    // insert
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addRegistration(registration: Registration): Long
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTemplate(template: Template): Long
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addParameterNote(parameter: Parameter.Note): Long
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addParameterSlider(parameter: Parameter.Slider): Long
 
+    // read
     @Query("SELECT * FROM registration ORDER BY date DESC")
     fun readAllRegistrationsLD(): LiveData<List<Registration>>
     @Query("SELECT * FROM template ORDER BY lastUsed DESC LIMIT 15")
@@ -36,12 +38,24 @@ interface RegistrationDAO {
     @Query("SELECT * FROM note WHERE regId=:regId")
     suspend fun readAllNoteByRegId(regId: Long): List<Parameter.Note>
 
+    // update
     @Update
     suspend fun updateTemplate(template: Template)
 
+    @Update
+    suspend fun updateParameterNote(note: Parameter.Note)
+    @Update
+    suspend fun updateParameterSlider(slider: Parameter.Slider)
+
+    // delete
     @Query("DELETE FROM template WHERE id= :id")
     suspend fun deleteTemplateById(id: Long)
     @Query("DELETE FROM registration WHERE id= :id")
     suspend fun deleteRegistrationById(id: Long)
+
+    @Query("DELETE FROM note WHERE id= :id")
+    suspend fun deleteParameterNote(id: Long)
+    @Query("DELETE FROM slider WHERE id= :id")
+    suspend fun deleteParameterSlider(id: Long)
 
 }
