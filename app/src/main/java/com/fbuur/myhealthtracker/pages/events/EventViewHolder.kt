@@ -14,8 +14,8 @@ import com.fbuur.myhealthtracker.util.toDateString
 
 class EventViewHolder(
     private val itemBinding: ItemEventBinding,
-    private val parameterNoteBinding: ItemParameterNoteBinding,
-    private val parameterSliderBinding: ItemParameterSliderBinding,
+    private val onCreateParameterNoteBinding: () -> ItemParameterNoteBinding,
+    private val onCreateParameterSliderBinding: () ->ItemParameterSliderBinding,
     private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
@@ -47,10 +47,10 @@ class EventViewHolder(
 
                 val view = when (p) {
                     is EventItemParameter.Note -> {
-                        setupAsNote(p, this@EventViewHolder.parameterNoteBinding)
+                        setupAsNote(p, this@EventViewHolder.onCreateParameterNoteBinding())
                     }
                     is EventItemParameter.Slider -> {
-                        setupAsSlider(p, this@EventViewHolder.parameterSliderBinding)
+                        setupAsSlider(p, this@EventViewHolder.onCreateParameterSliderBinding())
                     }
                 }
                 itemBinding.eventParameters.addView(view)

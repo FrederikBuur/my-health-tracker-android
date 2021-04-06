@@ -36,16 +36,20 @@ class EventsListAdapter(
                         parent,
                         false
                     ),
-                    parameterNoteBinding = ItemParameterNoteBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    ),
-                    parameterSliderBinding = ItemParameterSliderBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    ),
+                    onCreateParameterNoteBinding = {
+                        ItemParameterNoteBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                        )
+                    },
+                    onCreateParameterSliderBinding = {
+                        ItemParameterSliderBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                        )
+                    },
                     onRemoveParameterClicked = onRemoveParameterClicked
                 )
             }
