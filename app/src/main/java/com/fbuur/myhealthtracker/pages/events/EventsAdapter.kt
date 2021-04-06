@@ -1,19 +1,16 @@
 package com.fbuur.myhealthtracker.pages.events
 
-import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.databinding.ItemEventBinding
 import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
-import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemAdapter
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.util.DiffUtilEventItems
