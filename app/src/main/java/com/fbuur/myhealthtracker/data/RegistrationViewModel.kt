@@ -16,11 +16,21 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     private val repository: RegistrationRepository
 
     val readAllEventItemEntries: LiveData<List<EventItemEntry>>
+//    get() {
+//        return _readAllEventItemEntries
+//    }
     val readAllQuickRegisterEntries: LiveData<List<QuickRegisterEntry>>
+
+//    private val _readAllEventItemEntries = MutableLiveData<List<EventItemEntry>>()
+//    private val _readAllQuickRegisterEntries = MutableLiveData<List<QuickRegisterEntry>>()
+
 
     init {
         val registrationDao = TrackingDatabase.getTrackingDatabase(application).registrationDao()
         repository = RegistrationRepository(registrationDao)
+
+//        _readAllEventItemEntries.value = setupEventItemEntryLiveData()
+//        _readAllQuickRegisterEntries.value = setupQuickRegisterEntryLiveData()
 
         readAllEventItemEntries = setupEventItemEntryLiveData()
         readAllQuickRegisterEntries = setupQuickRegisterEntryLiveData()
@@ -30,7 +40,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     //    https://developer.android.com/topic/libraries/architecture/coroutines#livedata
     //    https://medium.com/androiddevelopers/livedata-with-coroutines-and-flow-part-ii-launching-coroutines-with-architecture-components-337909f37ae7
     private fun setupEventItemEntryLiveData() =
-        repository.readAllRegistrationsLD.switchMap { registrations ->
+        Transformations.switchMap(repository.readAllRegistrationsLD) { registrations ->
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 val templates = repository.readAllTemplates()
                 emit(mapToEventItemEntities(registrations, templates))
@@ -74,7 +84,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                 is Parameter.Note -> {
                     EventItemParameter.Note(
                         id = p.id,
-                        regId =  p.regId,
+                        regId = p.regId,
                         title = p.title,
                         type = ParameterType.NOTE,
                         description = p.description
@@ -114,6 +124,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     fun addParameter(parameter: Parameter) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addParameter(parameter)
+            repository.updateRegistrationLastUsedDate(parameter.regId)
         }
     }
 
@@ -157,9 +168,10 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun deleteParameterById(id: Long, type: ParameterType) {
+    fun deleteParameterById(id: Long, regId: Long, type: ParameterType) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteParameterById(id, type)
+            repository.updateRegistrationLastUsedDate(regId)
         }
     }
 

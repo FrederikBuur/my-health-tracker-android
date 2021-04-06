@@ -16,7 +16,7 @@ class EventViewHolder(
     private val itemBinding: ItemEventBinding,
     private val parameterNoteBinding: ItemParameterNoteBinding,
     private val parameterSliderBinding: ItemParameterSliderBinding,
-    private val onRemoveParameterClicked: (Long, ParameterType) -> Unit
+    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     fun bind(
@@ -77,7 +77,7 @@ class EventViewHolder(
                 parameterHeader.text = note.title
                 parameterNoteText.setText(note.description)
                 removeParameterIcon.setOnClickListener {
-                    onRemoveParameterClicked(note.id, note.type)
+                    onRemoveParameterClicked(note.id, note.regId, note.type)
                 }
             }.root
     }
@@ -93,7 +93,7 @@ class EventViewHolder(
                 parameterSlider.valueFrom = slider.lowest.toFloat()
                 parameterSlider.valueTo = slider.highest.toFloat()
                 removeParameterIcon.setOnClickListener {
-                    onRemoveParameterClicked(slider.id, slider.type)
+                    onRemoveParameterClicked(slider.id, slider.regId, slider.type)
                 }
 //                parameterSlider.addOnChangeListener { slider, value, fromUser ->
 //                    if (fromUser) {

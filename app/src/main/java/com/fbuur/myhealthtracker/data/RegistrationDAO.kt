@@ -30,8 +30,11 @@ interface RegistrationDAO {
     suspend fun readAllRegistrations(): List<Registration>
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
     suspend fun readAllTemplates(): List<Template>
+
     @Query("SELECT * FROM template WHERE id=:id")
     suspend fun readTemplateById(id: Long): Template
+    @Query("SELECT * FROM registration WHERE id=:id")
+    suspend fun readRegistrationById(id: Long): Registration
 
     @Query("SELECT * FROM slider WHERE regId=:regId")
     suspend fun readAllSliderByRegId(regId: Long): List<Parameter.Slider>
@@ -41,6 +44,8 @@ interface RegistrationDAO {
     // update
     @Update
     suspend fun updateTemplate(template: Template)
+    @Update
+    suspend fun updateRegistration(registration: Registration)
 
     @Update
     suspend fun updateParameterNote(note: Parameter.Note)

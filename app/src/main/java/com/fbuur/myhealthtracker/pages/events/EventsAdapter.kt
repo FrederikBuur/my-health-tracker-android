@@ -20,7 +20,7 @@ import com.fbuur.myhealthtracker.util.toDateString
 
 class EventsListAdapter(
     private val onAddParameterClicked: (Long, Long) -> Unit,
-    private val onRemoveParameterClicked: (Long, ParameterType) -> Unit
+    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()

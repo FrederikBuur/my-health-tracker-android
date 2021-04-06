@@ -101,7 +101,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 id = 0,
                 temId = temId,
                 date = Date(),
-                type = RegistrationType.EVENT
+                type = RegistrationType.EVENT,
+                lastModified = Date()
             )
         ) { regId ->
             // todo find and add parameters according to the template
@@ -118,7 +119,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             id = 0,
             temId = -1,
             date = Date(),
-            type = RegistrationType.NOTE
+            type = RegistrationType.NOTE,
+            lastModified = Date()
         )
         registrationViewModel.addRegistration(registration) { regId ->
             registrationViewModel.addParameter(
@@ -153,7 +155,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     id = 0,
                     temId = temId,
                     date = Date(),
-                    type = RegistrationType.EVENT
+                    type = RegistrationType.EVENT,
+                    lastModified = Date()
                 )
                 registrationViewModel.addRegistration(registration) { regId ->
                     // don't do anything, no parameters should be attached
@@ -164,8 +167,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
-    private val onRemoveParameterClicked: (Long, ParameterType) -> Unit = { parameterId, type ->
-        registrationViewModel.deleteParameterById(parameterId, type)
+    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit = { parameterId, regId, type ->
+        registrationViewModel.deleteParameterById(parameterId, regId, type)
     }
 
     private val onSwipeListener =

@@ -17,7 +17,8 @@ data class Registration(
     val id: Long,
     val temId: Long,
     val date: Date,
-    val type: RegistrationType
+    val type: RegistrationType,
+    val lastModified: Date
 )
 
 enum class RegistrationType {

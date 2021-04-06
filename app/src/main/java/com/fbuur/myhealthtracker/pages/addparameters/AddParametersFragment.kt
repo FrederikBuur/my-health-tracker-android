@@ -114,7 +114,6 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
             parameter?.let {
                 registrationViewModel.addParameter(it)
             }
-
         }
     }
 

@@ -5,7 +5,8 @@ import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
-import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
 
@@ -41,6 +42,19 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     // suspend update
     suspend fun updateTemplate(template: Template) =
         registrationDAO.updateTemplate(template)
+
+    suspend fun updateRegistrationLastUsedDate(regId: Long) =
+        registrationDAO.readRegistrationById(regId).let {
+            registrationDAO.updateRegistration(
+                Registration(
+                    id = it.id,
+                    temId = it.temId,
+                    date = it.date,
+                    type = it.type,
+                    lastModified = Date()
+                )
+            )
+        }
 
     // suspend delete
     suspend fun deleteTemplateById(id: Long) =
