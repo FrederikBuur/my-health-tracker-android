@@ -30,7 +30,7 @@ class EventViewHolder(
             eventIcon.setCardBackgroundColor(Color.parseColor(eventItemEntry.iconColor))
             eventIconInitials.text = eventItemEntry.name.getInitials()
 
-            eventItemContainer.setOnClickListener {
+            collapsedContainer.setOnClickListener {
                 eventItemEntry.isExpanded = !eventItemEntry.isExpanded
                 expansionCollapseView(eventItemEntry.isExpanded)
             }

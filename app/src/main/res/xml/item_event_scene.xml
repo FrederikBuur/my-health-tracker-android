@@ -41,6 +41,15 @@
             motion:layout_constraintBottom_toTopOf="@id/view"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/eventIcon"/>
+            motion:layout_constraintTop_toBottomOf="@id/eventIcon" />
+        <Constraint
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="0dp"
+            android:alpha="0.8"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 </MotionScene>
