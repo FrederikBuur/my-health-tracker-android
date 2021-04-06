@@ -13,10 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.RegistrationViewModel
-import com.fbuur.myhealthtracker.data.model.Parameter
-import com.fbuur.myhealthtracker.data.model.Registration
-import com.fbuur.myhealthtracker.data.model.RegistrationType
-import com.fbuur.myhealthtracker.data.model.Template
+import com.fbuur.myhealthtracker.data.model.*
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
@@ -55,7 +52,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         setupInputListener()
 
         val eventsAdapter = EventsListAdapter(
-            onAddParameterClicked
+            onAddParameterClicked,
+            onRemoveParameterClicked
         )
         val quickRegisterAdapter = QuickRegisterAdapter(
             onQuickRegisterClicked,
@@ -166,6 +164,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
+    private val onRemoveParameterClicked: (Long, ParameterType) -> Unit = { parameterId, type ->
+        registrationViewModel.deleteParameterById(parameterId, type)
+    }
 
     private val onSwipeListener =
         ItemTouchHelper(object : SwipeToDeleteCallback() {

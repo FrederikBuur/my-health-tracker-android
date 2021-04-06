@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.databinding.ItemEventBinding
 import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
@@ -18,7 +19,8 @@ import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
 
 class EventsListAdapter(
-    private val onAddParameterClicked: (Long, Long) -> Unit
+    private val onAddParameterClicked: (Long, Long) -> Unit,
+    private val onRemoveParameterClicked: (Long, ParameterType) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
@@ -43,7 +45,8 @@ class EventsListAdapter(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
-                    )
+                    ),
+                    onRemoveParameterClicked = onRemoveParameterClicked
                 )
             }
             RegistrationType.NOTE.ordinal -> NoteViewHolder(

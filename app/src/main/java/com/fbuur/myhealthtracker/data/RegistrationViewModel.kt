@@ -157,6 +157,12 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun deleteParameterById(id: Long, type: ParameterType) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteParameterById(id, type)
+        }
+    }
+
     companion object {
         const val QUICK_REGISTER_NOTE = "quick_register_note"
     }

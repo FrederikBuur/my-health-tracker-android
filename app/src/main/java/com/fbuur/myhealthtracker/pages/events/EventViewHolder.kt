@@ -3,6 +3,7 @@ package com.fbuur.myhealthtracker.pages.events
 import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.databinding.ItemEventBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
@@ -14,7 +15,8 @@ import com.fbuur.myhealthtracker.util.toDateString
 class EventViewHolder(
     private val itemBinding: ItemEventBinding,
     private val parameterNoteBinding: ItemParameterNoteBinding,
-    private val parameterSliderBinding: ItemParameterSliderBinding
+    private val parameterSliderBinding: ItemParameterSliderBinding,
+    private val onRemoveParameterClicked: (Long, ParameterType) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     fun bind(
@@ -27,6 +29,7 @@ class EventViewHolder(
             eventDate.text = eventItemEntry.date.toDateString()
             eventIcon.setCardBackgroundColor(Color.parseColor(eventItemEntry.iconColor))
             eventIconInitials.text = eventItemEntry.name.getInitials()
+
             eventItemContainer.setOnClickListener {
                 eventItemEntry.isExpanded = !eventItemEntry.isExpanded
                 expansionCollapseView(eventItemEntry.isExpanded)
@@ -73,6 +76,9 @@ class EventViewHolder(
             .apply {
                 parameterHeader.text = note.title
                 parameterNoteText.setText(note.description)
+                removeParameterIcon.setOnClickListener {
+                    onRemoveParameterClicked(note.id, note.type)
+                }
             }.root
     }
 
@@ -86,6 +92,9 @@ class EventViewHolder(
                 parameterSlider.value = slider.value.toFloat()
                 parameterSlider.valueFrom = slider.lowest.toFloat()
                 parameterSlider.valueTo = slider.highest.toFloat()
+                removeParameterIcon.setOnClickListener {
+                    onRemoveParameterClicked(slider.id, slider.type)
+                }
 //                parameterSlider.addOnChangeListener { slider, value, fromUser ->
 //                    if (fromUser) {
 //                        // update slider value in DB

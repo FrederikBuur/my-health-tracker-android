@@ -2,6 +2,7 @@ package com.fbuur.myhealthtracker.data
 
 import androidx.lifecycle.LiveData
 import com.fbuur.myhealthtracker.data.model.Parameter
+import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
@@ -47,6 +48,14 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
 
     suspend fun deleteRegistrationById(id: Long) =
         registrationDAO.deleteRegistrationById(id)
+
+    suspend fun deleteParameterById(id: Long, type: ParameterType) =
+        when(type) {
+            ParameterType.SLIDER -> registrationDAO.deleteParameterSlider(id)
+            ParameterType.NOTE -> registrationDAO.deleteParameterNote(id)
+            ParameterType.LOCATION -> throw NotImplementedError("location not added")
+            ParameterType.BINARY -> throw NotImplementedError("binary not added")
+        }
 
     // suspend write
     suspend fun addRegistration(registration: Registration) =
