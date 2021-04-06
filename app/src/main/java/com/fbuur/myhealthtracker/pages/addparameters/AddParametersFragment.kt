@@ -73,13 +73,13 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
             binding.addParametersButton.setOnClickListener {
                 // todo add parameter types to template
 
-                // todo add empty parameters to registration
+                // add empty parameters to registration
                 addParameters(
                     parametersList.filter { p ->
                         p.selected
                     }
                 )
-                findNavController().navigate(R.id.action_addParametersFragment_to_eventsFragment)
+                findNavController().popBackStack()
             }
         }
 
