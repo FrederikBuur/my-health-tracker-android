@@ -15,8 +15,11 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
 
     private val repository: RegistrationRepository
 
+    var eventList = emptyList<EventItemEntry>()
+
     val readAllEventItemEntries: LiveData<List<EventItemEntry>>
-//    get() {
+
+    //    get() {
 //        return _readAllEventItemEntries
 //    }
     val readAllQuickRegisterEntries: LiveData<List<QuickRegisterEntry>>
@@ -43,7 +46,9 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         Transformations.switchMap(repository.readAllRegistrationsLD) { registrations ->
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 val templates = repository.readAllTemplates()
-                emit(mapToEventItemEntities(registrations, templates))
+                val newList = mapToEventItemEntities(registrations, templates)
+                this@RegistrationViewModel.eventList = newList
+                emit(newList)
             }
         }
 
@@ -68,13 +73,19 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                         repository.readAllParametersByRegId(
                             registration.id
                         )
-                    )
+                    ),
+                    isExpanded = shouldEventBeExpanded("${registration.id}:${t.id}")
                 )
             } ?: run {
                 throw Exception(" test123 cant find template id: ${registration.temId}, for registration id: ${registration.id}")
             }
         }
     }
+
+    private fun shouldEventBeExpanded(eventId: String) =
+        this.eventList.singleOrNull { e -> e.id == eventId }?.isExpanded ?: kotlin.run {
+            false
+        }
 
     private fun mapToEventParameterList(
         paramList: List<Parameter>

@@ -1,8 +1,6 @@
 package com.fbuur.myhealthtracker.pages.events
 
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +11,7 @@ import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
-import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.util.DiffUtilEventItems
-import com.fbuur.myhealthtracker.util.getInitials
-import com.fbuur.myhealthtracker.util.toDateString
 
 class EventsListAdapter(
     private val onAddParameterClicked: (Long, Long) -> Unit,
