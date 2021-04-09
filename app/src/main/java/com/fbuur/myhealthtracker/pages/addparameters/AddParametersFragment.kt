@@ -92,7 +92,7 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
                     Parameter.Note(
                         regId = this.args.regId,
                         title = "Note",
-                        description = "Placeholder note text"
+                        description = ""
                     )
                 }
                 ParameterType.SLIDER -> {

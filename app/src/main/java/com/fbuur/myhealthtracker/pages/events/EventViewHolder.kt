@@ -1,6 +1,8 @@
 package com.fbuur.myhealthtracker.pages.events
 
+import android.content.Context
 import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.data.model.ParameterType
@@ -11,17 +13,20 @@ import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
+import com.google.android.material.slider.Slider
 
 class EventViewHolder(
     private val itemBinding: ItemEventBinding,
     private val onCreateParameterNoteBinding: () -> ItemParameterNoteBinding,
-    private val onCreateParameterSliderBinding: () ->ItemParameterSliderBinding,
+    private val onCreateParameterSliderBinding: () -> ItemParameterSliderBinding,
     private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     fun bind(
         eventItemEntry: EventItemEntry,
-        onAddParameterClicked: (Long, Long) -> Unit
+        onAddParameterClicked: (Long, Long) -> Unit,
+        onParameterChanged: (EventItemParameter) -> Unit,
+        onParameterNoteClicked: (EventItemParameter.Note) -> Unit
     ) {
         itemBinding.apply {
             expansionCollapseView(eventItemEntry.isExpanded)
@@ -47,14 +52,21 @@ class EventViewHolder(
 
                 val view = when (p) {
                     is EventItemParameter.Note -> {
-                        setupAsNote(p, this@EventViewHolder.onCreateParameterNoteBinding())
+                        setupAsNote(
+                            p,
+                            this@EventViewHolder.onCreateParameterNoteBinding(),
+                            onParameterNoteClicked
+                        )
                     }
                     is EventItemParameter.Slider -> {
-                        setupAsSlider(p, this@EventViewHolder.onCreateParameterSliderBinding())
+                        setupAsSlider(
+                            p,
+                            this@EventViewHolder.onCreateParameterSliderBinding(),
+                            onParameterChanged
+                        )
                     }
                 }
                 itemBinding.eventParameters.addView(view)
-
             }
 
         }
@@ -70,21 +82,29 @@ class EventViewHolder(
 
     private fun setupAsNote(
         note: EventItemParameter.Note,
-        binding: ItemParameterNoteBinding
+        binding: ItemParameterNoteBinding,
+        onParameterNoteClicked: (EventItemParameter.Note) -> Unit
     ): View {
-        return binding
-            .apply {
+//        val b = ItemParameterNoteBinding.inflate( todo user this inflater instead of a lambda
+//            this.itemBinding.root.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
+//                    as LayoutInflater
+//        )
+        return binding.apply {
                 parameterHeader.text = note.title
-                parameterNoteText.setText(note.description)
+                parameterNoteText.text = note.description
                 removeParameterIcon.setOnClickListener {
                     onRemoveParameterClicked(note.id, note.regId, note.type)
+                }
+                parameterNoteText.setOnClickListener {
+                    onParameterNoteClicked(note)
                 }
             }.root
     }
 
     private fun setupAsSlider(
         slider: EventItemParameter.Slider,
-        binding: ItemParameterSliderBinding
+        binding: ItemParameterSliderBinding,
+        onParameterChanged: (EventItemParameter) -> Unit
     ): View {
         return binding
             .apply {
@@ -95,12 +115,30 @@ class EventViewHolder(
                 removeParameterIcon.setOnClickListener {
                     onRemoveParameterClicked(slider.id, slider.regId, slider.type)
                 }
-//                parameterSlider.addOnChangeListener { slider, value, fromUser ->
+//                parameterSlider.addOnChangeListener { s, value, fromUser ->
 //                    if (fromUser) {
 //                        // update slider value in DB
-//                        value
+//                        val temp = slider.copy(value = value.toInt())
+//                        onParameterChanged(temp)
 //                    }
 //                }
+
+                parameterSlider.addOnSliderTouchListener(
+                    object : Slider.OnSliderTouchListener {
+                        override fun onStartTrackingTouch(s: Slider) {
+                            // nothing should happen
+                            s
+                        }
+
+                        override fun onStopTrackingTouch(s: Slider) {
+                            val temp = slider.copy(value = s.value.toInt())
+                            onParameterChanged(temp)
+                        }
+
+                    }
+
+                )
+
             }.root
     }
 

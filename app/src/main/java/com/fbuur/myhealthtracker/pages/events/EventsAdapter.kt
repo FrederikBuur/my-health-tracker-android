@@ -11,11 +11,14 @@ import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.util.DiffUtilEventItems
 
 class EventsListAdapter(
     private val onAddParameterClicked: (Long, Long) -> Unit,
-    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
+    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit,
+    private val onParameterChanged: (EventItemParameter) -> Unit,
+    private val onParameterNoteClicked: (EventItemParameter.Note) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
@@ -69,13 +72,16 @@ class EventsListAdapter(
         when (holder.itemViewType) {
             RegistrationType.NOTE.ordinal -> {
                 (holder as NoteViewHolder).bind(
-                    event
+                    event,
+                    onParameterChanged
                 )
             }
             RegistrationType.EVENT.ordinal -> {
                 (holder as EventViewHolder).bind(
                     event,
-                    onAddParameterClicked
+                    onAddParameterClicked,
+                    onParameterChanged,
+                    onParameterNoteClicked
                 )
             }
         }

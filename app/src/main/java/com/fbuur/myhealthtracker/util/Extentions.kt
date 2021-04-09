@@ -2,12 +2,15 @@ package com.fbuur.myhealthtracker.util
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
+val Number.dpToPx: Float get() = (toFloat() * Resources.getSystem().displayMetrics.density)
 
 fun Date.toDateString(): String {
     val dateFormat: DateFormat = SimpleDateFormat("dd. MMMM hh:mm", Locale.getDefault())

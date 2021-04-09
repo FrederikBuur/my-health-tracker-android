@@ -27,8 +27,8 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
         val sliders = registrationDAO.readAllSliderByRegId(regId)
 
         val parameterList = ArrayList<Parameter>()
-        parameterList.addAll(notes)
         parameterList.addAll(sliders)
+        parameterList.addAll(notes)
 
         return parameterList.toList()
     }
@@ -54,6 +54,19 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
                     lastModified = Date()
                 )
             )
+        }
+
+    suspend fun updateParameter(parameter: Parameter) =
+        when (parameter) {
+            is Parameter.Note -> {
+                registrationDAO.updateParameterNote(parameter)
+            }
+            is Parameter.Slider -> {
+                registrationDAO.updateParameterSlider(parameter)
+            }
+            else -> {
+                throw NotImplementedError("parameter type not implemented: $parameter")
+            }
         }
 
     // suspend delete

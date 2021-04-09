@@ -43,9 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textSize="11sp"
+                app:layout_constraintBottom_toBottomOf="@id/eventName"
                 app:layout_constraintStart_toEndOf="@id/eventName"
                 app:layout_constraintTop_toTopOf="@id/eventName"
-                app:layout_constraintBottom_toBottomOf="@id/eventName"
                 tools:text="27. feb." />
 
             <TextView
@@ -56,12 +56,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="12dp"
                 android:fontFamily="sans-serif-medium"
+                android:hint="Press to change text..."
+                android:minHeight="40dp"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventName"
-                tools:text="Today i have been lifting alo of heavy things and been really physically active" />
+                app:layout_constraintTop_toBottomOf="@id/eventName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

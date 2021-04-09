@@ -16,8 +16,10 @@ import com.fbuur.myhealthtracker.data.RegistrationViewModel
 import com.fbuur.myhealthtracker.data.model.*
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
+import com.fbuur.myhealthtracker.util.DialogStyle
 import com.fbuur.myhealthtracker.util.MyDialog
 import com.fbuur.myhealthtracker.util.SwipeToDeleteCallback
 import com.fbuur.myhealthtracker.util.hideKeyboard
@@ -53,7 +55,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         val eventsAdapter = EventsListAdapter(
             onAddParameterClicked,
-            onRemoveParameterClicked
+            onRemoveParameterClicked,
+            onParameterChanged,
+            onParameterNoteClicked
         )
         val quickRegisterAdapter = QuickRegisterAdapter(
             onQuickRegisterClicked,
@@ -127,7 +131,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 Parameter.Note(
                     regId = regId,
                     title = "Note",
-                    description = "Placeholder text" // todo don't set this or make a popup
+                    description = ""
                 )
             )
         }
@@ -171,6 +175,27 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         registrationViewModel.deleteParameterById(parameterId, regId, type)
     }
 
+    private val onParameterNoteClicked: (EventItemParameter.Note) -> Unit = { parameterNote ->
+        MyDialog(
+            text = parameterNote.description,
+            dialogStyle = DialogStyle.NOTE_PARAMETER
+        ) { newText ->
+            if (newText != parameterNote.description &&
+                    newText.isNotBlank()) {
+                        val temp = parameterNote.copy(
+                            description = newText
+                        )
+                registrationViewModel.updateParameter(
+                    temp
+                )
+            }
+        }.show(parentFragmentManager, this.javaClass.toString())
+    }
+
+    private val onParameterChanged: (EventItemParameter) -> Unit = { eventItemParameter ->
+        registrationViewModel.updateParameter(eventItemParameter)
+    }
+
     private val onSwipeListener =
         ItemTouchHelper(object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
@@ -202,7 +227,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val temId = this.quickRegisterIdLongClicked
         when (item.itemId) {
             R.id.rename_template -> {
-                MyDialog { newName ->
+                MyDialog(
+                    dialogStyle = DialogStyle.RENAME
+                ) { newName ->
                     registrationViewModel.updateTemplateName(temId, newName)
                 }.show(parentFragmentManager, this.javaClass.toString())
             }

@@ -1,5 +1,6 @@
 package com.fbuur.myhealthtracker.pages.events.eventsentry
 
+import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import java.util.*
@@ -39,3 +40,23 @@ sealed class EventItemParameter(
     ) : EventItemParameter(id, regId, title, type)
 
 }
+
+fun EventItemParameter.Note.toParameter() : Parameter.Note =
+    Parameter.Note(
+        regId = regId,
+        title = title,
+        description = description
+    ).also {
+        it.id = id
+    }
+
+fun EventItemParameter.Slider.toParameter() : Parameter.Slider =
+    Parameter.Slider(
+        regId = regId,
+        title = title,
+        value = value,
+        lowestValue = lowest,
+        highestValue = highest
+    ).also {
+        it.id = id
+    }

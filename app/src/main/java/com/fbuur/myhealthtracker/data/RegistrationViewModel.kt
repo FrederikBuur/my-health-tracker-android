@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.fbuur.myhealthtracker.data.model.*
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
+import com.fbuur.myhealthtracker.pages.events.eventsentry.toParameter
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
 
     private val repository: RegistrationRepository
 
-    var eventList = emptyList<EventItemEntry>()
+    private var eventList = emptyList<EventItemEntry>()
 
     val readAllEventItemEntries: LiveData<List<EventItemEntry>>
 
@@ -164,6 +165,25 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     color = temp.color
                 )
             )
+        }
+    }
+
+    fun updateParameter(eventItemParameter: EventItemParameter) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateParameter(
+                when(eventItemParameter) {
+                    is EventItemParameter.Note -> {
+                        eventItemParameter.toParameter()
+                    }
+                    is EventItemParameter.Slider -> {
+                        eventItemParameter.toParameter()
+                    }
+                    else -> {
+                        throw NotImplementedError("parameter not implemented: $eventItemParameter")
+                    }
+                }
+            )
+            repository.updateRegistrationLastUsedDate(eventItemParameter.regId)
         }
     }
 

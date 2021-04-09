@@ -9,15 +9,23 @@ import com.fbuur.myhealthtracker.util.toDateString
 class NoteViewHolder(
     private val itemBinding: ItemNoteBinding
 ) : RecyclerView.ViewHolder(itemBinding.root) {
-    fun bind(eventItemEntry: EventItemEntry) {
+    fun bind(
+        eventItemEntry: EventItemEntry,
+        onParameterNoteClicked: (EventItemParameter.Note) -> Unit
+    ) {
 
-        val text =
-            (eventItemEntry.eventParameterList.firstOrNull() as? EventItemParameter.Note)?.description
+        val noteParameter =
+            (eventItemEntry.eventParameterList.firstOrNull() as? EventItemParameter.Note)
 
         itemBinding.apply {
             eventName.text = eventItemEntry.name
             eventDate.text = eventItemEntry.date.toDateString()
-            noteDescription.text = text
+            noteDescription.text = noteParameter?.description
+            noteDescription.setOnClickListener {
+                noteParameter?.let {
+                    onParameterNoteClicked(it)
+                }
+            }
         }
     }
 }
