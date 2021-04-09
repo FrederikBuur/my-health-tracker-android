@@ -57,7 +57,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             onAddParameterClicked,
             onRemoveParameterClicked,
             onParameterChanged,
-            onParameterNoteClicked
+            onParameterNoteClicked,
+            onParameterTitleRenameClicked
         )
         val quickRegisterAdapter = QuickRegisterAdapter(
             onQuickRegisterClicked,
@@ -171,9 +172,10 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
-    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit = { parameterId, regId, type ->
-        registrationViewModel.deleteParameterById(parameterId, regId, type)
-    }
+    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit =
+        { parameterId, regId, type ->
+            registrationViewModel.deleteParameterById(parameterId, regId, type)
+        }
 
     private val onParameterNoteClicked: (EventItemParameter.Note) -> Unit = { parameterNote ->
         MyDialog(
@@ -181,12 +183,36 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             dialogStyle = DialogStyle.NOTE_PARAMETER
         ) { newText ->
             if (newText != parameterNote.description &&
-                    newText.isNotBlank()) {
-                        val temp = parameterNote.copy(
-                            description = newText
-                        )
-                registrationViewModel.updateParameter(
-                    temp
+                newText.isNotBlank()
+            ) {
+                onParameterChanged(
+                    parameterNote.copy(
+                        description = newText
+                    )
+                )
+            }
+        }.show(parentFragmentManager, this.javaClass.toString())
+    }
+
+    private val onParameterTitleRenameClicked: (EventItemParameter) -> Unit = { parameter ->
+        MyDialog(
+            dialogStyle = DialogStyle.RENAME
+        ) { newTitle ->
+            if (newTitle != parameter.title &&
+                newTitle.isNotBlank()
+            ) {
+                onParameterChanged(
+                    when(parameter) {
+                        is EventItemParameter.Note -> {
+                            parameter.copy(title = newTitle)
+                        }
+                        is EventItemParameter.Slider -> {
+                            parameter.copy(title = newTitle)
+                        }
+                        else -> {
+                            throw NotImplementedError("Parameter type not implemented: $parameter")
+                        }
+                    }
                 )
             }
         }.show(parentFragmentManager, this.javaClass.toString())

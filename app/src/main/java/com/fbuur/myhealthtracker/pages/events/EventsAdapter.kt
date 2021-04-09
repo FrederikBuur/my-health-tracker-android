@@ -18,7 +18,8 @@ class EventsListAdapter(
     private val onAddParameterClicked: (Long, Long) -> Unit,
     private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit,
     private val onParameterChanged: (EventItemParameter) -> Unit,
-    private val onParameterNoteClicked: (EventItemParameter.Note) -> Unit
+    private val onParameterNoteClicked: (EventItemParameter.Note) -> Unit,
+    private val onParameterTitleRenameClicked: (EventItemParameter) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
@@ -73,7 +74,7 @@ class EventsListAdapter(
             RegistrationType.NOTE.ordinal -> {
                 (holder as NoteViewHolder).bind(
                     event,
-                    onParameterChanged
+                    onParameterNoteClicked
                 )
             }
             RegistrationType.EVENT.ordinal -> {
@@ -81,7 +82,8 @@ class EventsListAdapter(
                     event,
                     onAddParameterClicked,
                     onParameterChanged,
-                    onParameterNoteClicked
+                    onParameterNoteClicked,
+                    onParameterTitleRenameClicked
                 )
             }
         }
