@@ -28,8 +28,9 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     private fun setup() {
 
-        binding.root.setOnClickListener { v ->
+        binding.root.setOnLongClickListener { v ->
             RoomExplorer.show(context, TrackingDatabase::class.java, "tracking_database")
+            false
         }
 
     }

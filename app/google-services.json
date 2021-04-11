@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "235543740064",
+    "project_id": "healthtracker-df70d",
+    "storage_bucket": "healthtracker-df70d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235543740064:android:323a73b60c5627c10453c5",
+        "android_client_info": {
+          "package_name": "com.fbuur.myhealthtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235543740064-d8lbr9t8u5qgjb22libqeb70to5jcicv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWNAqsPTVqVfZCQ3mouhNezMMXrKmLMhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235543740064-d8lbr9t8u5qgjb22libqeb70to5jcicv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
