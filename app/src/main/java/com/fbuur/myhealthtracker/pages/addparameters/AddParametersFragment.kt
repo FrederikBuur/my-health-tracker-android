@@ -50,12 +50,16 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
                 "A slider can allow you to make a selection from a range of values",
                 ParameterType.SLIDER
             ),
-            AddParameterEntry("Binary", "An either/or type of information", ParameterType.BINARY),
-            AddParameterEntry(
-                "Location",
-                "This will attach a GPS location",
-                ParameterType.LOCATION
-            ),
+//            AddParameterEntry( // todo not supported
+//                "Binary",
+//                "An either/or type of information",
+//                ParameterType.BINARY
+//            ),
+//            AddParameterEntry(
+//                "Location",
+//                "This will attach a GPS location",
+//                ParameterType.LOCATION
+//            ),
         )
 
         context?.let {
