@@ -20,9 +20,9 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/statisticsFragment"
+        android:id="@+id/dataFragment"
         android:name="com.fbuur.myhealthtracker.pages.data.DataFragment"
-        android:label="Statistics"
+        android:label="Data"
         tools:layout="@layout/fragment_data" />
     <fragment
         android:id="@+id/addParametersFragment"

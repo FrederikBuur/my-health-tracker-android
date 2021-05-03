@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.fbuur.myhealthtracker.R
-import com.fbuur.myhealthtracker.data.TrackingDatabase
 import com.fbuur.myhealthtracker.databinding.FragmentDataBinding
-import com.wajahatkarim3.roomexplorer.RoomExplorer
+import com.fbuur.myhealthtracker.pages.data.calendar.CalendarFragment
+import com.fbuur.myhealthtracker.pages.data.calendar.CompareFragment
+import com.fbuur.myhealthtracker.pages.data.calendar.StatisticsFragment
+import com.google.android.material.tabs.TabLayoutMediator
+
 
 class DataFragment : Fragment(R.layout.fragment_data) {
 
@@ -26,6 +30,32 @@ class DataFragment : Fragment(R.layout.fragment_data) {
     }
 
     private fun setup() {
+
+        val fragmentList = arrayListOf(
+            CalendarFragment(),
+            StatisticsFragment(),
+            CompareFragment()
+        )
+
+        val viewPagerAdapter = DataViewPagerAdapter(
+            fragmentList,
+            requireActivity().supportFragmentManager,
+            lifecycle
+        )
+
+        binding.apply {
+            viewPager.adapter = viewPagerAdapter
+
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                tab.text = when (position) {
+                    0 -> "Calendar"
+                    1 -> "Statistics"
+                    2 -> "Compare"
+                    else -> "not supported"
+
+                }
+            }.attach()
+        }
 
     }
 

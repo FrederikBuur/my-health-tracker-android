@@ -2,10 +2,6 @@ package com.fbuur.myhealthtracker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Interpolator
-import android.view.animation.TranslateAnimation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,7 +9,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.fbuur.myhealthtracker.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,9 +27,11 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.eventsFragment,
-                R.id.statisticsFragment
+                R.id.dataFragment
             )
         )
+
+//        supportActionBar?.hide()
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)

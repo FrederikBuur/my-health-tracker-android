@@ -7,8 +7,8 @@
         android:title="Events" />
 
     <item
-        android:id="@id/statisticsFragment"
+        android:id="@id/dataFragment"
         android:icon="@drawable/ic_statistics"
-        android:title="Statistics" />
+        android:title="Data" />
 
 </menu>

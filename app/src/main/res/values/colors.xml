@@ -21,7 +21,6 @@
 
     <color name="delete">#D80707</color>
 
-
     <color name="quick_register_note_background">#BEB541</color>
     <string-array name="eventColors">
         <item>#C33468</item>
