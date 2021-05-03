@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.RegistrationViewModel
+import com.fbuur.myhealthtracker.data.TrackingDatabase
 import com.fbuur.myhealthtracker.data.model.*
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
@@ -23,6 +24,7 @@ import com.fbuur.myhealthtracker.util.DialogStyle
 import com.fbuur.myhealthtracker.util.MyDialog
 import com.fbuur.myhealthtracker.util.SwipeToDeleteCallback
 import com.fbuur.myhealthtracker.util.hideKeyboard
+import com.wajahatkarim3.roomexplorer.RoomExplorer
 import java.util.*
 
 
@@ -96,6 +98,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         binding.createEventView.createEventBtn.setOnClickListener { v -> onCreateNewEventClicked() }
         binding.eventsRecyclerView.adapter = eventsAdapter
         binding.quickRegister.quickRegisterRecyclerView.adapter = quickRegisterAdapter
+
+        // debugging
+        binding.quickRegister.quickRegisterTitle.setOnLongClickListener { v ->
+            RoomExplorer.show(context, TrackingDatabase::class.java, "tracking_database")
+            false
+        }
 
         onSwipeListener.attachToRecyclerView(binding.eventsRecyclerView)
     }

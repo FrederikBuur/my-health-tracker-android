@@ -21,9 +21,9 @@
     </fragment>
     <fragment
         android:id="@+id/statisticsFragment"
-        android:name="com.fbuur.myhealthtracker.pages.statistics.StatisticsFragment"
+        android:name="com.fbuur.myhealthtracker.pages.data.DataFragment"
         android:label="Statistics"
-        tools:layout="@layout/fragment_statistics" />
+        tools:layout="@layout/fragment_data" />
     <fragment
         android:id="@+id/addParametersFragment"
         android:name="com.fbuur.myhealthtracker.pages.addparameters.AddParametersFragment"
