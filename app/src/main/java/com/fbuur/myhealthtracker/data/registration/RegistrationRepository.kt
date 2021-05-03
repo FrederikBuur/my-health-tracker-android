@@ -1,4 +1,4 @@
-package com.fbuur.myhealthtracker.data
+package com.fbuur.myhealthtracker.data.registration
 
 import androidx.lifecycle.LiveData
 import com.fbuur.myhealthtracker.data.model.Parameter
@@ -21,6 +21,9 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     // suspend read
     suspend fun readAllRegistrations() =
         registrationDAO.readAllRegistrations()
+
+    suspend fun readRegistrationByMonth(fromDate: Long, toDate: Long) =
+        registrationDAO.readRegistrationByMonth(fromDate, toDate)
 
     suspend fun readAllParametersByRegId(regId: Long): List<Parameter> {
         val notes = registrationDAO.readAllNoteByRegId(regId)

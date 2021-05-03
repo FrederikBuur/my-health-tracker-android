@@ -1,10 +1,8 @@
-package com.fbuur.myhealthtracker.data
+package com.fbuur.myhealthtracker.data.registration
 
 import androidx.room.TypeConverter
-import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.RegistrationType
-import com.google.gson.Gson
 import java.util.*
 
 class RegistrationTypeConverters {

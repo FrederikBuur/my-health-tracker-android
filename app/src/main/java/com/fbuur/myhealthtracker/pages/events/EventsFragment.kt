@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.fbuur.myhealthtracker.R
-import com.fbuur.myhealthtracker.data.RegistrationViewModel
 import com.fbuur.myhealthtracker.data.TrackingDatabase
 import com.fbuur.myhealthtracker.data.model.*
 import com.fbuur.myhealthtracker.databinding.FragmentEventsBinding

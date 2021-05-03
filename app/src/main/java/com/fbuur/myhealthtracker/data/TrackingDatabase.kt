@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fbuur.myhealthtracker.data.model.*
+import com.fbuur.myhealthtracker.data.registration.RegistrationDAO
+import com.fbuur.myhealthtracker.data.registration.RegistrationTypeConverters
 import java.util.*
 
 @Database(
@@ -17,6 +19,7 @@ import java.util.*
 abstract class TrackingDatabase : RoomDatabase() {
 
     abstract fun registrationDao(): RegistrationDAO
+    abstract fun calendarDao(): CalendarDAO
 
     companion object {
         @Volatile

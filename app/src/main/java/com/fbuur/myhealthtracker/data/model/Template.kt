@@ -3,7 +3,7 @@ package com.fbuur.myhealthtracker.data.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.fbuur.myhealthtracker.data.RegistrationViewModel
+import com.fbuur.myhealthtracker.pages.events.RegistrationViewModel
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import java.util.*
 

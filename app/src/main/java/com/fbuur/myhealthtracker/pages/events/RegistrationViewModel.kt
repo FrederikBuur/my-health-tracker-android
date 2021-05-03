@@ -1,8 +1,10 @@
-package com.fbuur.myhealthtracker.data
+package com.fbuur.myhealthtracker.pages.events
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.fbuur.myhealthtracker.data.TrackingDatabase
 import com.fbuur.myhealthtracker.data.model.*
+import com.fbuur.myhealthtracker.data.registration.RegistrationRepository
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.pages.events.eventsentry.toParameter
@@ -70,11 +72,9 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     date = registration.date,
                     iconColor = t.color,
                     type = registration.type,
-                    eventParameterList = mapToEventParameterList(
-                        repository.readAllParametersByRegId(
-                            registration.id
-                        )
-                    ),
+                    eventParameterList = repository
+                        .readAllParametersByRegId(registration.id)
+                        .mapToEventParameterList(),
                     isExpanded = shouldEventBeExpanded("${registration.id}:${t.id}")
                 )
             } ?: run {
@@ -87,39 +87,6 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         this.eventList.singleOrNull { e -> e.id == eventId }?.isExpanded ?: kotlin.run {
             false
         }
-
-    private fun mapToEventParameterList(
-        paramList: List<Parameter>
-    ): List<EventItemParameter> {
-        return paramList.map { p ->
-            when (p) {
-                is Parameter.Note -> {
-                    EventItemParameter.Note(
-                        id = p.id,
-                        regId = p.regId,
-                        title = p.title,
-                        type = ParameterType.NOTE,
-                        description = p.description
-                    )
-                }
-                is Parameter.Slider -> {
-                    EventItemParameter.Slider(
-                        id = p.id,
-                        regId = p.regId,
-                        title = p.title,
-                        type = ParameterType.SLIDER,
-                        value = p.value,
-                        lowest = p.lowestValue,
-                        highest = p.highestValue
-                    )
-                }
-                else -> {
-                    // todo binary and location not implemented yet
-                    throw NotImplementedError("Binary and Location not implemented yet: $p")
-                }
-            }
-        }
-    }
 
     fun addRegistration(registration: Registration, registrationId: (Long) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -171,7 +138,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     fun updateParameter(eventItemParameter: EventItemParameter) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateParameter(
-                when(eventItemParameter) {
+                when (eventItemParameter) {
                     is EventItemParameter.Note -> {
                         eventItemParameter.toParameter()
                     }

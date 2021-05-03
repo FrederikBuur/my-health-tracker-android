@@ -1,10 +1,11 @@
-package com.fbuur.myhealthtracker.data
+package com.fbuur.myhealthtracker.data.registration
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.model.Template
+import java.util.*
 
 @Dao
 interface RegistrationDAO {
@@ -28,6 +29,13 @@ interface RegistrationDAO {
 
     @Query("SELECT * FROM registration ORDER BY date DESC")
     suspend fun readAllRegistrations(): List<Registration>
+
+//    @Query("SELECT * FROM registration WHERE datetime(date/1000,'unixepoch','start of month') = datetime(:dateOfMonth/1000,'unixepoch','start of month')")
+//    suspend fun getRegistrationByMonth(dateOfMonth: Date) : List<Registration>
+
+    @Query("SELECT * FROM registration WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun readRegistrationByMonth(startDate: Long, endDate: Long): List<Registration>
+
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
     suspend fun readAllTemplates(): List<Template>
 

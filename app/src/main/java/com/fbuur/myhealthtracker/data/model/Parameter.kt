@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.Ignore
+import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 
 sealed class Parameter(
     open val title: String,
@@ -43,4 +44,35 @@ sealed class Parameter(
         val highestValue: Int
     ) : Parameter(title, regId)
 
+}
+
+fun List<Parameter>.mapToEventParameterList() : List<EventItemParameter> {
+    return map { p ->
+        when (p) {
+            is Parameter.Note -> {
+                EventItemParameter.Note(
+                    id = p.id,
+                    regId = p.regId,
+                    title = p.title,
+                    type = ParameterType.NOTE,
+                    description = p.description
+                )
+            }
+            is Parameter.Slider -> {
+                EventItemParameter.Slider(
+                    id = p.id,
+                    regId = p.regId,
+                    title = p.title,
+                    type = ParameterType.SLIDER,
+                    value = p.value,
+                    lowest = p.lowestValue,
+                    highest = p.highestValue
+                )
+            }
+            else -> {
+                // todo binary and location not implemented yet
+                throw NotImplementedError("Binary and Location not implemented yet: $p")
+            }
+        }
+    }
 }

@@ -7,13 +7,75 @@
     android:background="@color/background_white"
     tools:context=".pages.data.calendar.CalendarFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/monthPicker"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="calendar fragment"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/weekdays"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/arrowPrevious"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+        <TextView
+            android:id="@+id/monthTitle"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            tools:text="October" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/arrowNext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_arrow_forward" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/weekdays"
+        layout="@layout/view_weekdays"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/calenderGridView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/monthPicker" />
+
+    <GridView
+        android:id="@+id/calenderGridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:numColumns="7"
+        app:layout_constraintBottom_toTopOf="@id/selectedDayEvents"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekdays"
+        tools:layout_height="250dp"
+        tools:listitem="@layout/view_calender_day" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selectedDayEvents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
+        tools:listitem="@layout/item_event" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

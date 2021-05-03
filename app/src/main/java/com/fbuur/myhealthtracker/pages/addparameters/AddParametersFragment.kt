@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.fbuur.myhealthtracker.R
-import com.fbuur.myhealthtracker.data.RegistrationViewModel
+import com.fbuur.myhealthtracker.pages.events.RegistrationViewModel
 import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.databinding.FragmentAddParametersBinding
