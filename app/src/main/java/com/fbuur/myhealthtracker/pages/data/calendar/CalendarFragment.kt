@@ -1,5 +1,6 @@
 package com.fbuur.myhealthtracker.pages.data.calendar
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentCalendarBinding
+import java.lang.Exception
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
@@ -30,11 +32,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         calendarViewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
 
         val calenderGridAdapter = CalenderGridAdapter(
-            calenderDays = emptyList()
+            calenderDayList = emptyList(),
+            activity = (context as? Activity) ?: throw Exception("test 123 ???")
         )
 
-        calendarViewModel.readCalenderDayItemsByMonth(0) {
-            calenderGridAdapter.setDate(it)
+        calendarViewModel.readCalenderDayItemsByMonth(0) { eventItemMap ->
+            calenderGridAdapter.setDate(eventItemMap)
         }
 
         binding.apply {

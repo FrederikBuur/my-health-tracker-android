@@ -19,7 +19,6 @@ import java.util.*
 abstract class TrackingDatabase : RoomDatabase() {
 
     abstract fun registrationDao(): RegistrationDAO
-    abstract fun calendarDao(): CalendarDAO
 
     companion object {
         @Volatile

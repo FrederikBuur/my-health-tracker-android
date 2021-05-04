@@ -13,7 +13,8 @@ import java.util.*
 val Number.dpToPx: Float get() = (toFloat() * Resources.getSystem().displayMetrics.density)
 
 fun Date.toDateString(): String {
-    val dateFormat: DateFormat = SimpleDateFormat("dd. MMMM hh:mm", Locale.getDefault())
+    val dateFormat: DateFormat = SimpleDateFormat("dd. MMMM HH:mm", Locale.getDefault())
+//    val dateFormat: DateFormat = SimpleDateFormat("dd. MMMM HH:mm yyyy", Locale.getDefault())
     return dateFormat.format(this)
 }
 
