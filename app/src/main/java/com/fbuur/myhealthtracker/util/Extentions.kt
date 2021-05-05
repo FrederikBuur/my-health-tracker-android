@@ -17,6 +17,14 @@ fun Date.toDateString(): String {
 //    val dateFormat: DateFormat = SimpleDateFormat("dd. MMMM HH:mm yyyy", Locale.getDefault())
     return dateFormat.format(this)
 }
+fun Date.toHourMinString(): String {
+    val dateFormat: DateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return dateFormat.format(this)
+}
+fun Date.toMonthYearString(): String {
+    val dateFormat: DateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+    return dateFormat.format(this).capitalize(Locale.getDefault())
+}
 
 fun String.getInitials(): String {
 

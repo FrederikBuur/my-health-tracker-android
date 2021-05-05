@@ -1,4 +1,4 @@
-package com.fbuur.myhealthtracker.pages.data.calendar
+package com.fbuur.myhealthtracker.pages.data.calendar.calendarview
 
 import android.app.Activity
 import android.view.View
@@ -9,7 +9,8 @@ import java.lang.Exception
 
 class CalenderGridAdapter(
     calenderDayList: List<CalenderDay>,
-    private val activity: Activity
+    private val activity: Activity,
+    private val onDaySelected: (Int) -> Unit
 ) : BaseAdapter() {
 
     private var list = calenderDayList
@@ -26,11 +27,15 @@ class CalenderGridAdapter(
 
         val viewHolder: CalenderDayViewHolder
         if (convertView == null) {
-            viewHolder = CalenderDayViewHolder(ViewCalenderDayBinding.inflate(activity.layoutInflater, null, false))
+            viewHolder = CalenderDayViewHolder(
+                itemBinding = ViewCalenderDayBinding.inflate(activity.layoutInflater, null, false),
+                onDaySelected = onDaySelected
+            )
             v = viewHolder.itemView
             v.tag = viewHolder
         } else {
-            viewHolder = (v?.tag as? CalenderDayViewHolder) ?: throw Exception("test123 should not happen?")
+            viewHolder =
+                (v?.tag as? CalenderDayViewHolder) ?: throw Exception("test123 should not happen?")
         }
 
         // setup binding

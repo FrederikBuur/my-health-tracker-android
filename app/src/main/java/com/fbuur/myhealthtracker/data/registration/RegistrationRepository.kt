@@ -22,8 +22,8 @@ class RegistrationRepository(private val registrationDAO: RegistrationDAO) {
     suspend fun readAllRegistrations() =
         registrationDAO.readAllRegistrations()
 
-    suspend fun readRegistrationByMonth(fromDate: Long, toDate: Long) =
-        registrationDAO.readRegistrationByMonth(fromDate, toDate)
+    suspend fun readRegistrationByTime(fromDate: Long, toDate: Long) =
+        registrationDAO.readRegistrationByTime(fromDate, toDate)
 
     suspend fun readAllParametersByRegId(regId: Long): List<Parameter> {
         val notes = registrationDAO.readAllNoteByRegId(regId)

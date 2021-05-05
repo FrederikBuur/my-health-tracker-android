@@ -59,4 +59,9 @@ class DataFragment : Fragment(R.layout.fragment_data) {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 }

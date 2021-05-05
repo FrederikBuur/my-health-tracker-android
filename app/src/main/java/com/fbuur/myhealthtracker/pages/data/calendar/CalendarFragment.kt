@@ -9,7 +9,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentCalendarBinding
+import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderGridAdapter
+import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayAdapter
+import com.fbuur.myhealthtracker.util.toMonthYearString
 import java.lang.Exception
+import java.util.*
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
@@ -29,20 +33,38 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private fun setup() {
 
+        // setup view model
         calendarViewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
 
+        // setup adapters
         val calenderGridAdapter = CalenderGridAdapter(
             calenderDayList = emptyList(),
             activity = (context as? Activity) ?: throw Exception("test 123 ???")
-        )
+        ) { selectedDay ->
+            calendarViewModel.setSelectedDayOfMonth(selectedDay)
+        }
+        val calendarDayEventsAdapter = CalendarSelectedDayAdapter()
 
+        // read data to be displayed
         calendarViewModel.readCalenderDayItemsByMonth(0) { eventItemMap ->
             calenderGridAdapter.setDate(eventItemMap)
         }
+        calendarViewModel.readCalenderEventsByDay { list ->
+            calendarDayEventsAdapter.setDate(list)
+        }
 
+        // setup ui
         binding.apply {
+            monthTitle.text = calendarViewModel.getSelectedDayAsDate().toMonthYearString()
             calenderGridView.adapter = calenderGridAdapter
+            selectedDayEvents.adapter = calendarDayEventsAdapter
         }
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 }

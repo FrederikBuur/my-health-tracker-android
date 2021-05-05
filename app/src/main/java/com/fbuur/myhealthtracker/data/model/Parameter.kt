@@ -26,7 +26,11 @@ sealed class Parameter(
         @Ignore override val regId: Long,
         @Ignore override val title: String,
         val description: String
-    ) : Parameter(title, regId)
+    ) : Parameter(title, regId) {
+        override fun toString(): String {
+            return "$title: $description"
+        }
+    }
 
     @Entity(
         foreignKeys = [ForeignKey(
@@ -42,7 +46,11 @@ sealed class Parameter(
         val value: Int,
         val lowestValue: Int,
         val highestValue: Int
-    ) : Parameter(title, regId)
+    ) : Parameter(title, regId) {
+        override fun toString(): String {
+            return "$title: $value from $lowestValue to $highestValue"
+        }
+    }
 
 }
 

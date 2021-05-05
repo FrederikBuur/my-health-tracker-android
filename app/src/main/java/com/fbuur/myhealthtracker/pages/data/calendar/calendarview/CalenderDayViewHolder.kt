@@ -1,15 +1,14 @@
-package com.fbuur.myhealthtracker.pages.data.calendar
+package com.fbuur.myhealthtracker.pages.data.calendar.calendarview
 
-import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.ViewCalenderDayBinding
 import com.fbuur.myhealthtracker.databinding.ViewCalenderDayEventIconBinding
 import com.fbuur.myhealthtracker.util.getInitials
 
 class CalenderDayViewHolder(
-    private val itemBinding: ViewCalenderDayBinding
+    private val itemBinding: ViewCalenderDayBinding,
+    private val onDaySelected: (Int) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     fun bind(calenderDay: CalenderDay) {
@@ -28,11 +27,32 @@ class CalenderDayViewHolder(
 
     private fun setupDay(calenderDay: CalenderDay) {
         itemBinding.apply {
+
+            if (calenderDay.isSelected) {
+                day.visibility = View.INVISIBLE
+                daySelectedIndicator.visibility = View.VISIBLE
+            } else {
+                day.visibility = View.VISIBLE
+                daySelectedIndicator.visibility = View.INVISIBLE
+            }
+
             day.text = calenderDay.day.toString()
+            daySelectedIndicator.text = calenderDay.day.toString()
             icon1.setup(calenderDay.events.getOrNull(0))
             icon2.setup(calenderDay.events.getOrNull(1))
             icon3.setup(calenderDay.events.getOrNull(2))
             icon4.setup(calenderDay.events.getOrNull(3), calenderDay.events.size)
+            root.setOnClickListener {
+                onDaySelected(calenderDay.day)
+                calenderDay.isSelected = !calenderDay.isSelected
+                if (calenderDay.isSelected) {
+                    day.visibility = View.INVISIBLE
+                    daySelectedIndicator.visibility = View.VISIBLE
+                } else {
+                    day.visibility = View.VISIBLE
+                    daySelectedIndicator.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 
@@ -75,7 +95,8 @@ class CalenderDayViewHolder(
 class CalenderDay(
     val day: Int,
     val calenderDayType: CalenderDayType,
-    val events: List<CalenderEvent>
+    val events: List<CalenderEvent>,
+    var isSelected : Boolean
 )
 
 class CalenderEvent(

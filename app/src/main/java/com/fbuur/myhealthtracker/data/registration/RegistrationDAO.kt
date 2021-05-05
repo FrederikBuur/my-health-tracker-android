@@ -34,7 +34,7 @@ interface RegistrationDAO {
 //    suspend fun getRegistrationByMonth(dateOfMonth: Date) : List<Registration>
 
     @Query("SELECT * FROM registration WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
-    suspend fun readRegistrationByMonth(startDate: Long, endDate: Long): List<Registration>
+    suspend fun readRegistrationByTime(startDate: Long, endDate: Long): List<Registration>
 
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
     suspend fun readAllTemplates(): List<Template>

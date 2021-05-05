@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:padding="2dp"
+        android:padding="1dp"
         android:textColor="@color/text_primary_onwhite"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,20 +23,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="88" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/daySelected"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@drawable/background_calender_day_selected"-->
-<!--        android:fontFamily="sans-serif-medium"-->
-<!--        android:gravity="center"-->
-<!--        android:padding="2dp"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textSize="12sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:text="88" />-->
+    <TextView
+        android:id="@+id/daySelectedIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_calender_day_selected"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:padding="1dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="88" />
 
     <include
         android:id="@+id/icon1"
