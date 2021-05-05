@@ -3,6 +3,7 @@ package com.fbuur.myhealthtracker.pages.data.calendar.selectedday
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.databinding.ItemCalendarSelectedDayBinding
 import com.fbuur.myhealthtracker.databinding.ItemCalendarSelectedDayDataBinding
+import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toHourMinString
 import java.util.*
 
@@ -17,7 +18,10 @@ class CalendarSelectedDayEventViewHolder(
         itemBinding.apply {
             eventName.text = calendarSelectedDayEvent.name
             eventDate.text = calendarSelectedDayEvent.date.toHourMinString()
+            eventIconInitials.text = calendarSelectedDayEvent.name.getInitials()
             eventIcon.setCardBackgroundColor(calendarSelectedDayEvent.iconColor)
+
+            additionalData.removeAllViews()
             calendarSelectedDayEvent.additionalData.forEach { text ->
                 additionalData.addView(
                     onCreateAdditionalData().apply {

@@ -77,10 +77,6 @@ fun List<Parameter>.mapToEventParameterList() : List<EventItemParameter> {
                     highest = p.highestValue
                 )
             }
-            else -> {
-                // todo binary and location not implemented yet
-                throw NotImplementedError("Binary and Location not implemented yet: $p")
-            }
         }
     }
 }

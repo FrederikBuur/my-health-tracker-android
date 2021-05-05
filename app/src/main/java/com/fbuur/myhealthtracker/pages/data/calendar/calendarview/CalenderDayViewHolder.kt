@@ -19,9 +19,6 @@ class CalenderDayViewHolder(
             CalenderDayType.WHITESPACE -> {
                 setupWhiteSpace(calenderDay)
             }
-            else -> {
-                throw NotImplementedError("not supported: ${calenderDay.calenderDayType}")
-            }
         }
     }
 
@@ -39,7 +36,6 @@ class CalenderDayViewHolder(
             icon4.setup(calenderDay.events.getOrNull(3), calenderDay.events.size)
             root.setOnClickListener {
                 onDaySelected(calenderDay.day)
-                calenderDay.isSelected = true
                 setDaySelected(true)
             }
         }
@@ -91,23 +87,13 @@ class CalenderDayViewHolder(
 
     }
 
-    companion object {
-
-        var dayOffset = 0
-        var selectedDay = 0
-        set(value) {
-            field = dayOffset + value
-        }
-
-    }
-
 }
 
 class CalenderDay(
     val day: Int,
     val calenderDayType: CalenderDayType,
     val events: List<CalenderEvent>,
-    var isSelected : Boolean
+    val isSelected : Boolean
 )
 
 class CalenderEvent(

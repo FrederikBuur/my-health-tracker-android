@@ -30,15 +30,7 @@ class CalenderGridAdapter(
         if (convertView == null) {
             viewHolder = CalenderDayViewHolder(
                 itemBinding = ViewCalenderDayBinding.inflate(activity.layoutInflater, null, false),
-                onDaySelected = { day ->
-                    onDaySelected(day)
-
-                    // reset old selected day
-                    this.list[CalenderDayViewHolder.selectedDay].isSelected = false
-
-                    // select new selected day
-                    CalenderDayViewHolder.selectedDay = day
-                }
+                onDaySelected = onDaySelected
             )
             v = viewHolder.itemView
             v.tag = viewHolder
