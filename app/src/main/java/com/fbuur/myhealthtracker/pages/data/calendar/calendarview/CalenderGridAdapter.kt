@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.fbuur.myhealthtracker.databinding.ViewCalenderDayBinding
+import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEventViewHolder
 import java.lang.Exception
 
 class CalenderGridAdapter(
@@ -29,7 +30,15 @@ class CalenderGridAdapter(
         if (convertView == null) {
             viewHolder = CalenderDayViewHolder(
                 itemBinding = ViewCalenderDayBinding.inflate(activity.layoutInflater, null, false),
-                onDaySelected = onDaySelected
+                onDaySelected = { day ->
+                    onDaySelected(day)
+
+                    // reset old selected day
+                    this.list[CalenderDayViewHolder.selectedDay].isSelected = false
+
+                    // select new selected day
+                    CalenderDayViewHolder.selectedDay = day
+                }
             )
             v = viewHolder.itemView
             v.tag = viewHolder
@@ -45,7 +54,7 @@ class CalenderGridAdapter(
         return viewHolder.itemView
     }
 
-    fun setDate(list: List<CalenderDay>) {
+    fun setData(list: List<CalenderDay>) {
         this.list = list
         this.notifyDataSetChanged()
     }

@@ -8,6 +8,7 @@ import com.fbuur.myhealthtracker.data.TrackingDatabase
 import com.fbuur.myhealthtracker.data.registration.RegistrationRepository
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDay
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayType
+import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayViewHolder
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderEvent
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEvent
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +71,8 @@ class CalendarViewModel(
         val firstWeekDayInMonth =
             if (c.get(Calendar.DAY_OF_WEEK) == 1) 7 else c.get(Calendar.DAY_OF_WEEK) - 1
 
+        CalenderDayViewHolder.dayOffset = firstWeekDayInMonth - 1
+
         // get start of the next month
         c.add(Calendar.MONTH, 1)
         val toDateMillis = c.timeInMillis
@@ -117,13 +120,21 @@ class CalendarViewModel(
                         emptyList()
                     }
 
+                    val curIIsToday =
+                        this@CalendarViewModel.selectedDay.get(Calendar.DAY_OF_MONTH) == i
+                    if (curIIsToday) {
+                        CalenderDayViewHolder.selectedDay = i-1
+                    } else {
+
+                    }
+
                     // add calender day to final list
                     calenderDayList.add(
                         CalenderDay(
                             day = i,
                             calenderDayType = CalenderDayType.DAY,
                             events = calenderEvents,
-                            isSelected = this@CalendarViewModel.selectedDay.get(Calendar.DAY_OF_MONTH) == i
+                            isSelected = curIIsToday
                         )
                     )
 
@@ -131,7 +142,6 @@ class CalendarViewModel(
             }
 
             withContext(Dispatchers.Main) {
-//            results(calenderDayList, daysInMonth, firstWeekDayInMonth)
                 results(calenderDayList)
             }
         }

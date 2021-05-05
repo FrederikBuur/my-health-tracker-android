@@ -13,7 +13,6 @@ import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderGridAd
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayAdapter
 import com.fbuur.myhealthtracker.util.toMonthYearString
 import java.lang.Exception
-import java.util.*
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
@@ -37,20 +36,25 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         calendarViewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
 
         // setup adapters
+        val calendarDayEventsAdapter = CalendarSelectedDayAdapter()
         val calenderGridAdapter = CalenderGridAdapter(
             calenderDayList = emptyList(),
             activity = (context as? Activity) ?: throw Exception("test 123 ???")
         ) { selectedDay ->
             calendarViewModel.setSelectedDayOfMonth(selectedDay)
+
+            // update selected day adapter data
+            calendarViewModel.readCalenderEventsByDay { list ->
+                calendarDayEventsAdapter.setData(list)
+            }
         }
-        val calendarDayEventsAdapter = CalendarSelectedDayAdapter()
 
         // read data to be displayed
         calendarViewModel.readCalenderDayItemsByMonth(0) { eventItemMap ->
-            calenderGridAdapter.setDate(eventItemMap)
+            calenderGridAdapter.setData(eventItemMap)
         }
         calendarViewModel.readCalenderEventsByDay { list ->
-            calendarDayEventsAdapter.setDate(list)
+            calendarDayEventsAdapter.setData(list)
         }
 
         // setup ui

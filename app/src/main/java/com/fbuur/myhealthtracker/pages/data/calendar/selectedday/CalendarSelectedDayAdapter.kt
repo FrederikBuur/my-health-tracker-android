@@ -34,7 +34,7 @@ class CalendarSelectedDayAdapter(
 
     override fun getItemCount() = calenderSelectedDayEvents.size
 
-    fun setDate(list: List<CalendarSelectedDayEvent>) {
+    fun setData(list: List<CalendarSelectedDayEvent>) {
         this.calenderSelectedDayEvents = list
         this.notifyDataSetChanged()
     }

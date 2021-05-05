@@ -28,30 +28,31 @@ class CalenderDayViewHolder(
     private fun setupDay(calenderDay: CalenderDay) {
         itemBinding.apply {
 
-            if (calenderDay.isSelected) {
-                day.visibility = View.INVISIBLE
-                daySelectedIndicator.visibility = View.VISIBLE
-            } else {
-                day.visibility = View.VISIBLE
-                daySelectedIndicator.visibility = View.INVISIBLE
-            }
+            setDaySelected(calenderDay.isSelected)
 
             day.text = calenderDay.day.toString()
             daySelectedIndicator.text = calenderDay.day.toString()
+
             icon1.setup(calenderDay.events.getOrNull(0))
             icon2.setup(calenderDay.events.getOrNull(1))
             icon3.setup(calenderDay.events.getOrNull(2))
             icon4.setup(calenderDay.events.getOrNull(3), calenderDay.events.size)
             root.setOnClickListener {
                 onDaySelected(calenderDay.day)
-                calenderDay.isSelected = !calenderDay.isSelected
-                if (calenderDay.isSelected) {
-                    day.visibility = View.INVISIBLE
-                    daySelectedIndicator.visibility = View.VISIBLE
-                } else {
-                    day.visibility = View.VISIBLE
-                    daySelectedIndicator.visibility = View.INVISIBLE
-                }
+                calenderDay.isSelected = true
+                setDaySelected(true)
+            }
+        }
+    }
+
+    fun setDaySelected(isSelected: Boolean) {
+        itemBinding.apply {
+            if (isSelected) {
+                day.visibility = View.INVISIBLE
+                daySelectedIndicator.visibility = View.VISIBLE
+            } else {
+                day.visibility = View.VISIBLE
+                daySelectedIndicator.visibility = View.INVISIBLE
             }
         }
     }
@@ -86,6 +87,16 @@ class CalenderDayViewHolder(
             }
         } ?: kotlin.run {
             root.visibility = View.INVISIBLE
+        }
+
+    }
+
+    companion object {
+
+        var dayOffset = 0
+        var selectedDay = 0
+        set(value) {
+            field = dayOffset + value
         }
 
     }
