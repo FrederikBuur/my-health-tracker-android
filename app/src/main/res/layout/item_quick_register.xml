@@ -27,7 +27,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:textAlignment="center"
-                android:textColor="@color/text_primary_onwhite"
+                android:textColor="@color/mth_text_primary_onwhite"
                 android:textSize="12sp"
                 tools:text="Wrist pain Wrist pain Wrist pain Wrist pain " />
 

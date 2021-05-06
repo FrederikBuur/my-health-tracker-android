@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="sans-serif"
-            android:textColor="@color/black"
+            android:textColor="@color/mth_black"
             android:gravity="center"
             android:textSize="11sp"
             tools:text="WP" />
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="sans-serif"
-            android:textColor="@color/black"
+            android:textColor="@color/mth_black"
             android:gravity="center"
             android:textSize="12sp"
             tools:text="+2" />
@@ -65,7 +65,7 @@
         android:id="@+id/notificationBadge"
         android:layout_width="11dp"
         android:layout_height="11dp"
-        app:cardBackgroundColor="@color/delete"
+        app:cardBackgroundColor="@color/mth_delete"
         app:cardCornerRadius="5.5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -76,7 +76,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/mth_white"
             android:textSize="8sp"
             tools:text="9" />
 

@@ -8,14 +8,14 @@
     android:paddingVertical="16dp"
     android:layout_marginVertical="8dp"
     android:layout_marginHorizontal="16dp"
-    android:background="@color/white">
+    android:background="@color/mth_white">
 
     <TextView
         android:id="@+id/parameterHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:textColor="@color/text_primary_onwhite"
+        android:textColor="@color/mth_text_primary_onwhite"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/parameterSlider"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:tint="@color/black"
+        android:tint="@color/mth_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_close" />

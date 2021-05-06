@@ -33,7 +33,7 @@
         android:layout_marginHorizontal="16dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/text_primary_onwhite"
+        android:textColor="@color/mth_text_primary_onwhite"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/description"
         app:layout_constraintEnd_toStartOf="@id/checkbox"

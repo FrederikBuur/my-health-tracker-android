@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendarContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_white"
+    android:background="@color/mth_background_white"
     android:orientation="vertical"
     tools:context=".pages.data.calendar.CalendarFragment">
 
@@ -12,7 +13,7 @@
         android:id="@+id/monthPicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/mth_white"
         android:orientation="horizontal"
         android:paddingVertical="8dp"
         app:layout_constraintBottom_toTopOf="@id/weekdays"
@@ -56,46 +57,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/monthPicker" />
 
-    <View
-        android:id="@+id/calendarViewPlaceholder"
+    <GridView
+        android:id="@+id/calenderGridView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:background="@color/mth_white"
+        android:numColumns="7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekdays"
+        tools:layout_height="300dp" />
+
+    <ProgressBar
+        android:id="@+id/calendarViewSpinner"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/calenderGridView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weekdays" />
-
-<!--    <FrameLayout-->
-<!--        android:id="@+id/calenderGridViewContainer"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/weekdays">-->
-
-        <GridView
-            android:id="@+id/calenderGridView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:numColumns="7"
-            tools:layout_height="300dp"
-            tools:listitem="@layout/item_calender_day"
-            app:layout_constraintHeight_min="300dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/weekdays"/>
-
-        <ProgressBar
-            android:id="@+id/calendarViewSpinner"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/calenderGridView"
-            app:layout_constraintBottom_toBottomOf="@id/calenderGridView"/>
-
-<!--    </FrameLayout>-->
+        app:layout_constraintTop_toTopOf="@id/calenderGridView"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/selectedDayEvents"
@@ -119,15 +102,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calenderGridView"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/selectedDayEventsSpinner"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calenderGridView" />
+        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:tint="@color/text_primary_onwhite"
+        android:tint="@color/mth_text_primary_onwhite"
         app:srcCompat="@drawable/ic_event" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:fontFamily="sans-serif-medium"
         android:text="No events registered this day"
-        android:textColor="@color/text_primary_onwhite"
+        android:textColor="@color/mth_text_primary_onwhite"
         android:textSize="14sp" />
 
 

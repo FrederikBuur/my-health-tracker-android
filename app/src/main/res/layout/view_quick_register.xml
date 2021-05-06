@@ -14,7 +14,7 @@
         android:paddingHorizontal="8dp"
         android:paddingTop="4dp"
         android:text="Quick register"
-        android:textColor="@color/white"
+        android:textColor="@color/mth_white"
         android:textSize="11sp" />
 
     <FrameLayout

@@ -1,6 +1,5 @@
 package com.fbuur.myhealthtracker.util
 
-import android.content.Context
 import android.graphics.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -34,11 +33,11 @@ abstract class SwipeToDeleteCallback() :
             actionState,
             isCurrentlyActive
         )
-            .addBackgroundColor(ContextCompat.getColor(recyclerView.context, R.color.delete))
+            .addBackgroundColor(ContextCompat.getColor(recyclerView.context, R.color.mth_delete))
             .addActionIcon(R.drawable.ic_delete)
             .addSwipeLeftLabel("DELETE")
             .setSwipeLeftLabelTypeface(Typeface.DEFAULT_BOLD)
-            .setSwipeLeftLabelColor(ContextCompat.getColor(recyclerView.context, R.color.white))
+            .setSwipeLeftLabelColor(ContextCompat.getColor(recyclerView.context, R.color.mth_white))
             .create()
             .decorate()
 

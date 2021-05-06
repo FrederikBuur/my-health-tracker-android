@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="4dp"
-            android:tint="@color/black"
+            android:tint="@color/mth_black"
             app:srcCompat="@drawable/ic_note_add"/>
 
     </androidx.cardview.widget.CardView>

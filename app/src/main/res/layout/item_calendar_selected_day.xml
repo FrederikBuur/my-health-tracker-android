@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@color/background_white">
+    tools:background="@color/mth_background_white">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/eventIcon"
@@ -40,7 +40,7 @@
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
-        android:textColor="@color/text_primary_onwhite"
+        android:textColor="@color/mth_text_primary_onwhite"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/eventDate"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="@color/white"
+        android:background="@color/mth_white"
         android:orientation="vertical"
         android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

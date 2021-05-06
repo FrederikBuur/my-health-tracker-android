@@ -59,7 +59,7 @@
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
-        android:textColor="@color/text_primary_onwhite"
+        android:textColor="@color/mth_text_primary_onwhite"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/eventDate"
         app:layout_constraintEnd_toStartOf="@id/expandArrow"
@@ -127,7 +127,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
                 android:text="Add optional parameters"
-                android:textColor="@color/white"
+                android:textColor="@color/mth_white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

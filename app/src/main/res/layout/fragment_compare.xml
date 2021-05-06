@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_white"
+    android:background="@color/mth_background_white"
     tools:context=".pages.data.calendar.CompareFragment">
 
     <TextView

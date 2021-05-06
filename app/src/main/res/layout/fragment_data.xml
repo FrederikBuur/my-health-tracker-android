@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:background="@color/blue_500"
         android:elevation="4dp"
-        app:tabIndicatorColor="@color/white"
-        app:tabRippleColor="@color/black"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/white" />
+        app:tabIndicatorColor="@color/mth_white"
+        app:tabRippleColor="@color/mth_black"
+        app:tabSelectedTextColor="@color/mth_white"
+        app:tabTextColor="@color/mth_white" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

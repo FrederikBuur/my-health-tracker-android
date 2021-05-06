@@ -11,15 +11,15 @@
     <color name="accent_700">#AE2300</color>
 
     <!--    util-->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="white_alpha">#80FFFFFF</color>
+    <color name="mth_black">#FF000000</color>
+    <color name="mth_white">#FFFFFFFF</color>
+    <color name="mth_white_alpha">#80FFFFFF</color>
 
-    <color name="background_white">#F5F5F5</color>
-    <color name="text_primary_onwhite">#3E3E3E</color>
-    <color name="text_secondary_onwhite">#8E8E8E</color>
+    <color name="mth_background_white">#F5F5F5</color>
+    <color name="mth_text_primary_onwhite">#3E3E3E</color>
+    <color name="mth_text_secondary_onwhite">#8E8E8E</color>
 
-    <color name="delete">#D80707</color>
+    <color name="mth_delete">#D80707</color>
 
     <color name="quick_register_note_background">#BEB541</color>
     <string-array name="eventColors">

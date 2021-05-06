@@ -33,8 +33,8 @@
             android:imeOptions="actionNone"
             android:inputType="textCapSentences"
             android:maxLines="1"
-            android:textColor="@color/black"
-            android:textColorHint="@color/text_secondary_onwhite"
+            android:textColor="@color/mth_black"
+            android:textColorHint="@color/mth_text_secondary_onwhite"
             android:textSize="14sp" />
     </FrameLayout>
 
@@ -64,7 +64,7 @@
             android:maxLines="1"
             android:fontFamily="sans-serif-medium"
             android:text="Create"
-            android:textColor="@color/white"
+            android:textColor="@color/mth_white"
             android:textSize="14sp"
             android:textStyle="bold" />
 
