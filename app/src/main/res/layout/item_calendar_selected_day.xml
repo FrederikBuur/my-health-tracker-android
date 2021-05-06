@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:background="@color/background_white">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/eventIcon"
@@ -14,9 +15,9 @@
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@id/additionalData"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/additionalData"
         app:layout_constraintVertical_bias="0"
         tools:cardBackgroundColor="#EE5959">
 
@@ -43,7 +44,6 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/eventDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/eventIcon"
         app:layout_constraintTop_toTopOf="@id/eventIcon"
         tools:text="Wrist pain" />
@@ -61,28 +61,27 @@
 
     <LinearLayout
         android:id="@+id/additionalData"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventIcon"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-
-
-    </LinearLayout>
+        tools:layout_height="100dp"
+        tools:layout_width="300dp" />
 
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0.5dp"
-        android:layout_marginStart="16dp"
         android:alpha="0.1"
         android:background="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/eventIcon" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.fbuur.myhealthtracker.pages.data.calendar.selectedday
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.databinding.ItemCalendarSelectedDayBinding
 import com.fbuur.myhealthtracker.databinding.ItemCalendarSelectedDayDataBinding
@@ -22,6 +23,11 @@ class CalendarSelectedDayEventViewHolder(
             eventIcon.setCardBackgroundColor(calendarSelectedDayEvent.iconColor)
 
             additionalData.removeAllViews()
+            if (calendarSelectedDayEvent.additionalData.isEmpty()) {
+                additionalData.visibility = View.GONE
+            } else {
+                additionalData.visibility = View.VISIBLE
+            }
             calendarSelectedDayEvent.additionalData.forEach { text ->
                 additionalData.addView(
                     onCreateAdditionalData().apply {
