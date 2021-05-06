@@ -44,7 +44,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         ) { selectedDay ->
             // set view model selected day to selected day
             calendarViewModel.setSelectedDate(CalendarManager.getDateAtDay(selectedDay))
+            // set ui
             binding.selectedDayEventsSpinner.visibility = View.VISIBLE
+            binding.selectedDayEventsEmptyView.root.visibility = View.GONE
         }
         val calendarDayEventsAdapter = CalendarSelectedDayAdapter()
 
@@ -80,6 +82,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             arrowPrevious.setOnClickListener {
                 calendarViewSpinner.visibility = View.VISIBLE
                 selectedDayEventsSpinner.visibility = View.VISIBLE
+                binding.selectedDayEventsEmptyView.root.visibility = View.GONE
                 calendarViewModel.getSelectedDate()?.let {
                     calendarViewModel.setSelectedDate(
                         CalendarManager.getPreviousMonthAsDate(it)
@@ -89,6 +92,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             arrowNext.setOnClickListener {
                 calendarViewSpinner.visibility = View.VISIBLE
                 selectedDayEventsSpinner.visibility = View.VISIBLE
+                binding.selectedDayEventsEmptyView.root.visibility = View.GONE
                 calendarViewModel.getSelectedDate()?.let {
                     calendarViewModel.setSelectedDate(
                         CalendarManager.getNextMonthAsDate(it)

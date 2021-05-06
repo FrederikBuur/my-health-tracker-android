@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +14,11 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:paddingVertical="8dp">
+        android:paddingVertical="8dp"
+        app:layout_constraintBottom_toTopOf="@id/weekdays"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/arrowPrevious"
@@ -46,17 +50,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/calenderGridView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/monthPicker" />
 
-    <FrameLayout
+    <View
+        android:id="@+id/calendarViewPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="300dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekdays" />
 
-        <View
-            android:id="@+id/calendarViewPlaceholder"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@color/white"/>
+<!--    <FrameLayout-->
+<!--        android:id="@+id/calenderGridViewContainer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/weekdays">-->
 
         <GridView
             android:id="@+id/calenderGridView"
@@ -65,40 +80,54 @@
             android:background="@color/white"
             android:numColumns="7"
             tools:layout_height="300dp"
-            tools:listitem="@layout/item_calender_day" />
+            tools:listitem="@layout/item_calender_day"
+            app:layout_constraintHeight_min="300dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weekdays"/>
 
         <ProgressBar
             android:id="@+id/calendarViewSpinner"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="center" />
-    </FrameLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/calenderGridView"
+            app:layout_constraintBottom_toBottomOf="@id/calenderGridView"/>
 
-    <FrameLayout
+<!--    </FrameLayout>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selectedDayEvents"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
+        tools:listitem="@layout/item_event" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/selectedDayEvents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_event" />
+    <include
+        android:id="@+id/selectedDayEventsEmptyView"
+        layout="@layout/view_empty_selected_day_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
+        tools:visibility="visible"/>
 
-        <include
-            android:id="@+id/selectedDayEventsEmptyView"
-            layout="@layout/view_empty_selected_day_events"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/selectedDayEventsSpinner"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calenderGridView" />
 
-        <ProgressBar
-            android:id="@+id/selectedDayEventsSpinner"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
