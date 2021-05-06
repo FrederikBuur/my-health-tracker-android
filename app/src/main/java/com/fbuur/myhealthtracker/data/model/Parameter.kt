@@ -1,9 +1,6 @@
 package com.fbuur.myhealthtracker.data.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.ForeignKey
-import androidx.room.Ignore
+import androidx.room.*
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 
 sealed class Parameter(
@@ -23,8 +20,9 @@ sealed class Parameter(
         )]
     )
     data class Note(
-        @Ignore override val regId: Long,
-        @Ignore override val title: String,
+        @ColumnInfo(name = "regId", index = true)
+        override val regId: Long,
+        override val title: String,
         val description: String
     ) : Parameter(title, regId) {
         override fun toString(): String {
@@ -41,12 +39,16 @@ sealed class Parameter(
         )]
     )
     data class Slider(
-        @Ignore override val regId: Long,
-        @Ignore override val title: String,
+        @ColumnInfo(name = "regId", index = true)
+        override val regId: Long,
+        override val title: String,
         val value: Int,
         val lowestValue: Int,
         val highestValue: Int
     ) : Parameter(title, regId) {
+
+        constructor() : this(0L, "", 0, 0, 0)
+
         override fun toString(): String {
             return "$title: $value from $lowestValue to $highestValue"
         }
@@ -54,7 +56,7 @@ sealed class Parameter(
 
 }
 
-fun List<Parameter>.mapToEventParameterList() : List<EventItemParameter> {
+fun List<Parameter>.mapToEventParameterList(): List<EventItemParameter> {
     return map { p ->
         when (p) {
             is Parameter.Note -> {

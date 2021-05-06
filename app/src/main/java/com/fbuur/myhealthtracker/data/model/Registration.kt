@@ -1,5 +1,6 @@
 package com.fbuur.myhealthtracker.data.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -17,6 +18,7 @@ import java.util.*
 data class Registration(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    @ColumnInfo(name = "temId", index = true)
     val temId: Long,
     val date: Date,
     val type: RegistrationType,

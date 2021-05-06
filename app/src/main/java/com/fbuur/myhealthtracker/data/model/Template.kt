@@ -1,8 +1,6 @@
 package com.fbuur.myhealthtracker.data.model
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.fbuur.myhealthtracker.pages.events.RegistrationViewModel
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import java.util.*
@@ -10,6 +8,7 @@ import java.util.*
 @Entity
 data class Template(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id", index = true)
     val id: Long,
     val name: String,
     val lastUsed: Date,
@@ -22,11 +21,11 @@ data class Template(
         parentColumns = ["id"],
         childColumns = ["temId"],
         onDelete = ForeignKey.CASCADE)]
-
 )
 data class TemplateType(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    @ColumnInfo(name = "temId", index = true)
     val temId: Long,
     val type: ParameterType
 )
