@@ -17,22 +17,34 @@
         android:textColor="@color/white"
         android:textSize="11sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/quickRegisterRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blue_300"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:layoutAnimation="@anim/quick_register_item_animation"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_quick_register" />
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/quickRegisterRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue_300"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:layoutAnimation="@anim/quick_register_item_animation"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_quick_register" />
+
+        <ProgressBar
+            android:id="@+id/quickRegisterProgressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -76,6 +76,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 this.eventItemEntries = eventItemEntries
                 eventsAdapter.setData(this.eventItemEntries)
                 binding.eventsRecyclerView.scrollToPosition(0)
+                binding.eventsProgressBar.visibility = View.GONE
 
                 if (this.eventItemEntries.isEmpty()) {
                     binding.emptyListContainer.root.visibility = View.VISIBLE
@@ -91,6 +92,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 this.quickRegisterEntries = quickRegisterEntries
                 quickRegisterAdapter.setData(this.quickRegisterEntries)
                 binding.quickRegister.quickRegisterRecyclerView.scrollToPosition(0)
+                binding.quickRegister.quickRegisterProgressBar.visibility = View.GONE
             })
 
         // setup view binding
