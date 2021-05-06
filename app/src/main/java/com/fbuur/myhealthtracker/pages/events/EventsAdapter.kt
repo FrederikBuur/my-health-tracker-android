@@ -12,7 +12,6 @@ import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
-import com.fbuur.myhealthtracker.util.DiffUtilEventItems
 
 class EventsListAdapter(
     private val onAddParameterClicked: (Long, Long) -> Unit,

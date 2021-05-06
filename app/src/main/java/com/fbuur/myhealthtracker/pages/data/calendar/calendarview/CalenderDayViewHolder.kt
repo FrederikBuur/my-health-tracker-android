@@ -90,6 +90,7 @@ class CalenderDayViewHolder(
 }
 
 class CalenderDay(
+    val id: String,
     val day: Int,
     val calenderDayType: CalenderDayType,
     val events: List<CalenderEvent>,

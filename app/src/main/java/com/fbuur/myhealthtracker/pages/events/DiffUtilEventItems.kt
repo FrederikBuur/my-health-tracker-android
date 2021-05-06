@@ -1,4 +1,4 @@
-package com.fbuur.myhealthtracker.util
+package com.fbuur.myhealthtracker.pages.events
 
 import androidx.recyclerview.widget.DiffUtil
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry

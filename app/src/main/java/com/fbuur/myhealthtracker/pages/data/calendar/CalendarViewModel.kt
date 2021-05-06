@@ -74,7 +74,7 @@ class CalendarViewModel(
         // fill with whitespace events
         for (i in 1 until firstWeekDayInMonth) {
             calenderDayList.add(
-                CalenderDay(-1, CalenderDayType.WHITESPACE, emptyList(), false)
+                CalenderDay("", -1, CalenderDayType.WHITESPACE, emptyList(), false)
             )
         }
 
@@ -116,6 +116,7 @@ class CalendarViewModel(
                 // add calender day to final list
                 calenderDayList.add(
                     CalenderDay(
+                        id = regDayList.map { it.id }.toString(),
                         day = i,
                         calenderDayType = CalenderDayType.DAY,
                         events = calenderEvents,

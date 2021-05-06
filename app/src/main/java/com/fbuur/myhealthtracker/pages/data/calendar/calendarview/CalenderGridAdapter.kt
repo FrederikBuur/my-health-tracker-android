@@ -4,8 +4,10 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.fbuur.myhealthtracker.databinding.ItemCalenderDayBinding
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEventViewHolder
+import com.fbuur.myhealthtracker.pages.events.DiffUtilEventItems
 import java.lang.Exception
 
 class CalenderGridAdapter(
@@ -37,7 +39,10 @@ class CalenderGridAdapter(
     }
 
     fun setData(list: List<CalenderDay>) {
-        // todo implement diff util here
+        // todo implement diff util here but needs a recyclerview adapter
+//        val diffUtil = DiffUtilCalendarDay(this.list, list)
+//        val diffResults = DiffUtil.calculateDiff(diffUtil)
+//        diffResults.dispatchUpdatesTo(this)
         this.list = list
         this.notifyDataSetChanged()
     }
