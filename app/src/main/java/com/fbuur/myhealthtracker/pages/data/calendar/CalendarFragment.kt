@@ -22,8 +22,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
 
-    private var selectedDay = Date()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,44 +36,67 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         // setup view model
         calendarViewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
 
+
         // setup adapters
         val calenderGridAdapter = CalenderGridAdapter(
             calenderDayList = emptyList(),
             activity = (context as? Activity) ?: throw Exception("test 123 ???")
         ) { selectedDay ->
-            // set viewmodel selected day to selected day
+            // set view model selected day to selected day
             calendarViewModel.setSelectedDate(CalendarManager.getDateAtDay(selectedDay))
-
-            // todo start recyclerview loader
+            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
         }
         val calendarDayEventsAdapter = CalendarSelectedDayAdapter()
 
+
         // live data observers
         calendarViewModel.calendarDays.observe(viewLifecycleOwner) { calendarDays ->
+            // update data
             calenderGridAdapter.setData(calendarDays)
-            // in case month has been changed
-            updateUI()
+            // update ui
+            binding.calendarViewSpinner.visibility = View.GONE
+            binding.calendarViewPlaceholder.visibility = View.GONE
+            binding.monthTitle.text = calendarViewModel.getSelectedDate()?.toMonthYearString()
         }
         calendarViewModel.selectedDayEvents.observe(viewLifecycleOwner) { selectedCalendarDayEventList ->
+            // update data
             calendarDayEventsAdapter.setData(selectedCalendarDayEventList)
-
-            // todo stop recyclerview loader
+            // update ui
+            binding.selectedDayEventsSpinner.visibility = View.GONE
+            if (selectedCalendarDayEventList.isEmpty()) {
+                binding.selectedDayEventsEmptyView.root.visibility = View.VISIBLE
+            } else {
+                binding.selectedDayEventsEmptyView.root.visibility = View.GONE
+                binding.selectedDayEvents.scrollToPosition(0)
+            }
         }
 
-        // set adapters
+
+        // set binding values
         binding.apply {
             calenderGridView.adapter = calenderGridAdapter
             selectedDayEvents.adapter = calendarDayEventsAdapter
+            monthTitle.text = calendarViewModel.getSelectedDate()?.toMonthYearString()
+            arrowPrevious.setOnClickListener {
+                calendarViewSpinner.visibility = View.VISIBLE
+                selectedDayEventsSpinner.visibility = View.VISIBLE
+                calendarViewModel.getSelectedDate()?.let {
+                    calendarViewModel.setSelectedDate(
+                        CalendarManager.getPreviousMonthAsDate(it)
+                    )
+                }
+            }
+            arrowNext.setOnClickListener {
+                calendarViewSpinner.visibility = View.VISIBLE
+                selectedDayEventsSpinner.visibility = View.VISIBLE
+                calendarViewModel.getSelectedDate()?.let {
+                    calendarViewModel.setSelectedDate(
+                        CalendarManager.getNextMonthAsDate(it)
+                    )
+                }
+            }
         }
 
-        updateUI()
-
-    }
-
-    private fun updateUI() {
-        binding.apply {
-            monthTitle.text = this@CalendarFragment.selectedDay.toMonthYearString()
-        }
     }
 
     override fun onDestroy() {

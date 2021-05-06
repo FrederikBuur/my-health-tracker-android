@@ -179,12 +179,18 @@ object CalendarManager {
         cal.clear(Calendar.MILLISECOND)
     }
 
-    fun getPreviousMonthAsDate(): Date {
-        return Date()
+    fun getPreviousMonthAsDate(date: Date): Date {
+        cal.time = date
+        cal.add(Calendar.MONTH, -1)
+        cal.set(Calendar.DAY_OF_MONTH, 1)
+        return cal.time
     }
 
-    fun getNextMonthAsDate(): Date {
-        return Date()
+    fun getNextMonthAsDate(date: Date): Date {
+        cal.time = date
+        cal.add(Calendar.MONTH, 1)
+        cal.set(Calendar.DAY_OF_MONTH, 1)
+        return cal.time
     }
 
     fun getDateAtDay(day: Int): Date {

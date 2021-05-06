@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,9 +12,9 @@
         android:id="@+id/monthPicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="horizontal"
-        android:paddingVertical="8dp"
-        android:background="@color/white">
+        android:paddingVertical="8dp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/arrowPrevious"
@@ -28,8 +27,8 @@
             android:id="@+id/monthTitle"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
             android:layout_gravity="center"
+            android:fontFamily="sans-serif-medium"
             android:textAlignment="center"
             tools:text="October" />
 
@@ -47,23 +46,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"/>
+        android:paddingBottom="8dp" />
 
-    <GridView
-        android:id="@+id/calenderGridView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:numColumns="7"
-        tools:layout_height="250dp"
-        tools:listitem="@layout/view_calender_day" />
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/selectedDayEvents"
+        <View
+            android:id="@+id/calendarViewPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@color/white"/>
+
+        <GridView
+            android:id="@+id/calenderGridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:numColumns="7"
+            tools:layout_height="300dp"
+            tools:listitem="@layout/item_calender_day" />
+
+        <ProgressBar
+            android:id="@+id/calendarViewSpinner"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_event" />
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/selectedDayEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_event" />
+
+        <include
+            android:id="@+id/selectedDayEventsEmptyView"
+            layout="@layout/view_empty_selected_day_events"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/selectedDayEventsSpinner"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </LinearLayout>

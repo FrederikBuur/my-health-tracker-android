@@ -2,12 +2,12 @@ package com.fbuur.myhealthtracker.pages.data.calendar.calendarview
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.fbuur.myhealthtracker.databinding.ViewCalenderDayBinding
+import com.fbuur.myhealthtracker.databinding.ItemCalenderDayBinding
 import com.fbuur.myhealthtracker.databinding.ViewCalenderDayEventIconBinding
 import com.fbuur.myhealthtracker.util.getInitials
 
 class CalenderDayViewHolder(
-    private val itemBinding: ViewCalenderDayBinding,
+    private val itemBinding: ItemCalenderDayBinding,
     private val onDaySelected: (Int) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.fbuur.myhealthtracker.databinding.ViewCalenderDayBinding
+import com.fbuur.myhealthtracker.databinding.ItemCalenderDayBinding
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEventViewHolder
 import java.lang.Exception
 
@@ -24,20 +24,10 @@ class CalenderGridAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
 
-        var v = convertView
-
-        val viewHolder: CalenderDayViewHolder
-        if (convertView == null) {
-            viewHolder = CalenderDayViewHolder(
-                itemBinding = ViewCalenderDayBinding.inflate(activity.layoutInflater, null, false),
-                onDaySelected = onDaySelected
-            )
-            v = viewHolder.itemView
-            v.tag = viewHolder
-        } else {
-            viewHolder =
-                (v?.tag as? CalenderDayViewHolder) ?: throw Exception("test123 should not happen?")
-        }
+        val viewHolder = CalenderDayViewHolder(
+            itemBinding = ItemCalenderDayBinding.inflate(activity.layoutInflater, null, false),
+            onDaySelected = onDaySelected
+        )
 
         // setup binding
         val item = getItem(position)
@@ -47,6 +37,7 @@ class CalenderGridAdapter(
     }
 
     fun setData(list: List<CalenderDay>) {
+        // todo implement diff util here
         this.list = list
         this.notifyDataSetChanged()
     }
