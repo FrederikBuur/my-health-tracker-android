@@ -22,8 +22,8 @@ class DiffUtilCalendarDay(
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].day == newList[newItemPosition].day &&
-                return oldList[oldItemPosition].calenderDayType == newList[newItemPosition].calenderDayType &&
-                        return oldList[oldItemPosition].events.toString() == newList[newItemPosition].events.toString() &&
-                                return oldList[oldItemPosition].isSelected == newList[newItemPosition].isSelected
+                oldList[oldItemPosition].calenderDayType == newList[newItemPosition].calenderDayType &&
+                oldList[oldItemPosition].events.toString() == newList[newItemPosition].events.toString() &&
+                oldList[oldItemPosition].isSelected == newList[newItemPosition].isSelected
     }
 }

@@ -98,8 +98,8 @@ class EventsListAdapter(
     fun setData(newEvents: List<EventItemEntry>) {
         val diffUtil = DiffUtilEventItems(this.eventsList, newEvents)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
-        diffResults.dispatchUpdatesTo(this)
         eventsList = newEvents
+        diffResults.dispatchUpdatesTo(this)
     }
 
 }
