@@ -30,10 +30,10 @@ class CalenderDayViewHolder(
             day.text = calenderDay.day.toString()
             daySelectedIndicator.text = calenderDay.day.toString()
 
-            icon1.setup(calenderDay.events.getOrNull(0))
-            icon2.setup(calenderDay.events.getOrNull(1))
-            icon3.setup(calenderDay.events.getOrNull(2))
-            icon4.setup(calenderDay.events.getOrNull(3), calenderDay.events.size)
+//            icon1.setup(calenderDay.events.getOrNull(0))
+//            icon2.setup(calenderDay.events.getOrNull(1))
+//            icon3.setup(calenderDay.events.getOrNull(2))
+//            icon4.setup(calenderDay.events.getOrNull(3), calenderDay.events.size)
             root.setOnClickListener {
                 onDaySelected(calenderDay.day)
                 setDaySelected(true)
@@ -41,7 +41,7 @@ class CalenderDayViewHolder(
         }
     }
 
-    fun setDaySelected(isSelected: Boolean) {
+    private fun setDaySelected(isSelected: Boolean) {
         itemBinding.apply {
             if (isSelected) {
                 day.visibility = View.INVISIBLE
