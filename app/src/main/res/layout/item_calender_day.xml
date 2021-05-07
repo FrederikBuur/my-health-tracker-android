@@ -7,7 +7,6 @@
     android:paddingHorizontal="1dp"
     android:paddingTop="1dp"
     android:paddingBottom="2dp"
-    android:background="@color/blue_300"
     tools:layout_width="58dp">
 
     <TextView
@@ -40,48 +39,48 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="88" />
 
-<!--    <include-->
-<!--        android:id="@+id/icon1"-->
-<!--        layout="@layout/view_calender_day_event_icon"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        app:layout_constraintHorizontal_bias="0"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/day" />-->
+    <include
+        android:id="@+id/icon1"
+        layout="@layout/view_calender_day_event_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day" />
 
-<!--    <include-->
-<!--        android:id="@+id/icon2"-->
-<!--        layout="@layout/view_calender_day_event_icon"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        app:layout_constraintHorizontal_bias=".33"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/day" />-->
+    <include
+        android:id="@+id/icon2"
+        layout="@layout/view_calender_day_event_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        app:layout_constraintHorizontal_bias=".33"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day" />
 
-<!--    <include-->
-<!--        android:id="@+id/icon3"-->
-<!--        layout="@layout/view_calender_day_event_icon"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        app:layout_constraintHorizontal_bias=".66"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/day" />-->
+    <include
+        android:id="@+id/icon3"
+        layout="@layout/view_calender_day_event_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        app:layout_constraintHorizontal_bias=".66"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day" />
 
-<!--    <include-->
-<!--        android:id="@+id/icon4"-->
-<!--        layout="@layout/view_calender_day_event_icon"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        app:layout_constraintHorizontal_bias="1"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/day" />-->
+    <include
+        android:id="@+id/icon4"
+        layout="@layout/view_calender_day_event_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
