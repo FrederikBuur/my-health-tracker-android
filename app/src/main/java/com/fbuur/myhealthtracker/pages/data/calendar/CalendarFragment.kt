@@ -43,7 +43,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             // set view model selected day to selected day
             calendarViewModel.setSelectedDate(CalendarManager.getDateAtDay(selectedDay))
             // set ui
-            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
+//            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
 //            binding.selectedDayEventsEmptyView.container.visibility = View.GONE
         }
         val calendarDayEventsAdapter = CalendarSelectedDayAdapter()
@@ -54,14 +54,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             // update data
             calenderGridAdapter.setData(calendarDays)
             // update ui
-            binding.calendarViewSpinner.visibility = View.GONE
+//            binding.calendarViewSpinner.visibility = View.GONE
             binding.monthTitle.text = calendarViewModel.getSelectedDate()?.toMonthYearString()
         }
         calendarViewModel.selectedDayEvents.observe(viewLifecycleOwner) { selectedCalendarDayEventList ->
             // update data
             calendarDayEventsAdapter.setData(selectedCalendarDayEventList)
             // update ui
-            binding.selectedDayEventsSpinner.visibility = View.GONE
+//            binding.selectedDayEventsSpinner.visibility = View.GONE
             if (selectedCalendarDayEventList.isEmpty()) {
 //                binding.selectedDayEventsEmptyView.container.visibility = View.VISIBLE
             } else {
@@ -82,8 +82,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 //            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
 //            binding.calendarViewSpinner.visibility = View.VISIBLE
             arrowPrevious.setOnClickListener {
-                calendarViewSpinner.visibility = View.VISIBLE
-                selectedDayEventsSpinner.visibility = View.VISIBLE
+//                calendarViewSpinner.visibility = View.VISIBLE
+//                selectedDayEventsSpinner.visibility = View.VISIBLE
 //                binding.selectedDayEventsEmptyView.container.visibility = View.GONE
                 calendarViewModel.getSelectedDate()?.let {
                     calendarViewModel.setSelectedDate(
@@ -92,8 +92,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 }
             }
             arrowNext.setOnClickListener {
-                calendarViewSpinner.visibility = View.VISIBLE
-                selectedDayEventsSpinner.visibility = View.VISIBLE
+//                calendarViewSpinner.visibility = View.VISIBLE
+//                selectedDayEventsSpinner.visibility = View.VISIBLE
 //                binding.selectedDayEventsEmptyView.container.visibility = View.GONE
                 calendarViewModel.getSelectedDate()?.let {
                     calendarViewModel.setSelectedDate(

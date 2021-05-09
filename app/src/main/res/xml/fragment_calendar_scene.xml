@@ -12,27 +12,16 @@
             motion:touchAnchorId="@id/selectedDayEvents" />
     </Transition>
 
-    <ConstraintSet android:id="@+id/start">
-        <Constraint
-            android:id="@+id/calenderGridView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            motion:layout_constraintBottom_toTopOf="@id/selectedDayEvents"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/weekdays" />
-    </ConstraintSet>
+    <ConstraintSet android:id="@+id/start"></ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/calenderGridView"
+            android:id="@+id/selectedDayEvents"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="invisible"
-            motion:layout_constraintBottom_toTopOf="@id/selectedDayEvents"
+            android:layout_height="match_parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/weekdays" />
+            motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 </MotionScene>

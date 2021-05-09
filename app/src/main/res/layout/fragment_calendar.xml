@@ -70,16 +70,16 @@
         app:layout_constraintTop_toBottomOf="@id/weekdays"
         tools:layout_height="300dp" />
 
-    <ProgressBar
-        android:id="@+id/calendarViewSpinner"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/calenderGridView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/calenderGridView"
-        tools:visibility="visible" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/calendarViewSpinner"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/calenderGridView"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/calenderGridView"-->
+<!--        tools:visibility="visible" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/selectedDayEvents"
@@ -92,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calenderGridView"
-        tools:listitem="@layout/item_event" />
+        tools:listitem="@layout/item_calendar_selected_day" />
 
 <!--    <include-->
 <!--        android:id="@+id/selectedDayEventsEmptyView"-->
@@ -104,15 +104,15 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="@id/selectedDayEvents"/>-->
 
-    <ProgressBar
-        android:id="@+id/selectedDayEventsSpinner"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
-        tools:visibility="visible" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/selectedDayEventsSpinner"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/calenderGridView"-->
+<!--        tools:visibility="visible" />-->
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
