@@ -86,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:background="@color/mth_background_white"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,17 +94,15 @@
         app:layout_constraintTop_toBottomOf="@id/calenderGridView"
         tools:listitem="@layout/item_event" />
 
-    <include
-        android:id="@+id/selectedDayEventsEmptyView"
-        layout="@layout/view_empty_selected_day_events"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
-        tools:visibility="visible" />
+<!--    <include-->
+<!--        android:id="@+id/selectedDayEventsEmptyView"-->
+<!--        layout="@layout/view_empty_selected_day_events"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/selectedDayEvents"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/selectedDayEvents"/>-->
 
     <ProgressBar
         android:id="@+id/selectedDayEventsSpinner"
