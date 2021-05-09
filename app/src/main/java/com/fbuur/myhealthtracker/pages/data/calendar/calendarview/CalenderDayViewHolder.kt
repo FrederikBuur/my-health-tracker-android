@@ -62,7 +62,7 @@ class CalenderDayViewHolder(
         eventCount: Int = 0
     ) {
         calenderEvent?.let {
-
+            root.visibility = View.VISIBLE
             // setup text and background
             if (eventCount > 4) {
                 moreIconText.text = "+${eventCount.minus(3)}"
