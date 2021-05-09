@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentCalendarBinding
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderGridAdapter
@@ -38,10 +39,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         // setup adapters
-        val calenderGridAdapter = CalenderGridAdapter(
-            calenderDayList = emptyList(),
-            activity = (context as? Activity) ?: throw Exception("test 123 ???")
-        ) { selectedDay ->
+        val calenderGridAdapter = CalenderGridAdapter() { selectedDay ->
             // set view model selected day to selected day
             calendarViewModel.setSelectedDate(CalendarManager.getDateAtDay(selectedDay))
             // set ui
@@ -75,6 +73,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         // set binding values
         binding.apply {
+            calenderGridView.layoutManager =
+                GridLayoutManager(this@CalendarFragment.requireContext(), 7)
             calenderGridView.adapter = calenderGridAdapter
             selectedDayEvents.adapter = calendarDayEventsAdapter
             monthTitle.text = calendarViewModel.getSelectedDate()?.toMonthYearString()
