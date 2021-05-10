@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.fbuur.myhealthtracker.data.TrackingDatabase
 import com.fbuur.myhealthtracker.data.model.*
-import com.fbuur.myhealthtracker.data.registration.RegistrationRepository
+import com.fbuur.myhealthtracker.data.registration.TrackingRepository
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.pages.events.eventsentry.toParameter
@@ -16,7 +16,7 @@ import java.util.*
 
 class RegistrationViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: RegistrationRepository
+    private val repository: TrackingRepository
 
     private var eventList = emptyList<EventItemEntry>()
 
@@ -32,8 +32,8 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
 
 
     init {
-        val registrationDao = TrackingDatabase.getTrackingDatabase(application).registrationDao()
-        repository = RegistrationRepository(registrationDao)
+        val registrationDao = TrackingDatabase.getTrackingDatabase(application).trackingDAO()
+        repository = TrackingRepository(registrationDao)
 
 //        _readAllEventItemEntries.value = setupEventItemEntryLiveData()
 //        _readAllQuickRegisterEntries.value = setupQuickRegisterEntryLiveData()

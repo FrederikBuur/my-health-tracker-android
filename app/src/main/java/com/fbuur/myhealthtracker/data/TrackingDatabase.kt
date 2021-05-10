@@ -5,8 +5,8 @@ import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fbuur.myhealthtracker.data.model.*
-import com.fbuur.myhealthtracker.data.registration.RegistrationDAO
-import com.fbuur.myhealthtracker.data.registration.RegistrationTypeConverters
+import com.fbuur.myhealthtracker.data.registration.TrackingDAO
+import com.fbuur.myhealthtracker.data.registration.TrackingTypeConverters
 import java.util.*
 
 @Database(
@@ -15,10 +15,10 @@ import java.util.*
     version = 1,
     exportSchema = false
 )
-@TypeConverters(value = [RegistrationTypeConverters::class])
+@TypeConverters(value = [TrackingTypeConverters::class])
 abstract class TrackingDatabase : RoomDatabase() {
 
-    abstract fun registrationDao(): RegistrationDAO
+    abstract fun trackingDAO(): TrackingDAO
 
     companion object {
         @Volatile

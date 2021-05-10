@@ -8,7 +8,7 @@ import com.fbuur.myhealthtracker.data.model.Template
 import java.util.*
 
 @Dao
-interface RegistrationDAO {
+interface TrackingDAO {
 
     // insert
     @Insert(onConflict = OnConflictStrategy.IGNORE)

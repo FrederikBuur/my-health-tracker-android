@@ -1,6 +1,5 @@
 package com.fbuur.myhealthtracker.pages.data.calendar
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,15 +9,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentCalendarBinding
+import com.fbuur.myhealthtracker.pages.data.CalendarManager
+import com.fbuur.myhealthtracker.pages.data.DataViewModel
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderGridAdapter
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayAdapter
 import com.fbuur.myhealthtracker.util.toMonthYearString
-import java.lang.Exception
 import java.util.*
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
-    private lateinit var calendarViewModel: CalendarViewModel
+    private lateinit var dataViewModel: DataViewModel
 
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
@@ -35,13 +35,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private fun setup() {
 
         // setup view model
-        calendarViewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
+        dataViewModel = ViewModelProvider(this).get(DataViewModel::class.java)
 
 
         // setup adapters
         val calenderGridAdapter = CalenderGridAdapter() { selectedDay ->
             // set view model selected day to selected day
-            calendarViewModel.setSelectedDate(CalendarManager.getDateAtDay(selectedDay))
+            dataViewModel.setSelectedDate(CalendarManager.getDateAtDay(selectedDay))
             // set ui
 //            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
 //            binding.selectedDayEventsEmptyView.container.visibility = View.GONE
@@ -50,14 +50,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         // live data observers
-        calendarViewModel.calendarDays.observe(viewLifecycleOwner) { calendarDays ->
+        dataViewModel.calendarDays.observe(viewLifecycleOwner) { calendarDays ->
             // update data
             calenderGridAdapter.setData(calendarDays)
             // update ui
 //            binding.calendarViewSpinner.visibility = View.GONE
-            binding.monthTitle.text = calendarViewModel.getSelectedDate()?.toMonthYearString()
+            binding.monthPicker.monthTitle.text = dataViewModel.getSelectedDate()?.toMonthYearString()
         }
-        calendarViewModel.selectedDayEvents.observe(viewLifecycleOwner) { selectedCalendarDayEventList ->
+        dataViewModel.selectedDayEvents.observe(viewLifecycleOwner) { selectedCalendarDayEventList ->
             // update data
             calendarDayEventsAdapter.setData(selectedCalendarDayEventList)
             // update ui
@@ -78,25 +78,25 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             calenderGridView.itemAnimator = null
             calenderGridView.adapter = calenderGridAdapter
             selectedDayEvents.adapter = calendarDayEventsAdapter
-            monthTitle.text = calendarViewModel.getSelectedDate()?.toMonthYearString()
+                monthPicker.monthTitle.text = dataViewModel.getSelectedDate()?.toMonthYearString()
 //            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
 //            binding.calendarViewSpinner.visibility = View.VISIBLE
-            arrowPrevious.setOnClickListener {
+                monthPicker.arrowPrevious.setOnClickListener {
 //                calendarViewSpinner.visibility = View.VISIBLE
 //                selectedDayEventsSpinner.visibility = View.VISIBLE
 //                binding.selectedDayEventsEmptyView.container.visibility = View.GONE
-                calendarViewModel.getSelectedDate()?.let {
-                    calendarViewModel.setSelectedDate(
+                dataViewModel.getSelectedDate()?.let {
+                    dataViewModel.setSelectedDate(
                         CalendarManager.getPreviousMonthAsDate(it)
                     )
                 }
             }
-            arrowNext.setOnClickListener {
+                monthPicker.arrowNext.setOnClickListener {
 //                calendarViewSpinner.visibility = View.VISIBLE
 //                selectedDayEventsSpinner.visibility = View.VISIBLE
 //                binding.selectedDayEventsEmptyView.container.visibility = View.GONE
-                calendarViewModel.getSelectedDate()?.let {
-                    calendarViewModel.setSelectedDate(
+                dataViewModel.getSelectedDate()?.let {
+                    dataViewModel.setSelectedDate(
                         CalendarManager.getNextMonthAsDate(it)
                     )
                 }

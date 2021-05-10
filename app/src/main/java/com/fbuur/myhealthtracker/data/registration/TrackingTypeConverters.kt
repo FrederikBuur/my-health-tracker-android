@@ -5,7 +5,7 @@ import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.RegistrationType
 import java.util.*
 
-class RegistrationTypeConverters {
+class TrackingTypeConverters {
 
     // Parameter type enum type converters
     @TypeConverter

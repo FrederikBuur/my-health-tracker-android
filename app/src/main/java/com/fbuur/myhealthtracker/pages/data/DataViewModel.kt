@@ -1,37 +1,39 @@
-package com.fbuur.myhealthtracker.pages.data.calendar
+package com.fbuur.myhealthtracker.pages.data
 
 import android.app.Application
 import android.graphics.Color
 import androidx.lifecycle.*
 import com.fbuur.myhealthtracker.data.TrackingDatabase
-import com.fbuur.myhealthtracker.data.registration.RegistrationRepository
+import com.fbuur.myhealthtracker.data.registration.TrackingRepository
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDay
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayType
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderEvent
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEvent
+import com.fbuur.myhealthtracker.pages.data.statistics.BarChartView
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 
-class CalendarViewModel(
+class DataViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private val repository: RegistrationRepository
+    private val repository: TrackingRepository
 
     init {
-        val registrationDAO = TrackingDatabase.getTrackingDatabase(application).registrationDao()
-        repository = RegistrationRepository(registrationDAO)
+        val registrationDAO = TrackingDatabase.getTrackingDatabase(application).trackingDAO()
+        repository = TrackingRepository(registrationDAO)
     }
 
     private val selectedDayDate = MutableLiveData(Date())
+    private val dataScope = MutableLiveData(DataScope.WEEK)
 
+    // calendar fragment live data
     val calendarDays: LiveData<List<CalenderDay>> =
         Transformations.switchMap(selectedDayDate) { selectedDate ->
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 emit(readCalenderDayItemsByMonth())
             }
         }
-
     val selectedDayEvents: LiveData<List<CalendarSelectedDayEvent>> =
         Transformations.switchMap(selectedDayDate) { selectedDate ->
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -39,11 +41,25 @@ class CalendarViewModel(
             }
         }
 
-    fun getSelectedDate() = selectedDayDate.value
+    // statistics fragment live data
+    val barChartData: LiveData<BarChartView.BarChart> =
+        Transformations.switchMap(dataScope) { dataScope ->
+            liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+                emit(readBarChartData())
+            }
+        }
+
+    fun getSelectedDate() = selectedDayDate.value!!
     fun setSelectedDate(date: Date) {
         selectedDayDate.value = date
     }
 
+    fun getDataScope() = dataScope.value
+    fun setDataScope(scope: DataScope) {
+        dataScope.value = scope
+    }
+
+    // calendar page
     private suspend fun readCalenderDayItemsByMonth(
     ): List<CalenderDay> {
 
@@ -74,7 +90,13 @@ class CalendarViewModel(
         // fill with whitespace events
         for (i in 1 until firstWeekDayInMonth) {
             calenderDayList.add(
-                CalenderDay("fill-$i-$firstWeekDayInMonth", -1, CalenderDayType.WHITESPACE, emptyList(), false)
+                CalenderDay(
+                    "fill-$i-$firstWeekDayInMonth",
+                    -1,
+                    CalenderDayType.WHITESPACE,
+                    emptyList(),
+                    false
+                )
             )
         }
 
@@ -169,45 +191,31 @@ class CalendarViewModel(
         return calenderDayEvents
     }
 
+    // statistics page
+    private suspend fun readBarChartData(
+    ): BarChartView.BarChart {
+
+        // read add registrations win the given time period
+        repository.readRegistrationByTime(getSelectedDate().time, CalendarManager.getNextMonthAsDate(getSelectedDate()).time)
+
+        // make sub lists of registrations for each day
+
+        // make x axis title list
+        val xAxisTitles = arrayListOf<String>()
+
+        // make y axis title list
+        val yAxisTitles = arrayListOf<String>()
+
+        return BarChartView.BarChart(
+            barGroups = emptyList(),
+            xAxisTitles = xAxisTitles,
+            yAxisTitles = yAxisTitles
+        )
+    }
+
+    enum class DataScope {
+        DAY, WEEK, MONTH, YEAR
+    }
+
 }
 
-object CalendarManager {
-    private val cal = Calendar.getInstance()
-
-    fun clearCalendarMeta() {
-        cal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
-        cal.clear(Calendar.MINUTE)
-        cal.clear(Calendar.SECOND)
-        cal.clear(Calendar.MILLISECOND)
-    }
-
-    fun getPreviousMonthAsDate(date: Date): Date {
-        cal.time = date
-        cal.add(Calendar.MONTH, -1)
-        cal.set(Calendar.DAY_OF_MONTH, 1)
-        return cal.time
-    }
-
-    fun getNextMonthAsDate(date: Date): Date {
-        cal.time = date
-        cal.add(Calendar.MONTH, 1)
-        cal.set(Calendar.DAY_OF_MONTH, 1)
-        return cal.time
-    }
-
-    fun getDateAtDay(day: Int): Date {
-        clearCalendarMeta()
-        cal.set(Calendar.DAY_OF_MONTH, day)
-        return cal.time
-    }
-
-    fun isDaySameDateDay(
-        day: Int,
-        date: Date,
-    ): Boolean {
-        cal.time = date
-        clearCalendarMeta()
-        val dateAsWeekDay = cal.get(Calendar.DAY_OF_MONTH)
-        return dateAsWeekDay == day
-    }
-}

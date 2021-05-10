@@ -12,6 +12,7 @@
 
     <!--    util-->
     <color name="mth_black">#FF000000</color>
+    <color name="mth_black_20">#33000000</color>
     <color name="mth_white">#FFFFFFFF</color>
     <color name="mth_white_alpha">#80FFFFFF</color>
 
