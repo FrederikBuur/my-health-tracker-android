@@ -31,6 +31,10 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         // setup view model
         dataViewModel = ViewModelProvider(this).get(DataViewModel::class.java)
 
+        // observers
+        dataViewModel.barChartData.observe(viewLifecycleOwner) { barChart ->
+            binding.barChartView.barChartData = barChart
+        }
 
     }
 

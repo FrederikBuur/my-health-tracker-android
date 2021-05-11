@@ -25,8 +25,7 @@
         app:layout_constraintBottom_toTopOf="@id/templateFilter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monthPicker"
-        tools:layout_height="200dp"/>
+        app:layout_constraintTop_toBottomOf="@id/monthPicker"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/templateFilter"

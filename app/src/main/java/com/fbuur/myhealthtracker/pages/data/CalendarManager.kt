@@ -26,6 +26,12 @@ object CalendarManager {
         return cal.time
     }
 
+    fun getNextAsDate(date: Date, scope: Int): Date {
+        cal.time = date
+        cal.add(scope, 1)
+        return cal.time
+    }
+
     fun getDateAtDay(day: Int): Date {
         clearCalendarMeta()
         cal.set(Calendar.DAY_OF_MONTH, day)
