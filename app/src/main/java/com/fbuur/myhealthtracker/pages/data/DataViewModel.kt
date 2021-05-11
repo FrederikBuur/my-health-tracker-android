@@ -263,6 +263,8 @@ class DataViewModel(
 
         val barGroups: ArrayList<List<BarChartView.BarGroupEntity>> = arrayListOf()
 
+        var maxYAxisValue = 0
+
         // map registrations into list of bar group entities
         while (endFilter.time <= toDate.time) {
 
@@ -273,7 +275,6 @@ class DataViewModel(
 
             // sort registrations into bar groups
             registrations.filter { r ->
-//                c.time = startFilter
                 r.date > startFilter && r.date < endFilter
             }.also { subList ->
 
@@ -286,6 +287,9 @@ class DataViewModel(
                     grouped.forEach { list ->
                         if (list.isNotEmpty()) {
                             val template = repository.readTemplateById(list.first().temId)
+                            if (list.size > maxYAxisValue) {
+                                maxYAxisValue = list.size
+                            }
                             barGroupEntities.add(
                                 BarChartView.BarGroupEntity(
                                     temId = template.id,
@@ -340,9 +344,7 @@ class DataViewModel(
         }
 
         // make y axis title list
-        val yAxisTitles = listOf(
-            1, 2, 3, 4, 5, 6, 7 // todo find max and use from 1 to max
-        ).reversed()
+        val yAxisTitles = (1..maxYAxisValue).toList().reversed()
 
         return BarChartView.BarChart(
             barGroups = barGroups,
