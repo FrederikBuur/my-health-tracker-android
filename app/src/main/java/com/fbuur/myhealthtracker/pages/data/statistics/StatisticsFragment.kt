@@ -71,22 +71,21 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                     }
                 }
             monthPicker.arrowPrevious.setOnClickListener {
-                val curDate = dataViewModel.getSelectedScopedDate()
-                curDate
-                val newDate = CalendarManager.getPreviousAsDateScoped(
-                    date = dataViewModel.getSelectedScopedDate(),
-                    scope = dataViewModel.getDataScope()
+                dataViewModel.setSelectedScopeDataDate(
+                    CalendarManager.getPreviousAsDateScoped(
+                        date = dataViewModel.getSelectedScopedDate(),
+                        scope = dataViewModel.getDataScope()
+                    )
                 )
-                dataViewModel.setSelectedScopeDataDate(newDate)
             }
             monthPicker.arrowNext.setOnClickListener {
-                val curDate = dataViewModel.getSelectedScopedDate()
-                curDate
-                val newDate = CalendarManager.getNextAsDateScoped(
-                    date = dataViewModel.getSelectedScopedDate(),
-                    scope = dataViewModel.getDataScope()
+
+                dataViewModel.setSelectedScopeDataDate(
+                    CalendarManager.getNextAsDateScoped(
+                        date = dataViewModel.getSelectedScopedDate(),
+                        scope = dataViewModel.getDataScope()
+                    )
                 )
-                dataViewModel.setSelectedScopeDataDate(newDate)
             }
         }
 
