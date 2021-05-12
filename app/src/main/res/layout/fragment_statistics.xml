@@ -34,6 +34,8 @@
         android:background="@color/mth_white"
         android:orientation="horizontal"
         android:paddingVertical="12dp"
+        android:paddingHorizontal="4dp"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/statAverageHeader"
         app:layout_constraintEnd_toEndOf="parent"

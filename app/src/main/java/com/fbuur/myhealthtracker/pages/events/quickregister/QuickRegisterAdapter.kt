@@ -11,7 +11,8 @@ import com.fbuur.myhealthtracker.databinding.ItemQuickRegisterNoteBinding
 class QuickRegisterAdapter(
     private val onQuickRegisterClicked: (Long) -> Unit,
     private val onQuickRegisterNoteClicked: () -> Unit,
-    private val onQuickRegisterLongClicked: (Long) -> Unit
+    private val onQuickRegisterLongClicked: (Long) -> Unit,
+    private val enableLongPress: Boolean = true
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var quickRegistersList = emptyList<QuickRegisterEntry>()
@@ -48,14 +49,15 @@ class QuickRegisterAdapter(
                 (holder as QuickRegisterEventViewHolder).bind(
                     quickRegister,
                     onQuickRegisterClicked,
-                    onQuickRegisterLongClicked
+                    onQuickRegisterLongClicked,
+                    enableLongPress
                 )
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) ViewType.NOTE.ordinal else ViewType.EVENT.ordinal
+        return if (this.quickRegistersList[position].temId == -1L) ViewType.NOTE.ordinal else ViewType.EVENT.ordinal
     }
 
     override fun getItemCount() = quickRegistersList.size

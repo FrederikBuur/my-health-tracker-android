@@ -12,6 +12,7 @@ import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentStatisticsBinding
 import com.fbuur.myhealthtracker.pages.data.CalendarManager
 import com.fbuur.myhealthtracker.pages.data.DataViewModel
+import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterAdapter
 
 class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
@@ -34,16 +35,26 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         // setup view model
         dataViewModel = ViewModelProvider(this).get(DataViewModel::class.java)
 
+        // adapters
+        val filterAdapter = QuickRegisterAdapter(
+            onQuickRegisterClicked = {},
+            onQuickRegisterNoteClicked = {},
+            onQuickRegisterLongClicked = {},
+            enableLongPress = false
+        )
+
         // observers
-        dataViewModel.barChartData.observe(viewLifecycleOwner) { barChart ->
+        dataViewModel.barChartData.observe(viewLifecycleOwner) { pair ->
             // update data
-            binding.barChartView.barChartData = barChart
+            binding.barChartView.barChartData = pair.first
+            filterAdapter.setData(pair.second)
             // update UI
             binding.monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
         }
 
         // setup UI
         binding.apply {
+            templateFilter.adapter = filterAdapter
             monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
             val adapter = ArrayAdapter(
                 requireContext(),

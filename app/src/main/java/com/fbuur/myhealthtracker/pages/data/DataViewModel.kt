@@ -4,12 +4,14 @@ import android.app.Application
 import android.graphics.Color
 import androidx.lifecycle.*
 import com.fbuur.myhealthtracker.data.TrackingDatabase
+import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.data.registration.TrackingRepository
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDay
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayType
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderEvent
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEvent
 import com.fbuur.myhealthtracker.pages.data.statistics.BarChartView
+import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import com.fbuur.myhealthtracker.util.toDayMonthYearString
 import com.fbuur.myhealthtracker.util.toWeekMonthYear
 import kotlinx.coroutines.Dispatchers
@@ -50,10 +52,10 @@ class DataViewModel(
         }
 
     // statistics fragment live data
-    val barChartData: LiveData<BarChartView.BarChart> =
+    val barChartData: LiveData<Pair<BarChartView.BarChart, List<QuickRegisterEntry>>> =
         Transformations.switchMap(selectedScopeDate) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                emit(readBarChartData())
+                emit(readStatisticsData())
             }
         }
 
@@ -72,7 +74,7 @@ class DataViewModel(
     }
 
     fun getSelectedScopedDate() = selectedScopeDate.value!!
-    fun getSelectedScopedDateString() = when(getDataScope()) {
+    fun getSelectedScopedDateString() = when (getDataScope()) {
         DataScope.DAY -> {
             getSelectedScopedDate().toDayMonthYearString()
         }
@@ -83,6 +85,7 @@ class DataViewModel(
             getSelectedScopedDate().toDayMonthYearString()
         }
     }
+
     fun setSelectedScopeDataDate(date: Date) {
         selectedScopeDate.value = date
     }
@@ -220,8 +223,8 @@ class DataViewModel(
     }
 
     // statistics page
-    private suspend fun readBarChartData(
-    ): BarChartView.BarChart {
+    private suspend fun readStatisticsData(
+    ): Pair<BarChartView.BarChart, List<QuickRegisterEntry>> {
 
         // set from- to date time
         val c = Calendar.getInstance()
@@ -277,7 +280,7 @@ class DataViewModel(
 
 
         val barGroups: ArrayList<List<BarChartView.BarGroupEntity>> = arrayListOf()
-
+        val templates = arrayListOf<Template>()
         var maxYAxisValue = 0
 
         // map registrations into list of bar group entities
@@ -302,6 +305,7 @@ class DataViewModel(
                             if (list.size > maxYAxisValue) {
                                 maxYAxisValue = list.size
                             }
+                            templates.add(template)
                             barGroupEntities.add(
                                 BarChartView.BarGroupEntity(
                                     temId = template.id,
@@ -352,11 +356,22 @@ class DataViewModel(
         // make y axis title list
         val yAxisTitles = (1..maxYAxisValue).toList().reversed()
 
-        return BarChartView.BarChart(
-            barGroups = barGroups,
-            xAxisTitles = xAxisTitles,
-            yAxisTitles = yAxisTitles,
-            scope = getDataScope()
+        return Pair(
+            BarChartView.BarChart(
+                barGroups = barGroups,
+                xAxisTitles = xAxisTitles,
+                yAxisTitles = yAxisTitles,
+                scope = getDataScope()
+            ),
+            templates.distinct().map { t ->
+                QuickRegisterEntry(
+                    id = t.id.toString(),
+                    temId = t.id,
+                    name = t.name,
+                    color = t.color,
+                    templateTypes = emptyList()
+                )
+            }
         )
     }
 

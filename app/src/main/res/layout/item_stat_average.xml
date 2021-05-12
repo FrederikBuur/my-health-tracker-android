@@ -85,7 +85,7 @@
                 android:maxLines="1"
                 android:textColor="@color/mth_white"
                 android:textSize="12sp"
-                tools:text="All time" />
+                tools:text="Last week" />
 
             <TextView
                 android:id="@+id/value2"

@@ -17,7 +17,8 @@ class QuickRegisterEventViewHolder(
     fun bind(
         quickRegisterEntry: QuickRegisterEntry,
         onQuickRegisterClicked: (Long) -> Unit,
-        onQuickRegisterLongClicked: (Long) -> Unit
+        onQuickRegisterLongClicked: (Long) -> Unit,
+        enableLongPress: Boolean = true
     ) {
         title = quickRegisterEntry.name
 
@@ -31,7 +32,9 @@ class QuickRegisterEventViewHolder(
                 onQuickRegisterLongClicked(quickRegisterEntry.temId)
                 false
             }
-            root.setOnCreateContextMenuListener(this@QuickRegisterEventViewHolder)
+            if (enableLongPress) {
+                root.setOnCreateContextMenuListener(this@QuickRegisterEventViewHolder)
+            }
 
         }
     }

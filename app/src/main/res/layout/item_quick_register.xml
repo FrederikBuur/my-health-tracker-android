@@ -15,23 +15,22 @@
         app:cardElevation="0dp"
         tools:cardBackgroundColor="#EE5959">
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="180dp"
-                android:layout_gravity="center"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:paddingHorizontal="16dp"
-                android:textAlignment="center"
-                android:textColor="@color/mth_text_primary_onwhite"
-                android:textSize="12sp"
-                tools:text="Wrist pain Wrist pain Wrist pain Wrist pain " />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:maxWidth="180dp"
+            android:maxLines="1"
+            android:paddingHorizontal="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/mth_text_primary_onwhite"
+            android:textSize="12sp"
+            tools:text="Wrist pain " />
 
     </androidx.cardview.widget.CardView>
-
 
 </FrameLayout>
