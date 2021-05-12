@@ -9,28 +9,46 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/arrowPrevious"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight=".8"
         android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
         app:srcCompat="@drawable/ic_arrow_back" />
 
-    <TextView
-        android:id="@+id/monthTitle"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_weight="1"
-        android:fontFamily="sans-serif-medium"
-        android:textAlignment="center"
-        tools:text="October" />
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/monthTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-medium"
+            android:textAlignment="center"
+            android:layout_marginEnd="4dp"
+            tools:text="October" />
+
+        <Spinner
+            android:id="@+id/scopeDropDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="wrap_content"
+            android:visibility="gone"
+            android:layout_marginStart="4dp"/>
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/arrowNext"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight=".8"
         android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
         app:srcCompat="@drawable/ic_arrow_forward" />
 
 </LinearLayout>

@@ -78,7 +78,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             calenderGridView.itemAnimator = null
             calenderGridView.adapter = calenderGridAdapter
             selectedDayEvents.adapter = calendarDayEventsAdapter
-                monthPicker.monthTitle.text = dataViewModel.getSelectedDate()?.toMonthYearString()
+                monthPicker.monthTitle.text = dataViewModel.getSelectedDate().toMonthYearString()
 //            binding.selectedDayEventsSpinner.visibility = View.VISIBLE
 //            binding.calendarViewSpinner.visibility = View.VISIBLE
                 monthPicker.arrowPrevious.setOnClickListener {

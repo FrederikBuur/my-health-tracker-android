@@ -3,6 +3,7 @@ package com.fbuur.myhealthtracker.pages.data.statistics
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.children
 import com.fbuur.myhealthtracker.databinding.ViewBarChartBinding
+import com.fbuur.myhealthtracker.pages.data.DataViewModel
 import com.fbuur.myhealthtracker.util.dpToPx
-
 class BarChartView : FrameLayout {
 
     private var _binding: ViewBarChartBinding? = null
@@ -30,7 +30,8 @@ class BarChartView : FrameLayout {
     class BarChart(
         val barGroups: List<List<BarGroupEntity>>,
         val xAxisTitles: List<String>,
-        val yAxisTitles: List<Int>
+        val yAxisTitles: List<Int>,
+        val scope: DataViewModel.DataScope
     )
 
     class BarGroupEntity(
@@ -39,7 +40,7 @@ class BarChartView : FrameLayout {
         val value: Int
     )
 
-    var barChartData: BarChart = BarChart(emptyList(), emptyList(), emptyList())
+    var barChartData: BarChart = BarChart(emptyList(), emptyList(), emptyList(), DataViewModel.DataScope.DAY)
         set(value) {
             field = value
             setupUI(value)
@@ -71,6 +72,7 @@ class BarChartView : FrameLayout {
 
             val tv = TextView(context).apply {
                 text = it
+                textSize = 9f
                 textAlignment = TEXT_ALIGNMENT_CENTER
                 layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, // width
@@ -89,6 +91,7 @@ class BarChartView : FrameLayout {
             binding.yAxisTitles.addView(
                 TextView(context).apply {
                     text = it.toString()
+                    textSize = 9f
                     gravity = Gravity.CENTER
                     layoutParams = LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, // width
@@ -133,7 +136,17 @@ class BarChartView : FrameLayout {
                     ViewGroup.LayoutParams.MATCH_PARENT, // width
                     ViewGroup.LayoutParams.MATCH_PARENT // height
                 ).apply {
-                    width = 8.dpToPx.toInt()
+                    width = when(this@BarChartView.barChartData.scope) {
+                        DataViewModel.DataScope.DAY -> {
+                            2.dpToPx.toInt()
+                        }
+                        DataViewModel.DataScope.WEEK -> {
+                            8.dpToPx.toInt()
+                        }
+                        else -> {
+                            8.dpToPx.toInt()
+                        }
+                    }
                     height = actualHeight.toInt()
                 }
             }
@@ -145,11 +158,6 @@ class BarChartView : FrameLayout {
         binding.barGroupsContainer.addView(
             barGroup
         )
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        _binding = null
     }
 
 }

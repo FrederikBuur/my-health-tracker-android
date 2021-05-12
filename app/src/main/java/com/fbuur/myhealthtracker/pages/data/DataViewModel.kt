@@ -4,13 +4,14 @@ import android.app.Application
 import android.graphics.Color
 import androidx.lifecycle.*
 import com.fbuur.myhealthtracker.data.TrackingDatabase
-import com.fbuur.myhealthtracker.data.model.Registration
 import com.fbuur.myhealthtracker.data.registration.TrackingRepository
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDay
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayType
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderEvent
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEvent
 import com.fbuur.myhealthtracker.pages.data.statistics.BarChartView
+import com.fbuur.myhealthtracker.util.toDayMonthYearString
+import com.fbuur.myhealthtracker.util.toWeekMonthYear
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 import kotlin.Exception
@@ -32,7 +33,7 @@ class DataViewModel(
 
     // statistics live data
     private val dataScope = MutableLiveData(DataScope.WEEK)
-    private val selectedScopeData = MutableLiveData(Date())
+    private val selectedScopeDate = MutableLiveData(Date())
 
     // calendar fragment live data
     val calendarDays: LiveData<List<CalenderDay>> =
@@ -50,7 +51,7 @@ class DataViewModel(
 
     // statistics fragment live data
     val barChartData: LiveData<BarChartView.BarChart> =
-        Transformations.switchMap(selectedScopeData) {
+        Transformations.switchMap(selectedScopeDate) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 emit(readBarChartData())
             }
@@ -64,12 +65,26 @@ class DataViewModel(
 
     fun getDataScope() = dataScope.value!!
     fun setDataScope(scope: DataScope) {
-        dataScope.value = scope
+        if (scope != dataScope.value) {
+            dataScope.value = scope
+            setSelectedScopeData(Date())
+        }
     }
 
-    fun getSelectedScopeData() = selectedScopeData.value!!
+    fun getSelectedScopeData() = selectedScopeDate.value!!
+    fun getSelectedScopeDataDate() = when(getDataScope()) {
+        DataScope.DAY -> {
+            getSelectedScopeData().toDayMonthYearString()
+        }
+        DataScope.WEEK -> {
+            getSelectedScopeData().toWeekMonthYear()
+        }
+        else -> {
+            getSelectedScopeData().toDayMonthYearString()
+        }
+    }
     fun setSelectedScopeData(date: Date) {
-        selectedScopeData.value = date
+        selectedScopeDate.value = date
     }
 
     // calendar page
@@ -210,7 +225,7 @@ class DataViewModel(
 
         // set from- to date time
         val c = Calendar.getInstance()
-        c.time = this.selectedScopeData.value ?: Date()
+        c.time = this.selectedScopeDate.value ?: Date()
         c.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
         c.clear(Calendar.MINUTE)
         c.clear(Calendar.SECOND)
@@ -257,7 +272,7 @@ class DataViewModel(
         val registrations = repository.readRegistrationByTime(fromDate.time, toDate.time)
 
         var startFilter = fromDate
-        var endFilter = CalendarManager.getNextAsDate(fromDate, Calendar.DAY_OF_WEEK)
+        var endFilter = CalendarManager.getNextAsDate(fromDate, this.dataScope.value!!.offsetType)
         c.time = endFilter
 
 
@@ -267,9 +282,6 @@ class DataViewModel(
 
         // map registrations into list of bar group entities
         while (endFilter.time <= toDate.time) {
-
-            startFilter
-            endFilter
 
             val barGroupEntities = arrayListOf<BarChartView.BarGroupEntity>()
 
@@ -297,14 +309,8 @@ class DataViewModel(
                                     value = list.size
                                 )
                             )
-                        } else {
-                            // add empty list here ??
-                            list
                         }
                     }
-                } else {
-                    // add empty list here??
-                    grouped
                 }
 
                 barGroups.add(barGroupEntities.toList())
@@ -312,7 +318,7 @@ class DataViewModel(
             }
             startFilter = endFilter
             c.time
-            c.add(this.dataScope.value!!.offset, 1)
+            c.add(this.dataScope.value!!.offsetType, 1)
             c.time
             endFilter = c.time
         }
@@ -349,11 +355,12 @@ class DataViewModel(
         return BarChartView.BarChart(
             barGroups = barGroups,
             xAxisTitles = xAxisTitles,
-            yAxisTitles = yAxisTitles
+            yAxisTitles = yAxisTitles,
+            scope = getDataScope()
         )
     }
 
-    enum class DataScope(val offset: Int) {
+    enum class DataScope(val offsetType: Int) {
         DAY(Calendar.HOUR_OF_DAY),
         WEEK(Calendar.DAY_OF_WEEK),
         MONTH(Calendar.WEEK_OF_MONTH),
