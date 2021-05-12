@@ -33,7 +33,7 @@ fun Date.toDayMonthYearString(): String {
 }
 
 fun Date.toWeekMonthYear(): String {
-    val dateFormat: DateFormat = SimpleDateFormat("WW. MMMM yy", Locale.getDefault())
+    val dateFormat: DateFormat = SimpleDateFormat("W. MMMM yy", Locale.getDefault())
     return "Week:${dateFormat.format(this)}"
 }
 

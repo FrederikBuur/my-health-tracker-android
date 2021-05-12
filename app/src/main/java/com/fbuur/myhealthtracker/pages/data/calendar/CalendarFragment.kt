@@ -85,7 +85,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 //                calendarViewSpinner.visibility = View.VISIBLE
 //                selectedDayEventsSpinner.visibility = View.VISIBLE
 //                binding.selectedDayEventsEmptyView.container.visibility = View.GONE
-                dataViewModel.getSelectedDate()?.let {
+                dataViewModel.getSelectedDate().let {
                     dataViewModel.setSelectedDate(
                         CalendarManager.getPreviousMonthAsDate(it)
                     )
@@ -95,7 +95,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 //                calendarViewSpinner.visibility = View.VISIBLE
 //                selectedDayEventsSpinner.visibility = View.VISIBLE
 //                binding.selectedDayEventsEmptyView.container.visibility = View.GONE
-                dataViewModel.getSelectedDate()?.let {
+                dataViewModel.getSelectedDate().let {
                     dataViewModel.setSelectedDate(
                         CalendarManager.getNextMonthAsDate(it)
                     )

@@ -67,23 +67,23 @@ class DataViewModel(
     fun setDataScope(scope: DataScope) {
         if (scope != dataScope.value) {
             dataScope.value = scope
-            setSelectedScopeData(Date())
+            setSelectedScopeDataDate(Date())
         }
     }
 
-    fun getSelectedScopeData() = selectedScopeDate.value!!
-    fun getSelectedScopeDataDate() = when(getDataScope()) {
+    fun getSelectedScopedDate() = selectedScopeDate.value!!
+    fun getSelectedScopedDateString() = when(getDataScope()) {
         DataScope.DAY -> {
-            getSelectedScopeData().toDayMonthYearString()
+            getSelectedScopedDate().toDayMonthYearString()
         }
         DataScope.WEEK -> {
-            getSelectedScopeData().toWeekMonthYear()
+            getSelectedScopedDate().toWeekMonthYear()
         }
         else -> {
-            getSelectedScopeData().toDayMonthYearString()
+            getSelectedScopedDate().toDayMonthYearString()
         }
     }
-    fun setSelectedScopeData(date: Date) {
+    fun setSelectedScopeDataDate(date: Date) {
         selectedScopeDate.value = date
     }
 

@@ -10,8 +10,8 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentStatisticsBinding
+import com.fbuur.myhealthtracker.pages.data.CalendarManager
 import com.fbuur.myhealthtracker.pages.data.DataViewModel
-import com.fbuur.myhealthtracker.util.toDateString
 
 class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
@@ -36,12 +36,15 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         // observers
         dataViewModel.barChartData.observe(viewLifecycleOwner) { barChart ->
+            // update data
             binding.barChartView.barChartData = barChart
+            // update UI
+            binding.monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
         }
 
         // setup UI
         binding.apply {
-            monthPicker.monthTitle.text = dataViewModel.getSelectedScopeDataDate()
+            monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
@@ -50,16 +53,40 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             monthPicker.scopeDropDown.adapter = adapter
             monthPicker.scopeDropDown.visibility = View.VISIBLE
-            monthPicker.scopeDropDown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, p3: Long) {
-                    (parent?.getItemAtPosition(position) as? DataViewModel.DataScope)?.let {
-                        dataViewModel.setDataScope(it)
-                        monthPicker.monthTitle.text = dataViewModel.getSelectedScopeDataDate()
+            monthPicker.scopeDropDown.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        p3: Long
+                    ) {
+                        (parent?.getItemAtPosition(position) as? DataViewModel.DataScope)?.let {
+                            dataViewModel.setDataScope(it)
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        // do nothing
                     }
                 }
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // do nothing
-                }
+            monthPicker.arrowPrevious.setOnClickListener {
+                val curDate = dataViewModel.getSelectedScopedDate()
+                curDate
+                val newDate = CalendarManager.getPreviousAsDateScoped(
+                    date = dataViewModel.getSelectedScopedDate(),
+                    scope = dataViewModel.getDataScope()
+                )
+                dataViewModel.setSelectedScopeDataDate(newDate)
+            }
+            monthPicker.arrowNext.setOnClickListener {
+                val curDate = dataViewModel.getSelectedScopedDate()
+                curDate
+                val newDate = CalendarManager.getNextAsDateScoped(
+                    date = dataViewModel.getSelectedScopedDate(),
+                    scope = dataViewModel.getDataScope()
+                )
+                dataViewModel.setSelectedScopeDataDate(newDate)
             }
         }
 

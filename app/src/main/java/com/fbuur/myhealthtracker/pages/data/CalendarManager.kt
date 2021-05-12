@@ -32,6 +32,37 @@ object CalendarManager {
         return cal.time
     }
 
+    fun getNextAsDateScoped(date: Date, scope: DataViewModel.DataScope): Date {
+        cal.time = date
+        when(scope) {
+            DataViewModel.DataScope.DAY -> {
+                cal.add(Calendar.DAY_OF_MONTH, 1)
+            }
+            DataViewModel.DataScope.WEEK -> {
+                cal.add(Calendar.WEEK_OF_MONTH, 1)
+            }
+            else -> {
+                throw Exception("Unsupported scope")
+            }
+        }
+        return cal.time
+    }
+    fun getPreviousAsDateScoped(date: Date, scope: DataViewModel.DataScope): Date {
+        cal.time = date
+        when(scope) {
+            DataViewModel.DataScope.DAY -> {
+                cal.add(Calendar.DAY_OF_MONTH, -1)
+            }
+            DataViewModel.DataScope.WEEK -> {
+                cal.add(Calendar.WEEK_OF_MONTH, -1)
+            }
+            else -> {
+                throw Exception("Unsupported scope")
+            }
+        }
+        return cal.time
+    }
+
     fun getDateAtDay(day: Int): Date {
         clearCalendarMeta()
         cal.set(Calendar.DAY_OF_MONTH, day)
