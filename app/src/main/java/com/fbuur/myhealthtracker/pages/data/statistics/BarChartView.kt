@@ -52,6 +52,13 @@ class BarChartView : FrameLayout {
 
     private fun setupUI(chart: BarChart) {
 
+        // empty text visibility
+        if (chart.yAxisTitles.isEmpty()) {
+            binding.emptyBarChartText.visibility = View.VISIBLE
+        } else {
+            binding.emptyBarChartText.visibility = View.GONE
+        }
+
         // setup x axis titles
         setupXAxisTitles(chart.xAxisTitles)
 
