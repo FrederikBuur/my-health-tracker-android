@@ -1,19 +1,24 @@
 package com.fbuur.myhealthtracker.pages.data.statistics
 
+import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.animation.doOnStart
 import com.fbuur.myhealthtracker.databinding.ViewBarChartBinding
 import com.fbuur.myhealthtracker.pages.data.DataViewModel
 import com.fbuur.myhealthtracker.util.dpToPx
+
 class BarChartView : FrameLayout {
 
     private var _binding: ViewBarChartBinding? = null
@@ -40,7 +45,12 @@ class BarChartView : FrameLayout {
         val value: Int
     )
 
-    var barChartData: BarChart = BarChart(emptyList(), emptyList(), emptyList(), DataViewModel.DataScope.DAY)
+    var barChartData: BarChart = BarChart(
+        emptyList(),
+        emptyList(),
+        emptyList(),
+        DataViewModel.DataScope.DAY
+    )
         set(value) {
             field = value
             setupUI(value)
@@ -67,8 +77,8 @@ class BarChartView : FrameLayout {
 
         // for each bar chart group set up each group
         binding.barGroupsContainer.removeAllViews()
-        chart.barGroups.forEachIndexed { i, item ->
-            setupBarChartGroups(item, i)
+        chart.barGroups.forEach { item ->
+            setupBarChartGroups(item)
         }
 
     }
@@ -110,12 +120,7 @@ class BarChartView : FrameLayout {
         }
     }
 
-    private fun setupBarChartGroups(barGroups: List<BarGroupEntity>, i: Int) {
-
-        i
-        val maxWidth = binding.xAxisTitles.measuredWidth.toFloat()
-        val itemWidth = maxWidth / binding.xAxisTitles.childCount
-        itemWidth
+    private fun setupBarChartGroups(barGroups: List<BarGroupEntity>) {
 
         // setup bar group container
         val barGroup = LinearLayout(context).apply {
@@ -129,7 +134,7 @@ class BarChartView : FrameLayout {
         }
 
         // populate bar group container
-        barGroups.forEach { barGroupEntity ->
+        barGroups.forEachIndexed { i, barGroupEntity ->
             val maxHeight = binding.yAxisTitles.measuredHeight.toFloat()
             val itemHeight = maxHeight / binding.yAxisTitles.childCount
 
@@ -138,24 +143,41 @@ class BarChartView : FrameLayout {
             val actualHeight = maxHeight * heightPercentage - itemHeight.toFloat() / 2
 
             val bar = View(context).apply {
-                setBackgroundColor(barGroupEntity.color)
                 layoutParams = LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, // width
                     ViewGroup.LayoutParams.MATCH_PARENT // height
-                ).apply {
-                    width = when(this@BarChartView.barChartData.scope) {
-                        DataViewModel.DataScope.DAY -> {
-                            2.dpToPx.toInt()
-                        }
-                        DataViewModel.DataScope.WEEK -> {
-                            8.dpToPx.toInt()
-                        }
-                        else -> {
-                            8.dpToPx.toInt()
-                        }
+                )
+                layoutParams.width = when (this@BarChartView.barChartData.scope) {
+                    DataViewModel.DataScope.DAY -> {
+                        2.dpToPx.toInt()
                     }
-                    height = actualHeight.toInt()
+                    DataViewModel.DataScope.WEEK -> {
+                        8.dpToPx.toInt()
+                    }
+                    else -> {
+                        8.dpToPx.toInt()
+                    }
                 }
+
+                // animate bar height
+                val anim = ValueAnimator
+                    .ofInt(0, actualHeight.toInt())
+                    .setDuration(375)
+                anim.startDelay = i * 75L
+                anim.addUpdateListener { animator ->
+                    (animator.animatedValue as? Int)?.let {
+                        this.layoutParams.height = it
+                        this.requestLayout()
+                    }
+                }
+                anim.doOnStart {
+                    setBackgroundColor(barGroupEntity.color)
+                }
+                val animSet = AnimatorSet()
+                animSet.interpolator = AccelerateDecelerateInterpolator()
+                animSet.play(anim)
+                animSet.start()
+
             }
             // add bar to bar group
             barGroup.addView(bar)
@@ -165,6 +187,26 @@ class BarChartView : FrameLayout {
         binding.barGroupsContainer.addView(
             barGroup
         )
+    }
+
+}
+
+class ResizeAnimation(
+    var view: View,
+    private val targetHeight: Int,
+) : Animation() {
+
+    private val startHeight: Int = view.measuredHeight
+
+    override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+        val newHeight = (startHeight + (targetHeight - startHeight) * interpolatedTime).toInt()
+        view.layoutParams.height = newHeight
+        view.requestLayout()
+    }
+
+
+    override fun willChangeBounds(): Boolean {
+        return true
     }
 
 }
