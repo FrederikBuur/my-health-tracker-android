@@ -11,6 +11,7 @@ import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayTyp
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderEvent
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEvent
 import com.fbuur.myhealthtracker.pages.data.statistics.BarChartView
+import com.fbuur.myhealthtracker.pages.data.statistics.StatisticsAverageEntity
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import com.fbuur.myhealthtracker.util.toDayMonthYearString
 import com.fbuur.myhealthtracker.util.toWeekMonthYear
@@ -52,7 +53,7 @@ class DataViewModel(
         }
 
     // statistics fragment live data
-    val barChartData: LiveData<Pair<BarChartView.BarChart, List<QuickRegisterEntry>>> =
+    val barChartData: LiveData<Triple<BarChartView.BarChart, List<QuickRegisterEntry>, List<StatisticsAverageEntity>>> =
         Transformations.switchMap(selectedScopeDate) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 emit(readStatisticsData())
@@ -224,7 +225,7 @@ class DataViewModel(
 
     // statistics page
     private suspend fun readStatisticsData(
-    ): Pair<BarChartView.BarChart, List<QuickRegisterEntry>> {
+    ): Triple<BarChartView.BarChart, List<QuickRegisterEntry>, List<StatisticsAverageEntity>> {
 
         // set from- to date time
         val c = Calendar.getInstance()
@@ -281,6 +282,7 @@ class DataViewModel(
 
         val barGroups: ArrayList<List<BarChartView.BarGroupEntity>> = arrayListOf()
         val templates = arrayListOf<Template>()
+        val statAverageEntities = arrayListOf<StatisticsAverageEntity>()
         var maxYAxisValue = 0
 
         // map registrations into list of bar group entities
@@ -356,7 +358,7 @@ class DataViewModel(
         // make y axis title list
         val yAxisTitles = (1..maxYAxisValue).toList().reversed()
 
-        return Pair(
+        return Triple(
             BarChartView.BarChart(
                 barGroups = barGroups,
                 xAxisTitles = xAxisTitles,
@@ -371,7 +373,8 @@ class DataViewModel(
                     color = t.color,
                     templateTypes = emptyList()
                 )
-            }
+            },
+            statAverageEntities // todo populate this list
         )
     }
 

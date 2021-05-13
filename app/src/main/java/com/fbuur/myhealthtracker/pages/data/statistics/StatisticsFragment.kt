@@ -42,12 +42,14 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             onQuickRegisterLongClicked = {},
             enableLongPress = false
         )
+        val statAvgAdapter = StatisticsAveragesAdapter()
 
         // observers
-        dataViewModel.barChartData.observe(viewLifecycleOwner) { pair ->
+        dataViewModel.barChartData.observe(viewLifecycleOwner) { triple ->
             // update data
-            binding.barChartView.barChartData = pair.first
-            filterAdapter.setData(pair.second)
+            binding.barChartView.barChartData = triple.first
+            filterAdapter.setData(triple.second)
+            statAvgAdapter.setData(triple.third)
             // update UI
             binding.monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
         }
@@ -55,6 +57,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         // setup UI
         binding.apply {
             templateFilter.adapter = filterAdapter
+            statAverages.adapter = statAvgAdapter
             monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
             val adapter = ArrayAdapter(
                 requireContext(),
