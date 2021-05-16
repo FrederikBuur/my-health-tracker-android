@@ -358,6 +358,48 @@ class DataViewModel(
         // make y axis title list
         val yAxisTitles = (1..maxYAxisValue).toList().reversed()
 
+        val filterItems = templates.distinct().map { t ->
+
+            val v1 = repository.readAllRegistrationsByTemplateAndTime(
+                temId = t.id,
+                fromDate = fromDate.time,
+                toDate = toDate.time
+            )
+            val tempFrom =
+                CalendarManager.getPreviousAsDateScoped(fromDate, this.getDataScope()).time
+            val v2 = repository.readAllRegistrationsByTemplateAndTime(
+                temId = t.id,
+                fromDate = tempFrom,
+                toDate = fromDate.time
+            )
+
+            statAverageEntities.add(
+                StatisticsAverageEntity(
+                    id = t.id,
+                    name = t.name.capitalize(Locale.ROOT),
+                    color = Color.parseColor(t.color),
+                    title1 = "This ${
+                        this.getDataScope().name.toLowerCase(Locale.getDefault())
+                            .capitalize(Locale.getDefault())
+                    }",
+                    value1 = v1.toString(),
+                    title2 = "Last ${
+                        this.getDataScope().name.toLowerCase(Locale.getDefault())
+                            .capitalize(Locale.getDefault())
+                    }",
+                    value2 = v2.toString()
+                )
+            )
+
+            QuickRegisterEntry(
+                id = t.id.toString(),
+                temId = t.id,
+                name = t.name,
+                color = t.color,
+                templateTypes = emptyList()
+            )
+        }
+
         return Triple(
             BarChartView.BarChart(
                 barGroups = barGroups,
@@ -365,15 +407,7 @@ class DataViewModel(
                 yAxisTitles = yAxisTitles,
                 scope = getDataScope()
             ),
-            templates.distinct().map { t ->
-                QuickRegisterEntry(
-                    id = t.id.toString(),
-                    temId = t.id,
-                    name = t.name,
-                    color = t.color,
-                    templateTypes = emptyList()
-                )
-            },
+            filterItems,
             statAverageEntities // todo populate this list
         )
     }

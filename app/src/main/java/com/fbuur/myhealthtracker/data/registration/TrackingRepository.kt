@@ -25,6 +25,9 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
     suspend fun readRegistrationByTime(fromDate: Long, toDate: Long) =
         trackingDAO.readRegistrationByTime(fromDate, toDate)
 
+    suspend fun readAllRegistrationsByTemplateAndTime(temId: Long, fromDate: Long, toDate: Long) =
+        trackingDAO.readRegistrationsByTemplateAndTime(temId, fromDate, toDate)
+
     suspend fun readAllParametersByRegId(regId: Long): List<Parameter> {
         val notes = trackingDAO.readAllNoteByRegId(regId)
         val sliders = trackingDAO.readAllSliderByRegId(regId)

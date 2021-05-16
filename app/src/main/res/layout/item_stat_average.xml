@@ -5,13 +5,13 @@
     android:layout_width="130dp"
     android:layout_height="110dp"
     app:cardCornerRadius="6dp"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    tools:cardBackgroundColor="@color/blue_500">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/blue_500">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/title"

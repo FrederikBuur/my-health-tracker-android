@@ -36,6 +36,9 @@ interface TrackingDAO {
     @Query("SELECT * FROM registration WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     suspend fun readRegistrationByTime(startDate: Long, endDate: Long): List<Registration>
 
+    @Query("SELECT COUNT(*) FROM registration WHERE temId=:temId AND date BETWEEN :startDate AND :endDate ORDER by date ASC ")
+    suspend fun readRegistrationsByTemplateAndTime(temId: Long, startDate: Long, endDate: Long): Int
+
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
     suspend fun readAllTemplates(): List<Template>
 
