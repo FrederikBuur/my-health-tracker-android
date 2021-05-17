@@ -1,14 +1,18 @@
-package com.fbuur.myhealthtracker.pages.data.calendar
+package com.fbuur.myhealthtracker.pages.data.compare
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentCompareBinding
+import com.fbuur.myhealthtracker.pages.data.DataViewModel
 
 class CompareFragment : Fragment(R.layout.fragment_compare) {
+
+    private lateinit var dataViewModel: DataViewModel
 
     private var _binding: FragmentCompareBinding? = null
     private val binding get() = _binding!!
@@ -24,7 +28,13 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
 
     private fun setup() {
 
-
+        dataViewModel = ViewModelProvider(this).get(DataViewModel::class.java)
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 }

@@ -5,15 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mth_background_white"
-    tools:context=".pages.data.calendar.CompareFragment">
+    tools:context=".pages.data.compare.CompareFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/monthPicker"
+        layout="@layout/view_month_picker"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="compare fragment"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/compareGraphView"/>
+
+    <com.fbuur.myhealthtracker.pages.data.compare.CompareGraphView
+        android:id="@+id/compareGraphView"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/mth_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/monthPicker"/>
+
+    <include
+        android:id="@+id/selectEventPrimary"
+        layout="@layout/view_compare_select_event"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@id/selectEventSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/compareGraphView" />
+
+    <include
+        android:id="@+id/selectEventSecondary"
+        layout="@layout/view_compare_select_event"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/selectEventPrimary"
+        app:layout_constraintTop_toBottomOf="@id/compareGraphView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

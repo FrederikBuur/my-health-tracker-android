@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 val Number.dpToPx: Float get() = (toFloat() * Resources.getSystem().displayMetrics.density)
+val Number.spToPx: Float get() = toFloat() * Resources.getSystem().displayMetrics.scaledDensity
 
 fun Date.toDateString(): String {
     val dateFormat: DateFormat = SimpleDateFormat("dd. MMMM HH:mm", Locale.getDefault())

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.databinding.FragmentDataBinding
 import com.fbuur.myhealthtracker.pages.data.calendar.CalendarFragment
-import com.fbuur.myhealthtracker.pages.data.calendar.CompareFragment
+import com.fbuur.myhealthtracker.pages.data.compare.CompareFragment
 import com.fbuur.myhealthtracker.pages.data.statistics.StatisticsFragment
 import com.google.android.material.tabs.TabLayoutMediator
 

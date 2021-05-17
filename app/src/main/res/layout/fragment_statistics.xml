@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/mth_background_white"
     android:clipChildren="false"
-    tools:context=".pages.data.calendar.CompareFragment">
+    tools:context=".pages.data.compare.CompareFragment">
 
     <include
         android:id="@+id/monthPicker"

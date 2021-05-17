@@ -36,7 +36,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="2dp"
-        android:background="@drawable/background_calender_day_event_more"
+        android:background="@drawable/background_circular_calender_day_event_more"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
