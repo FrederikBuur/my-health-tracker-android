@@ -22,17 +22,28 @@
 
     <color name="mth_delete">#D80707</color>
 
-    <color name="quick_register_note_background">#BEB541</color>
+    <color name="quick_register_note_background">#FFCA28</color>
     <string-array name="eventColors">
+        <item>#ef5350</item>
         <item>#C33468</item>
-        <item>#EE5959</item>
-        <item>#F2A340</item>
-        <item>#86B968</item>
-        <item>#75C833</item>
-        <item>#3BC8A6</item>
-        <item>#6D64EA</item>
-        <item>#98A0DF</item>
+        <item>#EC407A</item>
+        <item>#AB47BC</item>
+        <item>#7E57C2</item>
         <item>#B398DF</item>
+        <item>#5C6BC0</item>
+        <item>#64B5F6</item>
+        <item>#29B6F6</item>
+        <item>#00BCD4</item>
+        <item>#26A69A</item>
+        <item>#66BB6A</item>
+        <item>#75C833</item>
+        <item>#9CCC65</item>
+        <item>#FFA726</item>
+        <item>#FF7043</item>
+        <item>#EE5959</item>
+        <item>#8D6E63</item>
+        <item>#BDBDBD</item>
+        <item>#78909C</item>
     </string-array>
 
 </resources>
