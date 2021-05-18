@@ -22,6 +22,9 @@
 
     <color name="mth_delete">#D80707</color>
 
+    <color name="test1">#C33468</color>
+    <color name="test2">#7E57C2</color>
+
     <color name="quick_register_note_background">#FFCA28</color>
     <string-array name="eventColors">
         <item>#ef5350</item>

@@ -23,8 +23,18 @@ class CompareGraphView : View {
     var compareGraphData: CompareGraphData = CompareGraphData(
         scope = DataViewModel.DataScope.WEEK,
         graphs = Pair(
-            first = CompareGraphEntity(0L, 0, ""),
-            second = CompareGraphEntity(0L, 0, "")
+            first = CompareGraphEntity(
+                0L,
+                ContextCompat.getColor(context, R.color.test1),
+                "test1",
+                listOf(200, 350, 143, 160, 420)
+            ),
+            second = CompareGraphEntity(
+                0L,
+                ContextCompat.getColor(context, R.color.test2),
+                "test2",
+                listOf(3, 2, 8, 4, 9, 1, 6, 5, 10, 1)
+            )
         )
     )
         set(value) {
@@ -45,6 +55,10 @@ class CompareGraphView : View {
     private var graphHeight = 0f
     private var graphWidth = 0f
 
+    private val lineMargin = 24.dpToPx
+
+    private val yAxisTitleCount = 5
+
 
     init {
         setupPaint()
@@ -53,7 +67,7 @@ class CompareGraphView : View {
     private fun setupPaint() {
 
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 4.dpToPx
+        paint.strokeWidth = 2.dpToPx
         paint.color = ContextCompat.getColor(context, R.color.mth_black)
 
         textPaint.style = Paint.Style.FILL
@@ -65,25 +79,21 @@ class CompareGraphView : View {
     }
 
     override fun onDraw(canvas: Canvas?) {
-
         canvas?.let {
-
             drawBaseElements(it)
-            drawGraphs(it)
-
+            drawYAxisValues(it)
+            drawGraph(it, this.compareGraphData.graphs.first)
+            drawGraph(it, this.compareGraphData.graphs.second)
         }
-
     }
 
     private fun drawBaseElements(canvas: Canvas) {
 
-        val margin = 24.dpToPx
-
         // set axis points
-        pointBotL = PointF(margin, measuredHeight - margin)
-        pointBotR = PointF(measuredWidth - margin, measuredHeight - margin)
-        pointTopL = PointF(margin, margin)
-        pointTopR = PointF(measuredWidth - margin, margin)
+        pointBotL = PointF(lineMargin, measuredHeight - lineMargin)
+        pointBotR = PointF(measuredWidth - lineMargin, measuredHeight - lineMargin)
+        pointTopL = PointF(lineMargin, lineMargin)
+        pointTopR = PointF(measuredWidth - lineMargin, lineMargin)
         graphHeight = pointBotL.y - pointTopL.y
         graphWidth = pointBotR.x - pointBotL.x
 
@@ -120,18 +130,94 @@ class CompareGraphView : View {
         val itemWidth = this.graphWidth / xAxisValues.size
         val yPos = pointBotL.y + 16.dpToPx
 
+        textPaint.color = ContextCompat.getColor(context, R.color.mth_text_primary_onwhite)
+
         for (i in xAxisValues.indices) {
             val xPos = pointBotL.x + itemWidth * i + itemWidth / 2
             canvas.drawText(xAxisValues[i], xPos, yPos, textPaint)
         }
     }
 
-    private fun drawGraphs(canvas: Canvas) {
+    private fun drawYAxisValues(canvas: Canvas) {
+        val itemHeight = this.graphHeight / yAxisTitleCount
+        val xPosPrimary = lineMargin / 2
+        val xPosSecondary = measuredWidth - lineMargin / 2
 
-        // draw primary graph
-        // todo
+        val maxPrimary =
+            this.compareGraphData.graphs.first.dataPoints.maxByOrNull { it ?: 0 } ?: 0
+        val minPrimary =
+            this.compareGraphData.graphs.first.dataPoints.minByOrNull { it ?: 0 } ?: 0
+        val maxSecondary =
+            this.compareGraphData.graphs.second.dataPoints.maxByOrNull { it ?: 0 } ?: 0
+        val minSecondary =
+            this.compareGraphData.graphs.second.dataPoints.minByOrNull { it ?: 0 } ?: 0
 
-        // draw secondary graph
+        val rangeHopPrimary = (maxPrimary - minPrimary) / (yAxisTitleCount - 1)
+        val rangeHopSecondary = (maxSecondary - minSecondary) / (yAxisTitleCount - 1)
+
+        for (i in 1..yAxisTitleCount) {
+
+            val yPos = pointTopL.y + itemHeight * i - itemHeight / 2 + textPaint.textSize / 4
+
+            // draw primary text
+            textPaint.color = this.compareGraphData.graphs.first.color
+            canvas.drawText(
+                "${minPrimary + rangeHopPrimary * (yAxisTitleCount - i)}",
+                xPosPrimary,
+                yPos,
+                textPaint
+            )
+
+            // draw secondary text
+            textPaint.color = this.compareGraphData.graphs.second.color
+            canvas.drawText(
+                "${minSecondary + rangeHopSecondary * (yAxisTitleCount - i)}",
+                xPosSecondary,
+                yPos,
+                textPaint
+            )
+
+        }
+
+        // draw y-axis value of interest titles
+        with(this.compareGraphData.graphs.first) {
+            textPaint.color = color
+            canvas.drawText(
+                valueOfInterestTitle,
+                pointTopL.x,
+                lineMargin / 2 + textPaint.textSize / 2,
+                textPaint
+            )
+        }
+        with(this.compareGraphData.graphs.second) {
+            textPaint.color = color
+            canvas.drawText(
+                valueOfInterestTitle,
+                pointTopR.x,
+                lineMargin / 2 + textPaint.textSize / 2,
+                textPaint
+            )
+        }
+
+    }
+
+    private fun drawGraph(canvas: Canvas, compareGraphEntity: CompareGraphEntity) {
+
+        val itemHeight = this.graphHeight / yAxisTitleCount
+        val xPosPrimary = lineMargin / 2
+        val xPosSecondary = measuredWidth - lineMargin / 2
+
+        val maxPrimary =
+            this.compareGraphData.graphs.first.dataPoints.maxByOrNull { it ?: 0 } ?: 0
+        val minPrimary =
+            this.compareGraphData.graphs.first.dataPoints.minByOrNull { it ?: 0 } ?: 0
+        val maxSecondary =
+            this.compareGraphData.graphs.second.dataPoints.maxByOrNull { it ?: 0 } ?: 0
+        val minSecondary =
+            this.compareGraphData.graphs.second.dataPoints.minByOrNull { it ?: 0 } ?: 0
+
+
+        // draw graph
         // todo
 
     }
@@ -151,5 +237,5 @@ class CompareGraphEntity(
     val temId: Long,
     val color: Int,
     val valueOfInterestTitle: String,
-
-    )
+    val dataPoints: List<Int?>
+)
