@@ -10,12 +10,16 @@ import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDay
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDayType
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderEvent
 import com.fbuur.myhealthtracker.pages.data.calendar.selectedday.CalendarSelectedDayEvent
+import com.fbuur.myhealthtracker.pages.data.compare.CompareFragment
+import com.fbuur.myhealthtracker.pages.data.compare.CompareGraphData
+import com.fbuur.myhealthtracker.pages.data.compare.CompareGraphEntity
 import com.fbuur.myhealthtracker.pages.data.statistics.BarChartView
 import com.fbuur.myhealthtracker.pages.data.statistics.StatisticsAverageEntity
 import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import com.fbuur.myhealthtracker.util.toDayMonthYearString
 import com.fbuur.myhealthtracker.util.toWeekMonthYear
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.Exception
 import kotlin.collections.ArrayList
@@ -38,6 +42,9 @@ class DataViewModel(
     private val dataScope = MutableLiveData(DataScope.WEEK)
     private val selectedScopeDate = MutableLiveData(Date())
 
+    // compare live data
+    private val selectedEvents = MutableLiveData<CompareGraphData?>()
+
     // calendar fragment live data
     val calendarDays: LiveData<List<CalenderDay>> =
         Transformations.switchMap(selectedDayDate) {
@@ -57,6 +64,14 @@ class DataViewModel(
         Transformations.switchMap(selectedScopeDate) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 emit(readStatisticsData())
+            }
+        }
+
+    // compare fragment live data
+    val compareGraphData: LiveData<CompareGraphData> =
+        Transformations.switchMap(selectedDayDate) {
+            liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+                emit(selectedEvents.value)
             }
         }
 
@@ -91,10 +106,22 @@ class DataViewModel(
         selectedScopeDate.value = date
     }
 
+    fun setSelectedEventTypeIds(
+        pair: Pair<
+                Pair<Long?, String>,
+                Pair<Long?, String>
+                >
+    ) {
+        readCompareGraphData(pair) {
+            selectedEvents.value = it
+        }
+    }
+
     // calendar page
     private suspend fun readCalenderDayItemsByMonth(
     ): List<CalenderDay> {
 
+        //todo use getfromandtodates
         val c = Calendar.getInstance()
         c.time = this.selectedDayDate.value ?: Date()
         c.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
@@ -186,6 +213,7 @@ class DataViewModel(
     private suspend fun readCalenderEventsByDay(
     ): List<CalendarSelectedDayEvent> {
 
+        //todo use getfromandtodates
         val c = Calendar.getInstance()
         c.time = this.selectedDayDate.value ?: Date()
         c.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
@@ -227,7 +255,7 @@ class DataViewModel(
     private suspend fun readStatisticsData(
     ): Triple<BarChartView.BarChart, List<QuickRegisterEntry>, List<StatisticsAverageEntity>> {
 
-        // set from- to date time
+        // set from- to date time todo use getfromandtodates
         val c = Calendar.getInstance()
         c.time = this.selectedScopeDate.value ?: Date()
         c.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
@@ -360,14 +388,14 @@ class DataViewModel(
 
         val filterItems = templates.distinct().map { t ->
 
-            val v1 = repository.readAllRegistrationsByTemplateAndTime(
+            val v1 = repository.readAllRegistrationCountByTemplateAndTime(
                 temId = t.id,
                 fromDate = fromDate.time,
                 toDate = toDate.time
             )
             val tempFrom =
                 CalendarManager.getPreviousAsDateScoped(fromDate, this.getDataScope()).time
-            val v2 = repository.readAllRegistrationsByTemplateAndTime(
+            val v2 = repository.readAllRegistrationCountByTemplateAndTime(
                 temId = t.id,
                 fromDate = tempFrom,
                 toDate = fromDate.time
@@ -410,6 +438,161 @@ class DataViewModel(
             filterItems,
             statAverageEntities // todo populate this list
         )
+    }
+
+    // compare page
+    private fun readCompareGraphData(
+        pair: Pair<
+                Pair<Long?, String>,
+                Pair<Long?, String>
+                >,
+        onFinish: (CompareGraphData) -> Unit
+    ) {
+        viewModelScope.launch {
+
+            val c = Calendar.getInstance()
+            val dates = getFromAndToDate(c)
+            val fromDate = dates.first
+            val toDate = dates.second
+
+            // get all registration by temId and time for primary graph data
+            val primaryGraph: CompareGraphEntity? = pair.first.first?.let { temId ->
+                getCompareGraphEntity(
+                    temId = temId,
+                    valueOfInterest = pair.first.second,
+                    c = c,
+                    fromDate = fromDate,
+                    toDate = toDate
+                )
+            }
+
+            // get all registration by temId and time for secondary graph data
+            val secondaryGraph: CompareGraphEntity? = pair.second.first?.let { temId ->
+                getCompareGraphEntity(
+                    temId = temId,
+                    valueOfInterest = pair.second.second,
+                    c = c,
+                    fromDate = fromDate,
+                    toDate = toDate
+                )
+            }
+
+            onFinish(
+                CompareGraphData(
+                    scope = this@DataViewModel.getDataScope(),
+                    graphs = Pair(
+                        first = primaryGraph,
+                        second = secondaryGraph
+                    )
+                )
+            )
+        }
+    }
+
+    private suspend fun getCompareGraphEntity(
+        temId: Long,
+        valueOfInterest: String,
+        c: Calendar,
+        fromDate: Date,
+        toDate: Date
+    ): CompareGraphEntity {
+        val template = repository.readTemplateById(temId)
+
+        val dataPoints = arrayListOf<Int?>()
+
+        val startFilter = fromDate
+        var endFilter = CalendarManager.getNextAsDate(
+            fromDate,
+            this@DataViewModel.dataScope.value!!.offsetType
+        )
+        c.time = endFilter
+
+        // collect data points for each hour/day/week/month
+        while (endFilter.time <= toDate.time) {
+            val registrationsPrimary = repository.readAllRegistrationsByTemplateAndTime(
+                temId,
+                startFilter.time,
+                endFilter.time
+            )
+
+            // determine data points
+            // if specified, get parameters with given value of interest
+            if (valueOfInterest == CompareFragment.EVENT_COUNT_AS_INTEREST) {
+                dataPoints.add(if (registrationsPrimary.isNotEmpty()) registrationsPrimary.size else null)
+            } else {
+                // get parameters by value of interest
+                var dataPoint: Int? = null
+                registrationsPrimary.forEach { r ->
+                    val parameters = repository.readAllParametersByRegIdAndParameterName(
+                        r.id,
+                        valueOfInterest
+                    )
+                    parameters.forEach { p ->
+                        p.getValueOfInterest()?.let { v ->
+                            dataPoint?.let { dataPoint?.plus(v) } ?: run { dataPoint = v }
+                        }
+                    }
+                }
+                dataPoints.add(dataPoint)
+            }
+
+            c.add(this@DataViewModel.dataScope.value!!.offsetType, 1)
+            endFilter = c.time
+        }
+
+        return CompareGraphEntity(
+            temId = temId,
+            color = Color.parseColor(template.color),
+            valueOfInterestTitle = valueOfInterest,
+            dataPoints = dataPoints
+        )
+    }
+
+    private fun getFromAndToDate(c: Calendar): Pair<Date, Date> {
+        // set from- to date time
+        c.time = this@DataViewModel.selectedScopeDate.value ?: Date()
+        c.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
+        c.clear(Calendar.MINUTE)
+        c.clear(Calendar.SECOND)
+        c.clear(Calendar.MILLISECOND)
+
+        val fromDate: Date
+        val toDate: Date
+
+        when (this@DataViewModel.dataScope.value) {
+            DataScope.DAY -> {
+                fromDate = c.time
+                c.add(Calendar.DAY_OF_MONTH, 1)
+                toDate = c.time
+                c.add(Calendar.DAY_OF_MONTH, -1)
+            }
+            DataScope.WEEK -> {
+                c.set(Calendar.DAY_OF_WEEK, 2)
+                fromDate = c.time
+                c.add(Calendar.WEEK_OF_MONTH, 1)
+                toDate = c.time
+                c.add(Calendar.WEEK_OF_MONTH, -1)
+            }
+            DataScope.MONTH -> {
+                c.set(Calendar.DAY_OF_MONTH, 1)
+                fromDate = c.time
+                c.add(Calendar.MONTH, 1)
+                toDate = c.time
+                c.add(Calendar.MONTH, -1)
+            }
+            DataScope.YEAR -> {
+                c.set(Calendar.MONTH, 1)
+                c.set(Calendar.DAY_OF_MONTH, 1)
+                fromDate = c.time
+                c.add(Calendar.YEAR, 1)
+                toDate = c.time
+                c.add(Calendar.YEAR, -1)
+            }
+            else -> {
+                throw Exception("Scope not supported")
+            }
+        }
+        return Pair(fromDate, toDate)
     }
 
     enum class DataScope(val offsetType: Int) {

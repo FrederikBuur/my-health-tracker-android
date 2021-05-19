@@ -87,8 +87,12 @@ class CompareGraphView : View {
         canvas?.let {
             drawBaseElements(it)
             drawYAxisLabels(it)
-            drawGraph(it, this.compareGraphData.graphs.first)
-            drawGraph(it, this.compareGraphData.graphs.second)
+            this.compareGraphData.graphs.first?.let { graphData ->
+                drawGraph(it, graphData)
+            }
+            this.compareGraphData.graphs.second?.let { graphData ->
+                drawGraph(it, graphData)
+            }
         }
     }
 
@@ -151,19 +155,19 @@ class CompareGraphView : View {
         val xPosSecondary = measuredWidth - lineMargin / 2
 
         var maxPrimary = Int.MIN_VALUE
-        this.compareGraphData.graphs.first.dataPoints.forEach { num ->
+        this.compareGraphData.graphs.first?.dataPoints?.forEach { num ->
             num?.let { if (it > maxPrimary) maxPrimary = it }
         }
         var minPrimary = Int.MAX_VALUE
-        this.compareGraphData.graphs.first.dataPoints.forEach { num ->
+        this.compareGraphData.graphs.first?.dataPoints?.forEach { num ->
             num?.let { if (it < minPrimary) minPrimary = it }
         }
         var maxSecondary = Int.MIN_VALUE
-        this.compareGraphData.graphs.second.dataPoints.forEach { num ->
+        this.compareGraphData.graphs.second?.dataPoints?.forEach { num ->
             num?.let { if (it > maxSecondary) maxSecondary = it }
         }
         var minSecondary = Int.MAX_VALUE
-        this.compareGraphData.graphs.second.dataPoints.forEach { num ->
+        this.compareGraphData.graphs.second?.dataPoints?.forEach { num ->
             num?.let { if (it < minSecondary) minSecondary = it }
         }
 
@@ -182,38 +186,42 @@ class CompareGraphView : View {
                 .replace(',', '.')
 
             // draw primary text
-            textPaint.color = this.compareGraphData.graphs.first.color
-            canvas.drawText(
-                labelPrimary,
-                xPosPrimary,
-                yPos,
-                textPaint
-            )
-
+            this.compareGraphData.graphs.first?.let { graph ->
+                textPaint.color = graph.color
+                canvas.drawText(
+                    labelPrimary,
+                    xPosPrimary,
+                    yPos,
+                    textPaint
+                )
+            }
             // draw secondary text
-            textPaint.color = this.compareGraphData.graphs.second.color
-            canvas.drawText(
-                labelSecondary,
-                xPosSecondary,
-                yPos,
-                textPaint
-            )
+            this.compareGraphData.graphs.second?.let { graph ->
+                textPaint.color = graph.color
+                canvas.drawText(
+                    labelSecondary,
+                    xPosSecondary,
+                    yPos,
+                    textPaint
+                )
+            }
         }
 
         // draw y-axis value of interest titles
-        with(this.compareGraphData.graphs.first) {
-            textPaint.color = color
+        this.compareGraphData.graphs.first?.let { graph ->
+            textPaint.color = graph.color
+            textPaint.color = graph.color
             canvas.drawText(
-                valueOfInterestTitle,
+                graph.valueOfInterestTitle,
                 pointTopL.x,
                 lineMargin / 2 + textPaint.textSize / 2,
                 textPaint
             )
         }
-        with(this.compareGraphData.graphs.second) {
-            textPaint.color = color
+        this.compareGraphData.graphs.second?.let { graph ->
+            textPaint.color = graph.color
             canvas.drawText(
-                valueOfInterestTitle,
+                graph.valueOfInterestTitle,
                 pointTopR.x,
                 lineMargin / 2 + textPaint.textSize / 2,
                 textPaint
@@ -277,7 +285,7 @@ class CompareGraphView : View {
 
 class CompareGraphData(
     val scope: DataViewModel.DataScope,
-    val graphs: Pair<CompareGraphEntity, CompareGraphEntity>
+    val graphs: Pair<CompareGraphEntity?, CompareGraphEntity?>
 )
 
 class CompareGraphEntity(

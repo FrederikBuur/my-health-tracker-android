@@ -30,11 +30,21 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
 
         dataViewModel = ViewModelProvider(this).get(DataViewModel::class.java)
 
+        dataViewModel.compareGraphData.observe(viewLifecycleOwner) { compareGraphData ->
+            compareGraphData?.let {
+                binding.compareGraphView.compareGraphData = it
+            }
+        }
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object {
+        const val EVENT_COUNT_AS_INTEREST = "event-count-as-interest"
     }
 
 }

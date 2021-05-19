@@ -11,6 +11,8 @@ sealed class Parameter(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0 // fixme dont make var
 
+    abstract fun getValueOfInterest(): Int?
+
     @Entity(
         foreignKeys = [ForeignKey(
             entity = Registration::class,
@@ -25,6 +27,8 @@ sealed class Parameter(
         override val title: String,
         val description: String
     ) : Parameter(title, regId) {
+        override fun getValueOfInterest(): Int? = null
+
         override fun toString(): String {
             return "$title: $description"
         }
@@ -48,6 +52,8 @@ sealed class Parameter(
     ) : Parameter(title, regId) {
 
         constructor() : this(0L, "", 0, 0, 0)
+
+        override fun getValueOfInterest() = value
 
         override fun toString(): String {
             return "$title: $value from $lowestValue to $highestValue"

@@ -25,6 +25,9 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
     suspend fun readRegistrationByTime(fromDate: Long, toDate: Long) =
         trackingDAO.readRegistrationByTime(fromDate, toDate)
 
+    suspend fun readAllRegistrationCountByTemplateAndTime(temId: Long, fromDate: Long, toDate: Long) =
+        trackingDAO.readRegistrationCountByTemplateAndTime(temId, fromDate, toDate)
+
     suspend fun readAllRegistrationsByTemplateAndTime(temId: Long, fromDate: Long, toDate: Long) =
         trackingDAO.readRegistrationsByTemplateAndTime(temId, fromDate, toDate)
 
@@ -37,6 +40,17 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
         parameterList.addAll(notes)
 
         return parameterList.toList()
+    }
+
+    suspend fun readAllParametersByRegIdAndParameterName(regId: Long, name: String): List<Parameter> {
+        val notes = trackingDAO.readAllNoteByRegIdParameterName(regId, name)
+        val sliders = trackingDAO.readAllSliderByRegIdAndParameterName(regId, name)
+
+        val parameterList = ArrayList<Parameter>()
+        parameterList.addAll(sliders)
+        parameterList.addAll(notes)
+
+        return parameterList
     }
 
     suspend fun readAllTemplates() =

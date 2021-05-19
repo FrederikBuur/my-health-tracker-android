@@ -30,20 +30,21 @@ interface TrackingDAO {
     @Query("SELECT * FROM registration ORDER BY date DESC")
     suspend fun readAllRegistrations(): List<Registration>
 
-//    @Query("SELECT * FROM registration WHERE datetime(date/1000,'unixepoch','start of month') = datetime(:dateOfMonth/1000,'unixepoch','start of month')")
-//    suspend fun getRegistrationByMonth(dateOfMonth: Date) : List<Registration>
-
     @Query("SELECT * FROM registration WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     suspend fun readRegistrationByTime(startDate: Long, endDate: Long): List<Registration>
 
     @Query("SELECT COUNT(*) FROM registration WHERE temId=:temId AND date BETWEEN :startDate AND :endDate ORDER by date ASC ")
-    suspend fun readRegistrationsByTemplateAndTime(temId: Long, startDate: Long, endDate: Long): Int
+    suspend fun readRegistrationCountByTemplateAndTime(temId: Long, startDate: Long, endDate: Long): Int
+
+    @Query("SELECT * FROM registration WHERE temId=:temId AND date BETWEEN :startDate AND :endDate ORDER by date ASC ")
+    suspend fun readRegistrationsByTemplateAndTime(temId: Long, startDate: Long, endDate: Long): List<Registration>
 
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
     suspend fun readAllTemplates(): List<Template>
 
     @Query("SELECT * FROM template WHERE id=:id")
     suspend fun readTemplateById(id: Long): Template
+
     @Query("SELECT * FROM registration WHERE id=:id")
     suspend fun readRegistrationById(id: Long): Registration
 
@@ -51,6 +52,11 @@ interface TrackingDAO {
     suspend fun readAllSliderByRegId(regId: Long): List<Parameter.Slider>
     @Query("SELECT * FROM note WHERE regId=:regId")
     suspend fun readAllNoteByRegId(regId: Long): List<Parameter.Note>
+
+    @Query("SELECT * FROM slider WHERE regId=:regId AND title=:name")
+    suspend fun readAllSliderByRegIdAndParameterName(regId: Long, name: String): List<Parameter.Slider>
+    @Query("SELECT * FROM note WHERE regId=:regId AND title=:name")
+    suspend fun readAllNoteByRegIdParameterName(regId: Long, name: String): List<Parameter.Note>
 
     // update
     @Update
