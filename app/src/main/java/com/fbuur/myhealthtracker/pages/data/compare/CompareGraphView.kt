@@ -9,6 +9,8 @@ import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.pages.data.DataViewModel
 import com.fbuur.myhealthtracker.util.dpToPx
 import com.fbuur.myhealthtracker.util.spToPx
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class CompareGraphView : View {
 
@@ -27,13 +29,13 @@ class CompareGraphView : View {
                 0L,
                 ContextCompat.getColor(context, R.color.test1),
                 "test1",
-                listOf(200, 350, 143, 160, 420)
+                listOf(2, 4, 6, 8, 10, 12, 14)
             ),
             second = CompareGraphEntity(
                 0L,
                 ContextCompat.getColor(context, R.color.test2),
                 "test2",
-                listOf(3, 2, 8, 4, 9, 1, 6, 5, 10, 1)
+                listOf(350, 113, 143, null, 220, 420, null)
             )
         )
     )
@@ -45,7 +47,7 @@ class CompareGraphView : View {
     // paints
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)
-    private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)
+    private val tempPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)
 
     // points
     private var pointBotL = PointF(0f, 0f)
@@ -57,7 +59,8 @@ class CompareGraphView : View {
 
     private val lineMargin = 24.dpToPx
 
-    private val yAxisTitleCount = 5
+    private val yAxisLabelCount = 6
+    private var xAxisLabelCount = 0
 
 
     init {
@@ -70,6 +73,8 @@ class CompareGraphView : View {
         paint.strokeWidth = 2.dpToPx
         paint.color = ContextCompat.getColor(context, R.color.mth_black)
 
+        tempPaint.style = Paint.Style.FILL
+
         textPaint.style = Paint.Style.FILL
         textPaint.strokeWidth = 7.dpToPx
         textPaint.textSize = 12.spToPx
@@ -81,7 +86,7 @@ class CompareGraphView : View {
     override fun onDraw(canvas: Canvas?) {
         canvas?.let {
             drawBaseElements(it)
-            drawYAxisValues(it)
+            drawYAxisLabels(it)
             drawGraph(it, this.compareGraphData.graphs.first)
             drawGraph(it, this.compareGraphData.graphs.second)
         }
@@ -98,6 +103,7 @@ class CompareGraphView : View {
         graphWidth = pointBotR.x - pointBotL.x
 
         // draw axis lines
+        paint.color = ContextCompat.getColor(context, R.color.mth_black)
         paint.strokeCap = Paint.Cap.ROUND
         canvas.drawLine(pointTopL.x, pointTopL.y, pointBotL.x, pointBotL.y, paint)
         canvas.drawLine(pointBotL.x, pointBotL.y, pointBotR.x, pointBotR.y, paint)
@@ -127,6 +133,7 @@ class CompareGraphView : View {
     }
 
     private fun drawXAxisValues(canvas: Canvas, xAxisValues: List<String>) {
+        xAxisLabelCount = xAxisValues.size
         val itemWidth = this.graphWidth / xAxisValues.size
         val yPos = pointBotL.y + 16.dpToPx
 
@@ -138,31 +145,46 @@ class CompareGraphView : View {
         }
     }
 
-    private fun drawYAxisValues(canvas: Canvas) {
-        val itemHeight = this.graphHeight / yAxisTitleCount
+    private fun drawYAxisLabels(canvas: Canvas) {
+        val itemHeight = this.graphHeight / (yAxisLabelCount + 1)
         val xPosPrimary = lineMargin / 2
         val xPosSecondary = measuredWidth - lineMargin / 2
 
-        val maxPrimary =
-            this.compareGraphData.graphs.first.dataPoints.maxByOrNull { it ?: 0 } ?: 0
-        val minPrimary =
-            this.compareGraphData.graphs.first.dataPoints.minByOrNull { it ?: 0 } ?: 0
-        val maxSecondary =
-            this.compareGraphData.graphs.second.dataPoints.maxByOrNull { it ?: 0 } ?: 0
-        val minSecondary =
-            this.compareGraphData.graphs.second.dataPoints.minByOrNull { it ?: 0 } ?: 0
+        var maxPrimary = Int.MIN_VALUE
+        this.compareGraphData.graphs.first.dataPoints.forEach { num ->
+            num?.let { if (it > maxPrimary) maxPrimary = it }
+        }
+        var minPrimary = Int.MAX_VALUE
+        this.compareGraphData.graphs.first.dataPoints.forEach { num ->
+            num?.let { if (it < minPrimary) minPrimary = it }
+        }
+        var maxSecondary = Int.MIN_VALUE
+        this.compareGraphData.graphs.second.dataPoints.forEach { num ->
+            num?.let { if (it > maxSecondary) maxSecondary = it }
+        }
+        var minSecondary = Int.MAX_VALUE
+        this.compareGraphData.graphs.second.dataPoints.forEach { num ->
+            num?.let { if (it < minSecondary) minSecondary = it }
+        }
 
-        val rangeHopPrimary = (maxPrimary - minPrimary) / (yAxisTitleCount - 1)
-        val rangeHopSecondary = (maxSecondary - minSecondary) / (yAxisTitleCount - 1)
+        val rangeHopPrimary = (maxPrimary - minPrimary).toFloat() / yAxisLabelCount
+        val rangeHopSecondary = (maxSecondary - minSecondary).toFloat() / yAxisLabelCount
 
-        for (i in 1..yAxisTitleCount) {
-
-            val yPos = pointTopL.y + itemHeight * i - itemHeight / 2 + textPaint.textSize / 4
+        for (i in 0..yAxisLabelCount) {
+            val yPos =
+                pointTopL.y + itemHeight * (yAxisLabelCount - i) + itemHeight / 2
+            val formatter = DecimalFormat("#.#").apply {
+                roundingMode = RoundingMode.FLOOR
+            }
+            val labelPrimary = formatter.format(minPrimary + rangeHopPrimary * i)
+                .replace(',', '.')
+            val labelSecondary = formatter.format(minSecondary + rangeHopSecondary * i)
+                .replace(',', '.')
 
             // draw primary text
             textPaint.color = this.compareGraphData.graphs.first.color
             canvas.drawText(
-                "${minPrimary + rangeHopPrimary * (yAxisTitleCount - i)}",
+                labelPrimary,
                 xPosPrimary,
                 yPos,
                 textPaint
@@ -171,12 +193,11 @@ class CompareGraphView : View {
             // draw secondary text
             textPaint.color = this.compareGraphData.graphs.second.color
             canvas.drawText(
-                "${minSecondary + rangeHopSecondary * (yAxisTitleCount - i)}",
+                labelSecondary,
                 xPosSecondary,
                 yPos,
                 textPaint
             )
-
         }
 
         // draw y-axis value of interest titles
@@ -203,22 +224,45 @@ class CompareGraphView : View {
 
     private fun drawGraph(canvas: Canvas, compareGraphEntity: CompareGraphEntity) {
 
-        val itemHeight = this.graphHeight / yAxisTitleCount
-        val xPosPrimary = lineMargin / 2
-        val xPosSecondary = measuredWidth - lineMargin / 2
+        val itemHeight = this.graphHeight / (yAxisLabelCount + 1)
+        val itemWidth = this.graphWidth / xAxisLabelCount
 
-        val maxPrimary =
-            this.compareGraphData.graphs.first.dataPoints.maxByOrNull { it ?: 0 } ?: 0
-        val minPrimary =
-            this.compareGraphData.graphs.first.dataPoints.minByOrNull { it ?: 0 } ?: 0
-        val maxSecondary =
-            this.compareGraphData.graphs.second.dataPoints.maxByOrNull { it ?: 0 } ?: 0
-        val minSecondary =
-            this.compareGraphData.graphs.second.dataPoints.minByOrNull { it ?: 0 } ?: 0
-
+        var maxValue = Int.MIN_VALUE
+        compareGraphEntity.dataPoints.forEach { num ->
+            num?.let {
+                if (it > maxValue) maxValue = it
+            }
+        }
+        var minValue = Int.MAX_VALUE
+        compareGraphEntity.dataPoints.forEach { num ->
+            num?.let {
+                if (it < minValue) minValue = it
+            }
+        }
+        paint.color = compareGraphEntity.color
+        tempPaint.color = compareGraphEntity.color
 
         // draw graph
         // todo
+
+        val points = arrayListOf<PointF>()
+
+        // calc and set points
+        compareGraphEntity.dataPoints.forEachIndexed { i, value ->
+            value?.let {
+                val xPos = pointBotL.x + itemWidth / 2 + itemWidth * i
+
+                val temp1 = maxValue - minValue
+                val temp2 = value - minValue
+                val percentOfMaxHeight = temp2.toFloat() / temp1.toFloat()
+
+                val yPos = pointBotL.y - (graphHeight - itemHeight) * percentOfMaxHeight - itemHeight / 2 - textPaint.textSize / 3
+
+                canvas.drawCircle(xPos, yPos, 4.dpToPx, tempPaint)
+            }
+        }
+
+        // make lines between points
 
     }
 
