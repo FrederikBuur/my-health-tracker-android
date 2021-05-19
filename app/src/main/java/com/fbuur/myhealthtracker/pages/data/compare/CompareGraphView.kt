@@ -57,7 +57,7 @@ class CompareGraphView : View {
     private var graphHeight = 0f
     private var graphWidth = 0f
 
-    private val lineMargin = 24.dpToPx
+    private val lineMargin = 28.dpToPx
 
     private val yAxisLabelCount = 6
     private var xAxisLabelCount = 0
@@ -77,7 +77,7 @@ class CompareGraphView : View {
 
         textPaint.style = Paint.Style.FILL
         textPaint.strokeWidth = 7.dpToPx
-        textPaint.textSize = 12.spToPx
+        textPaint.textSize = 10.spToPx
         textPaint.textAlign = Paint.Align.CENTER
 
         setWillNotDraw(false)
@@ -242,9 +242,6 @@ class CompareGraphView : View {
         paint.color = compareGraphEntity.color
         tempPaint.color = compareGraphEntity.color
 
-        // draw graph
-        // todo
-
         val points = arrayListOf<PointF>()
 
         // calc and set points
@@ -255,14 +252,20 @@ class CompareGraphView : View {
                 val temp1 = maxValue - minValue
                 val temp2 = value - minValue
                 val percentOfMaxHeight = temp2.toFloat() / temp1.toFloat()
+                val yPos =
+                    pointBotL.y - (graphHeight - itemHeight) * percentOfMaxHeight - itemHeight / 2 - textPaint.textSize / 3
 
-                val yPos = pointBotL.y - (graphHeight - itemHeight) * percentOfMaxHeight - itemHeight / 2 - textPaint.textSize / 3
-
+                points.add(PointF(xPos, yPos))
                 canvas.drawCircle(xPos, yPos, 4.dpToPx, tempPaint)
             }
         }
 
         // make lines between points
+        points.forEachIndexed { i, p1 ->
+            points.getOrNull(i + 1)?.let { p2 ->
+                canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint)
+            }
+        }
 
     }
 
