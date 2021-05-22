@@ -13,7 +13,9 @@ data class Template(
     val name: String,
     val lastUsed: Date,
     val color: String
-)
+) {
+    override fun toString() = name
+}
 
 @Entity(
     foreignKeys = [ForeignKey(

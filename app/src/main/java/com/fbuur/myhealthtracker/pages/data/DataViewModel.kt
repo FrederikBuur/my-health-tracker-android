@@ -19,7 +19,6 @@ import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import com.fbuur.myhealthtracker.util.toDayMonthYearString
 import com.fbuur.myhealthtracker.util.toWeekMonthYear
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.Exception
 import kotlin.collections.ArrayList
@@ -43,7 +42,10 @@ class DataViewModel(
     private val selectedScopeDate = MutableLiveData(Date())
 
     // compare live data
-    private val selectedEvents = MutableLiveData<CompareGraphData?>()
+//    private val selectedEventsGraphData = MutableLiveData<CompareGraphData?>()
+    private val selectedEventTypeIds =
+        MutableLiveData<Pair<Pair<Long?, String>,
+                Pair<Long?, String>>>()
 
     // calendar fragment live data
     val calendarDays: LiveData<List<CalenderDay>> =
@@ -69,12 +71,13 @@ class DataViewModel(
 
     // compare fragment live data
     val compareGraphData: LiveData<CompareGraphData> =
-        Transformations.switchMap(selectedDayDate) {
+        Transformations.switchMap(selectedEventTypeIds) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                emit(selectedEvents.value)
+                emit(readCompareGraphData(it))
             }
         }
-
+    val templates: LiveData<List<Template>> = repository.readAllTemplatesLD
+    // todo livedata for parameter primary and secondary
 
     fun getSelectedDate() = selectedDayDate.value!!
     fun setSelectedDate(date: Date) {
@@ -106,15 +109,12 @@ class DataViewModel(
         selectedScopeDate.value = date
     }
 
-    fun setSelectedEventTypeIds(
-        pair: Pair<
-                Pair<Long?, String>,
-                Pair<Long?, String>
-                >
-    ) {
-        readCompareGraphData(pair) {
-            selectedEvents.value = it
-        }
+    fun setPrimarySelectedEventTypeIds(pair: Pair<Long?, String>) {
+        this.selectedEventTypeIds.value = this.selectedEventTypeIds.value?.copy(first = pair)
+    }
+
+    fun setSecondarySelectedEventTypeIds(pair: Pair<Long?, String>) {
+        this.selectedEventTypeIds.value = this.selectedEventTypeIds.value?.copy(second = pair)
     }
 
     // calendar page
@@ -441,52 +441,47 @@ class DataViewModel(
     }
 
     // compare page
-    private fun readCompareGraphData(
+    private suspend fun readCompareGraphData(
         pair: Pair<
                 Pair<Long?, String>,
                 Pair<Long?, String>
-                >,
-        onFinish: (CompareGraphData) -> Unit
-    ) {
-        viewModelScope.launch {
+                >
+    ): CompareGraphData {
+        val c = Calendar.getInstance()
+        val dates = getFromAndToDate(c)
+        val fromDate = dates.first
+        val toDate = dates.second
 
-            val c = Calendar.getInstance()
-            val dates = getFromAndToDate(c)
-            val fromDate = dates.first
-            val toDate = dates.second
-
-            // get all registration by temId and time for primary graph data
-            val primaryGraph: CompareGraphEntity? = pair.first.first?.let { temId ->
-                getCompareGraphEntity(
-                    temId = temId,
-                    valueOfInterest = pair.first.second,
-                    c = c,
-                    fromDate = fromDate,
-                    toDate = toDate
-                )
-            }
-
-            // get all registration by temId and time for secondary graph data
-            val secondaryGraph: CompareGraphEntity? = pair.second.first?.let { temId ->
-                getCompareGraphEntity(
-                    temId = temId,
-                    valueOfInterest = pair.second.second,
-                    c = c,
-                    fromDate = fromDate,
-                    toDate = toDate
-                )
-            }
-
-            onFinish(
-                CompareGraphData(
-                    scope = this@DataViewModel.getDataScope(),
-                    graphs = Pair(
-                        first = primaryGraph,
-                        second = secondaryGraph
-                    )
-                )
+        // get all registration by temId and time for primary graph data
+        val primaryGraph: CompareGraphEntity? = pair.first.first?.let { temId ->
+            getCompareGraphEntity(
+                temId = temId,
+                valueOfInterest = pair.first.second,
+                c = c,
+                fromDate = fromDate,
+                toDate = toDate
             )
         }
+
+        // get all registration by temId and time for secondary graph data
+        val secondaryGraph: CompareGraphEntity? = pair.second.first?.let { temId ->
+            getCompareGraphEntity(
+                temId = temId,
+                valueOfInterest = pair.second.second,
+                c = c,
+                fromDate = fromDate,
+                toDate = toDate
+            )
+        }
+
+        return CompareGraphData(
+            scope = this@DataViewModel.getDataScope(),
+            graphs = Pair(
+                first = primaryGraph,
+                second = secondaryGraph
+            )
+        )
+
     }
 
     private suspend fun getCompareGraphEntity(
@@ -548,6 +543,8 @@ class DataViewModel(
         )
     }
 
+
+    // util functions
     private fun getFromAndToDate(c: Calendar): Pair<Date, Date> {
         // set from- to date time
         c.time = this@DataViewModel.selectedScopeDate.value ?: Date()
