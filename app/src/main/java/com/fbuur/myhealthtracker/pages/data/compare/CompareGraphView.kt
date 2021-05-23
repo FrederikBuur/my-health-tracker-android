@@ -154,22 +154,8 @@ class CompareGraphView : View {
         val xPosPrimary = lineMargin / 2
         val xPosSecondary = measuredWidth - lineMargin / 2
 
-        var maxPrimary = Int.MIN_VALUE
-        this.compareGraphData.graphs.first?.dataPoints?.forEach { num ->
-            num?.let { if (it > maxPrimary) maxPrimary = it }
-        }
-        var minPrimary = Int.MAX_VALUE
-        this.compareGraphData.graphs.first?.dataPoints?.forEach { num ->
-            num?.let { if (it < minPrimary) minPrimary = it }
-        }
-        var maxSecondary = Int.MIN_VALUE
-        this.compareGraphData.graphs.second?.dataPoints?.forEach { num ->
-            num?.let { if (it > maxSecondary) maxSecondary = it }
-        }
-        var minSecondary = Int.MAX_VALUE
-        this.compareGraphData.graphs.second?.dataPoints?.forEach { num ->
-            num?.let { if (it < minSecondary) minSecondary = it }
-        }
+        val (maxPrimary, minPrimary) = getMinAndMaxByList(this.compareGraphData.graphs.first)
+        val (maxSecondary, minSecondary) = getMinAndMaxByList(this.compareGraphData.graphs.second)
 
         val rangeHopPrimary = (maxPrimary - minPrimary).toFloat() / yAxisLabelCount
         val rangeHopSecondary = (maxSecondary - minSecondary).toFloat() / yAxisLabelCount
@@ -235,18 +221,8 @@ class CompareGraphView : View {
         val itemHeight = this.graphHeight / (yAxisLabelCount + 1)
         val itemWidth = this.graphWidth / xAxisLabelCount
 
-        var maxValue = Int.MIN_VALUE
-        compareGraphEntity.dataPoints.forEach { num ->
-            num?.let {
-                if (it > maxValue) maxValue = it
-            }
-        }
-        var minValue = Int.MAX_VALUE
-        compareGraphEntity.dataPoints.forEach { num ->
-            num?.let {
-                if (it < minValue) minValue = it
-            }
-        }
+        val (maxValue, minValue) = getMinAndMaxByList(compareGraphEntity)
+
         paint.color = compareGraphEntity.color
         tempPaint.color = compareGraphEntity.color
 
@@ -275,6 +251,28 @@ class CompareGraphView : View {
             }
         }
 
+    }
+
+    private fun getMinAndMaxByList(compareGraphEntity: CompareGraphEntity?): Pair<Int, Int> {
+        var maxValue = Int.MIN_VALUE
+        compareGraphEntity?.dataPoints?.forEach { num ->
+            num?.let {
+                if (it > maxValue) maxValue = it
+            }
+        }
+        var minValue = Int.MAX_VALUE
+        compareGraphEntity?.dataPoints?.forEach { num ->
+            num?.let {
+                if (it < minValue) minValue = it
+            }
+        }
+        if (minValue == Int.MAX_VALUE && maxValue == Int.MIN_VALUE) {
+            maxValue = 2
+            minValue = 1
+        } else if (minValue == maxValue) {
+            maxValue = minValue * 2
+        }
+        return Pair(maxValue, minValue)
     }
 
     private fun reset() {
