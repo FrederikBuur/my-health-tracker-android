@@ -495,7 +495,7 @@ class DataViewModel(
 
         val dataPoints = arrayListOf<Int?>()
 
-        val startFilter = fromDate
+        var startFilter = fromDate
         var endFilter = CalendarManager.getNextAsDate(
             fromDate,
             this@DataViewModel.dataScope.value!!.offsetType
@@ -531,6 +531,7 @@ class DataViewModel(
                 dataPoints.add(dataPoint)
             }
 
+            startFilter = endFilter
             c.add(this@DataViewModel.dataScope.value!!.offsetType, 1)
             endFilter = c.time
         }
