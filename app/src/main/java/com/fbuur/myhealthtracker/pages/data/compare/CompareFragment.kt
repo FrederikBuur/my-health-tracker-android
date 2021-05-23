@@ -49,6 +49,12 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                 }
             )
         }
+        dataViewModel.selectedEventParameters.observe(viewLifecycleOwner) { selectedParameterLists ->
+            setupSelectValueOfInterestDropDown(
+                parameterListPrimary = selectedParameterLists.first,
+                parameterListSecondary = selectedParameterLists.second
+            )
+        }
 
     }
 
@@ -75,9 +81,14 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                     ) {
                         val isColouredBackground =
                             (parent?.getItemAtPosition(position) as? Template)?.let { t ->
-
                                 selectEventPrimary.root.setCardBackgroundColor(Color.parseColor(t.color))
                                 // fetch parameters from view model
+                                dataViewModel.setPrimarySelectedEventTypeIds(
+                                    Pair(
+                                        t.id,
+                                        EVENT_COUNT_AS_INTEREST
+                                    )
+                                )
                                 true
                             } ?: run {
                                 selectEventPrimary.root.setCardBackgroundColor(
@@ -135,11 +146,11 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
         parameterListPrimary: List<Parameter>?,
         parameterListSecondary: List<Parameter>?
     ) {
-        parameterListPrimary?.let {
+        parameterListPrimary?.let { parameters ->
             val adapterPrimary = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                it
+                parameters
             )
             binding.selectEventPrimary.valueOfInterestDropDown.adapter = adapterPrimary
             binding.selectEventPrimary.valueOfInterestDropDown.onItemSelectedListener =
@@ -151,7 +162,8 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                         p3: Long
                     ) {
                         (parent?.getItemAtPosition(position) as? Parameter)?.let { p ->
-                            // update viewmodel selected data
+                            // update view model selected data
+                            dataViewModel.setPrimarySelectedEventParameter(p.title)
                         }
                     }
 
@@ -175,7 +187,7 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                         p3: Long
                     ) {
                         (parent?.getItemAtPosition(position) as? Parameter)?.let { p ->
-                            // update viewmodel selected data
+                            // update view model selected data
                         }
                     }
 

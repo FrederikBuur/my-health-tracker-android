@@ -4,6 +4,7 @@ import android.app.Application
 import android.graphics.Color
 import androidx.lifecycle.*
 import com.fbuur.myhealthtracker.data.TrackingDatabase
+import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.data.registration.TrackingRepository
 import com.fbuur.myhealthtracker.pages.data.calendar.calendarview.CalenderDay
@@ -19,6 +20,7 @@ import com.fbuur.myhealthtracker.pages.events.quickregister.QuickRegisterEntry
 import com.fbuur.myhealthtracker.util.toDayMonthYearString
 import com.fbuur.myhealthtracker.util.toWeekMonthYear
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.Exception
 import kotlin.collections.ArrayList
@@ -45,7 +47,17 @@ class DataViewModel(
 //    private val selectedEventsGraphData = MutableLiveData<CompareGraphData?>()
     private val selectedEventTypeIds =
         MutableLiveData<Pair<Pair<Long?, String>,
-                Pair<Long?, String>>>()
+                Pair<Long?, String>>>(
+            Pair(
+                Pair(null, ""), // temId, parameter name
+                Pair(null, "") // temId, parameter name
+            )
+        )
+    private val selectedEventParameterList =
+        MutableLiveData<Pair<
+                List<Parameter>,
+                List<Parameter>
+                >>()
 
     // calendar fragment live data
     val calendarDays: LiveData<List<CalenderDay>> =
@@ -74,9 +86,19 @@ class DataViewModel(
         Transformations.switchMap(selectedEventTypeIds) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 emit(readCompareGraphData(it))
+                withContext(Dispatchers.Main) {
+                    val list = readParameterLists()
+                    selectedEventParameterList.value = list
+                }
             }
         }
     val templates: LiveData<List<Template>> = repository.readAllTemplatesLD
+    val selectedEventParameters: LiveData<Pair<List<Parameter>, List<Parameter>>> =
+        Transformations.switchMap(selectedEventParameterList) {
+            liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+                emit(selectedEventParameterList.value)
+            }
+        }
     // todo livedata for parameter primary and secondary
 
     fun getSelectedDate() = selectedDayDate.value!!
@@ -115,6 +137,25 @@ class DataViewModel(
 
     fun setSecondarySelectedEventTypeIds(pair: Pair<Long?, String>) {
         this.selectedEventTypeIds.value = this.selectedEventTypeIds.value?.copy(second = pair)
+    }
+
+    fun setPrimarySelectedEventParameter(parameterName: String) {
+        this.selectedEventTypeIds.value?.first?.let { primaryIds ->
+            this.selectedEventTypeIds.value =
+                this.selectedEventTypeIds.value?.copy(first = Pair(primaryIds.first, parameterName))
+        }
+    }
+
+    fun setSecondarySelectedEventParameter(parameterName: String) {
+        this.selectedEventTypeIds.value?.second?.let { secondaryIds ->
+            this.selectedEventTypeIds.value =
+                this.selectedEventTypeIds.value?.copy(
+                    second = Pair(
+                        secondaryIds.first,
+                        parameterName
+                    )
+                )
+        }
     }
 
     // calendar page
@@ -544,6 +585,16 @@ class DataViewModel(
         )
     }
 
+    private fun readParameterLists(
+    ): Pair<List<Parameter>,
+            List<Parameter>> {
+
+        // read all parameters based on selected parameters todo
+
+        // make distinct list for primary and secondary todo
+
+        return Pair(emptyList(), emptyList())
+    }
 
     // util functions
     private fun getFromAndToDate(c: Calendar): Pair<Date, Date> {
