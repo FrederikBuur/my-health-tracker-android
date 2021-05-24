@@ -44,7 +44,6 @@ class DataViewModel(
     private val selectedScopeDate = MutableLiveData(Date())
 
     // compare live data
-//    private val selectedEventsGraphData = MutableLiveData<CompareGraphData?>()
     private val selectedEventTypeIds =
         MutableLiveData<Pair<Pair<Long?, String>,
                 Pair<Long?, String>>>(
@@ -55,8 +54,8 @@ class DataViewModel(
         )
     private val selectedEventParameterList =
         MutableLiveData<Pair<
-                List<Parameter>,
-                List<Parameter>
+                List<String>,
+                List<String>
                 >>()
 
     // calendar fragment live data
@@ -92,8 +91,18 @@ class DataViewModel(
                 }
             }
         }
-    val templates: LiveData<List<Template>> = repository.readAllTemplatesLD
-    val selectedEventParameters: LiveData<Pair<List<Parameter>, List<Parameter>>> =
+    val templates: LiveData<List<Template>> =
+        Transformations.switchMap(selectedScopeDate) {
+            liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+                val c = Calendar.getInstance()
+                val (fromDate, toDate) = getFromAndToDate(c)
+                emit(repository.readAllTemplatesByTime(fromDate.time, toDate.time))
+            }
+
+
+        }
+
+    val selectedEventParameters: LiveData<Pair<List<String>, List<String>>> =
         Transformations.switchMap(selectedEventParameterList) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 emit(selectedEventParameterList.value)
@@ -557,7 +566,8 @@ class DataViewModel(
                 dataPoints.add(if (registrationsPrimary.isNotEmpty()) registrationsPrimary.size else null)
             } else {
                 // get parameters by value of interest
-                var dataPoint: Int? = null
+                var isDataSet = false
+                var dataPoint = 0
                 registrationsPrimary.forEach { r ->
                     val parameters = repository.readAllParametersByRegIdAndParameterName(
                         r.id,
@@ -565,11 +575,17 @@ class DataViewModel(
                     )
                     parameters.forEach { p ->
                         p.getValueOfInterest()?.let { v ->
-                            dataPoint?.let { dataPoint?.plus(v) } ?: run { dataPoint = v }
+                            dataPoint += v
+                            isDataSet = true
                         }
+                        dataPoint
                     }
+                    dataPoint
                 }
-                dataPoints.add(dataPoint)
+                dataPoint
+                if (isDataSet) {
+                    dataPoints.add(dataPoint)
+                }
             }
 
             startFilter = endFilter
@@ -585,15 +601,58 @@ class DataViewModel(
         )
     }
 
-    private fun readParameterLists(
-    ): Pair<List<Parameter>,
-            List<Parameter>> {
+    private suspend fun readParameterLists(
+    ): Pair<List<String>,
+            List<String>> {
 
-        // read all parameters based on selected parameters todo
+        val parameterListPrimary = arrayListOf(CompareFragment.EVENT_COUNT_AS_INTEREST)
+        val parameterListSecondary = arrayListOf(CompareFragment.EVENT_COUNT_AS_INTEREST)
 
-        // make distinct list for primary and secondary todo
+        val c = Calendar.getInstance()
+        val (fromDate, toDate) = getFromAndToDate(c)
 
-        return Pair(emptyList(), emptyList())
+        this.selectedEventTypeIds.value?.let { eventPair ->
+
+            // read all registrations in time period with given primary template
+            eventPair.first.first?.let { temId ->
+                val test1 = repository.readAllRegistrationsByTemplateAndTime(
+                    temId,
+                    fromDate.time,
+                    toDate.time
+                )
+
+                test1.forEach { r ->
+                    // get all related parameters
+                    val test2 = repository.readAllParametersByRegId(
+                        r.id
+                    )
+                    test2.forEach { p ->
+                        // add parameter title to list as unique values
+                        if (!parameterListPrimary.contains(p.title)) {
+                            parameterListPrimary.add(p.title)
+                        }
+                    }
+                }
+            }
+
+            // read all registrations in time period with given secondary template
+            eventPair.second.first?.let { temId ->
+                repository.readAllRegistrationsByTemplateAndTime(temId, fromDate.time, toDate.time)
+                    .forEach { r ->
+                        // get all relevant parameters
+                        repository.readAllParametersByRegId(
+                            r.id
+                        ).forEach { p ->
+                            // add parameter title to list as unique values
+                            if (!parameterListSecondary.contains(p.title)) {
+                                parameterListSecondary.add(p.title)
+                            }
+                        }
+                    }
+            }
+        }
+
+        return Pair(parameterListPrimary, parameterListSecondary)
     }
 
     // util functions

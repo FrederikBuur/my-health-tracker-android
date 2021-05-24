@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.fbuur.myhealthtracker.R
-import com.fbuur.myhealthtracker.data.model.Parameter
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.databinding.FragmentCompareBinding
 import com.fbuur.myhealthtracker.pages.data.DataViewModel
@@ -23,6 +22,21 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
 
     private var _binding: FragmentCompareBinding? = null
     private val binding get() = _binding!!
+
+    private val adapterPrimaryValueOfInterest by lazy {
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            arrayListOf("None")
+        )
+    }
+    private val adapterSecondaryValueOfInterest by lazy {
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            arrayListOf("None")
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,10 +64,15 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
             )
         }
         dataViewModel.selectedEventParameters.observe(viewLifecycleOwner) { selectedParameterLists ->
-            setupSelectValueOfInterestDropDown(
+            updateSelectValueOfInterestDropDown(
                 parameterListPrimary = selectedParameterLists.first,
                 parameterListSecondary = selectedParameterLists.second
             )
+        }
+
+        setupSelectValueOfInterestDropDown()
+        binding. apply {
+            
         }
 
     }
@@ -82,12 +101,8 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                         val isColouredBackground =
                             (parent?.getItemAtPosition(position) as? Template)?.let { t ->
                                 selectEventPrimary.root.setCardBackgroundColor(Color.parseColor(t.color))
-                                // fetch parameters from view model
                                 dataViewModel.setPrimarySelectedEventTypeIds(
-                                    Pair(
-                                        t.id,
-                                        EVENT_COUNT_AS_INTEREST
-                                    )
+                                    Pair(t.id, EVENT_COUNT_AS_INTEREST)
                                 )
                                 true
                             } ?: run {
@@ -117,7 +132,8 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                             selectEventPrimary.eventTypeTitle.setTextColor(color)
                             selectEventPrimary.valueOfInterestTitle.setTextColor(color)
                         }
-
+                        adapterPrimaryValueOfInterest.clear()
+                        adapterPrimaryValueOfInterest.notifyDataSetChanged()
                     }
 
                     override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -131,9 +147,42 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                         position: Int,
                         p3: Long
                     ) {
-                        (parent?.getItemAtPosition(position) as? Template)?.let { t ->
-                            // fetch parameters from view model
+                        val isColouredBackground =
+                            (parent?.getItemAtPosition(position) as? Template)?.let { t ->
+                                selectEventSecondary.root.setCardBackgroundColor(Color.parseColor(t.color))
+                                dataViewModel.setSecondarySelectedEventTypeIds(
+                                    Pair(t.id, EVENT_COUNT_AS_INTEREST)
+                                )
+                                true
+                            } ?: run {
+                                selectEventSecondary.root.setCardBackgroundColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.mth_white
+                                    )
+                                )
+                                false
+                            }
+
+                        if (isColouredBackground) {
+                            val color = ContextCompat.getColor(
+                                requireContext(),
+                                R.color.mth_white
+                            )
+                            selectEventSecondary.root.strokeWidth = 0
+                            selectEventSecondary.eventTypeTitle.setTextColor(color)
+                            selectEventSecondary.valueOfInterestTitle.setTextColor(color)
+                        } else {
+                            val color = ContextCompat.getColor(
+                                requireContext(),
+                                R.color.mth_text_primary_onwhite
+                            )
+                            selectEventSecondary.root.strokeWidth = 2.dpToPx.toInt()
+                            selectEventSecondary.eventTypeTitle.setTextColor(color)
+                            selectEventSecondary.valueOfInterestTitle.setTextColor(color)
                         }
+                        adapterSecondaryValueOfInterest.clear()
+                        adapterSecondaryValueOfInterest.notifyDataSetChanged()
                     }
 
                     override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -142,57 +191,60 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
         }
     }
 
-    private fun setupSelectValueOfInterestDropDown(
-        parameterListPrimary: List<Parameter>?,
-        parameterListSecondary: List<Parameter>?
+    private fun setupSelectValueOfInterestDropDown() {
+        binding.selectEventPrimary.valueOfInterestDropDown.adapter = adapterPrimaryValueOfInterest
+        binding.selectEventPrimary.valueOfInterestDropDown.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+                    (parent?.getItemAtPosition(position) as? String)?.let { pName ->
+                        // update view model selected data
+                        dataViewModel.setPrimarySelectedEventParameter(pName)
+                    }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
+        binding.selectEventSecondary.valueOfInterestDropDown.adapter =
+            adapterSecondaryValueOfInterest
+        binding.selectEventSecondary.valueOfInterestDropDown.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+                    (parent?.getItemAtPosition(position) as? String)?.let { pName ->
+                        // update view model selected data
+                        dataViewModel.setSecondarySelectedEventParameter(pName)
+                    }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
+
+    }
+
+    private fun updateSelectValueOfInterestDropDown(
+        parameterListPrimary: List<String>?,
+        parameterListSecondary: List<String>?
     ) {
-        parameterListPrimary?.let { parameters ->
-            val adapterPrimary = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                parameters
-            )
-            binding.selectEventPrimary.valueOfInterestDropDown.adapter = adapterPrimary
-            binding.selectEventPrimary.valueOfInterestDropDown.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        p3: Long
-                    ) {
-                        (parent?.getItemAtPosition(position) as? Parameter)?.let { p ->
-                            // update view model selected data
-                            dataViewModel.setPrimarySelectedEventParameter(p.title)
-                        }
-                    }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {}
-                }
+        parameterListPrimary?.let {
+            this.adapterPrimaryValueOfInterest.clear()
+            this.adapterPrimaryValueOfInterest.notifyDataSetChanged()
+            this.adapterPrimaryValueOfInterest.addAll(it)
+            this.adapterPrimaryValueOfInterest.notifyDataSetChanged()
         }
-
         parameterListSecondary?.let {
-            val adapterSecondary = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                it
-            )
-            binding.selectEventSecondary.valueOfInterestDropDown.adapter = adapterSecondary
-            binding.selectEventSecondary.valueOfInterestDropDown.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        p3: Long
-                    ) {
-                        (parent?.getItemAtPosition(position) as? Parameter)?.let { p ->
-                            // update view model selected data
-                        }
-                    }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {}
-                }
+            this.adapterSecondaryValueOfInterest.clear()
+            this.adapterSecondaryValueOfInterest.notifyDataSetChanged()
+            this.adapterSecondaryValueOfInterest.addAll(it)
+            this.adapterSecondaryValueOfInterest.notifyDataSetChanged()
         }
     }
 
@@ -202,7 +254,7 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
     }
 
     companion object {
-        const val EVENT_COUNT_AS_INTEREST = "event-count-as-interest"
+        const val EVENT_COUNT_AS_INTEREST = "Registration count"
     }
 
 }

@@ -56,6 +56,9 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
     suspend fun readAllTemplates() =
         trackingDAO.readAllTemplates()
 
+    suspend fun readAllTemplatesByTime(fromDate: Long, toDate: Long) =
+        trackingDAO.readAllTemplatesByTime(fromDate, toDate)
+
     suspend fun readTemplateById(id: Long) =
         trackingDAO.readTemplateById(id)
 

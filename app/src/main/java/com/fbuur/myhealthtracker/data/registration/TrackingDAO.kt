@@ -42,6 +42,9 @@ interface TrackingDAO {
     @Query("SELECT * FROM template ORDER BY lastUsed DESC")
     suspend fun readAllTemplates(): List<Template>
 
+    @Query("SELECT * FROM template WHERE lastUsed BETWEEN :startDate AND :endDate ORDER BY lastUsed DESC")
+    suspend fun readAllTemplatesByTime(startDate: Long, endDate: Long): List<Template>
+
     @Query("SELECT * FROM template WHERE id=:id")
     suspend fun readTemplateById(id: Long): Template
 
