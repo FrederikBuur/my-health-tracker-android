@@ -91,7 +91,7 @@ class DataViewModel(
                 }
             }
         }
-    val templates: LiveData<List<Template>> =
+    val templatesByScope: LiveData<List<Template>> =
         Transformations.switchMap(selectedScopeDate) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
                 val c = Calendar.getInstance()
@@ -578,14 +578,12 @@ class DataViewModel(
                             dataPoint += v
                             isDataSet = true
                         }
-                        dataPoint
                     }
-                    dataPoint
                 }
-                dataPoint
                 if (isDataSet) {
                     dataPoints.add(dataPoint)
-                }
+                } else
+                    dataPoints.add(null)
             }
 
             startFilter = endFilter

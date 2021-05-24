@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.fbuur.myhealthtracker.R
 import com.fbuur.myhealthtracker.data.model.Template
 import com.fbuur.myhealthtracker.databinding.FragmentCompareBinding
+import com.fbuur.myhealthtracker.pages.data.CalendarManager
 import com.fbuur.myhealthtracker.pages.data.DataViewModel
 import com.fbuur.myhealthtracker.util.dpToPx
 
@@ -56,12 +57,15 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                 binding.compareGraphView.compareGraphData = it
             }
         }
-        dataViewModel.templates.observe(viewLifecycleOwner) { templates ->
+        dataViewModel.templatesByScope.observe(viewLifecycleOwner) { templates ->
             setupSelectEventDropDown(
                 arrayListOf<Any?>("Select").apply {
                     addAll(templates)
                 }
             )
+            // update UI
+            binding.compareGraphView.changeScope(dataViewModel.getDataScope())
+            binding.monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
         }
         dataViewModel.selectedEventParameters.observe(viewLifecycleOwner) { selectedParameterLists ->
             updateSelectValueOfInterestDropDown(
@@ -71,10 +75,55 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
         }
 
         setupSelectValueOfInterestDropDown()
-        binding. apply {
-            
-        }
+        setupMonthPicker()
+    }
 
+    private fun setupMonthPicker() {
+        binding. apply {
+            monthPicker.monthTitle.text = dataViewModel.getSelectedScopedDateString()
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                listOf(DataViewModel.DataScope.WEEK, DataViewModel.DataScope.DAY)
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            monthPicker.scopeDropDown.adapter = adapter
+            monthPicker.scopeDropDown.visibility = View.VISIBLE
+            monthPicker.scopeDropDown.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        p3: Long
+                    ) {
+                        (parent?.getItemAtPosition(position) as? DataViewModel.DataScope)?.let {
+                            dataViewModel.setDataScope(it)
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        // do nothing
+                    }
+                }
+            monthPicker.arrowPrevious.setOnClickListener {
+                dataViewModel.setSelectedScopeDataDate(
+                    CalendarManager.getPreviousAsDateScoped(
+                        date = dataViewModel.getSelectedScopedDate(),
+                        scope = dataViewModel.getDataScope()
+                    )
+                )
+            }
+            monthPicker.arrowNext.setOnClickListener {
+
+                dataViewModel.setSelectedScopeDataDate(
+                    CalendarManager.getNextAsDateScoped(
+                        date = dataViewModel.getSelectedScopedDate(),
+                        scope = dataViewModel.getDataScope()
+                    )
+                )
+            }
+        }
     }
 
     private fun setupSelectEventDropDown(templates: List<Any?>) {
@@ -106,6 +155,8 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                                 )
                                 true
                             } ?: run {
+                                dataViewModel.setPrimarySelectedEventTypeIds(Pair(null, ""))
+//                                compareGraphView.resetPrimary()
                                 selectEventPrimary.root.setCardBackgroundColor(
                                     ContextCompat.getColor(
                                         requireContext(),
@@ -155,6 +206,9 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                                 )
                                 true
                             } ?: run {
+                                // none is selected
+                                dataViewModel.setSecondarySelectedEventTypeIds(Pair(null, ""))
+//                                compareGraphView.resetSecondary()
                                 selectEventSecondary.root.setCardBackgroundColor(
                                     ContextCompat.getColor(
                                         requireContext(),

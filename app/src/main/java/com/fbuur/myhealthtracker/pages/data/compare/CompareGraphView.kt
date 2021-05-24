@@ -22,26 +22,28 @@ class CompareGraphView : View {
         defStyleAttr
     )
 
-    var compareGraphData: CompareGraphData = CompareGraphData(
+    private val emptyGraphData = CompareGraphData(
         scope = DataViewModel.DataScope.WEEK,
         graphs = Pair(
             first = CompareGraphEntity(
                 0L,
-                ContextCompat.getColor(context, R.color.test1),
-                "test1",
-                listOf(2, 4, 6, 8, 10, 12, 14)
+                ContextCompat.getColor(context, android.R.color.transparent),
+                "",
+                emptyList()
             ),
             second = CompareGraphEntity(
                 0L,
-                ContextCompat.getColor(context, R.color.test2),
-                "test2",
-                listOf(350, 113, 143, null, 220, 420, null)
+                ContextCompat.getColor(context, android.R.color.transparent),
+                "",
+                emptyList()
             )
         )
     )
+
+    var compareGraphData: CompareGraphData = emptyGraphData
         set(value) {
             field = value
-            reset()
+            this.invalidate()
         }
 
     // paints
@@ -275,18 +277,18 @@ class CompareGraphView : View {
         return Pair(maxValue, minValue)
     }
 
-    private fun reset() {
-        this.invalidate()
+    fun changeScope(scope: DataViewModel.DataScope) {
+        this.compareGraphData = this.compareGraphData.copy(scope = scope)
     }
 
 }
 
-class CompareGraphData(
+data class CompareGraphData(
     val scope: DataViewModel.DataScope,
     val graphs: Pair<CompareGraphEntity?, CompareGraphEntity?>
 )
 
-class CompareGraphEntity(
+data class CompareGraphEntity(
     val temId: Long,
     val color: Int,
     val valueOfInterestTitle: String,

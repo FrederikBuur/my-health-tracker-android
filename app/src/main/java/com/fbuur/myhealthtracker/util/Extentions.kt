@@ -29,13 +29,13 @@ fun Date.toMonthYearString(): String {
 }
 
 fun Date.toDayMonthYearString(): String {
-    val dateFormat: DateFormat = SimpleDateFormat("EEE dd. MMMM yy", Locale.getDefault())
+    val dateFormat: DateFormat = SimpleDateFormat("EEE dd. MMMM yyyy", Locale.getDefault())
     return dateFormat.format(this).capitalize(Locale.getDefault())
 }
 
 fun Date.toWeekMonthYear(): String {
-    val dateFormat: DateFormat = SimpleDateFormat("W. MMMM yy", Locale.getDefault())
-    return "Week:${dateFormat.format(this)}"
+    val dateFormat: DateFormat = SimpleDateFormat("W, MMMM, yyyy", Locale.getDefault())
+    return "Week ${dateFormat.format(this)}"
 }
 
 fun String.getInitials(): String {
