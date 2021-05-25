@@ -154,6 +154,23 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun updateEvent(event: EventItemEntry) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val d = event.id.split(':')
+            val regId = d[0].toLong()
+            val temId = d[1].toLong()
+            repository.updateRegistration(
+                Registration(
+                    id = regId,
+                    temId = temId,
+                    event.date,
+                    type = event.type,
+                    lastModified = Date()
+                )
+            )
+        }
+    }
+
     fun deleteTemplateById(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTemplateById(id)

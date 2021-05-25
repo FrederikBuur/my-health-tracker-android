@@ -9,13 +9,16 @@ import com.fbuur.myhealthtracker.data.model.RegistrationType
 import com.fbuur.myhealthtracker.databinding.*
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
+import java.util.*
 
 class EventsListAdapter(
     private val onAddParameterClicked: (Long, Long) -> Unit,
     private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit,
     private val onParameterChanged: (EventItemParameter) -> Unit,
     private val onParameterNoteClicked: (EventItemParameter.Note) -> Unit,
-    private val onParameterTitleRenameClicked: (EventItemParameter) -> Unit
+    private val onParameterTitleRenameClicked: (EventItemParameter) -> Unit,
+    private val onParameterDateEditDayClicked: (EventItemEntry, Date) -> Unit,
+    private val onParameterDateEditTimeClicked: (EventItemEntry, Date) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var eventsList = emptyList<EventItemEntry>()
@@ -84,7 +87,13 @@ class EventsListAdapter(
                     onAddParameterClicked,
                     onParameterChanged,
                     onParameterNoteClicked,
-                    onParameterTitleRenameClicked
+                    onParameterTitleRenameClicked,
+                    { d ->
+                        onParameterDateEditDayClicked(event, d)
+                    },
+                    { d ->
+                        onParameterDateEditTimeClicked(event, d)
+                    }
                 )
             }
         }

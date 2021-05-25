@@ -1,5 +1,7 @@
 package com.fbuur.myhealthtracker.pages.events
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -59,7 +61,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             onRemoveParameterClicked,
             onParameterChanged,
             onParameterNoteClicked,
-            onParameterTitleRenameClicked
+            onParameterTitleRenameClicked,
+            onParameterDateEditDayClicked,
+            onParameterDateEditTimeClicked
         )
         val quickRegisterAdapter = QuickRegisterAdapter(
             onQuickRegisterClicked,
@@ -211,7 +215,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 newTitle.isNotBlank()
             ) {
                 onParameterChanged(
-                    when(parameter) {
+                    when (parameter) {
                         is EventItemParameter.Note -> {
                             parameter.copy(title = newTitle)
                         }
@@ -229,6 +233,40 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val onParameterChanged: (EventItemParameter) -> Unit = { eventItemParameter ->
         registrationViewModel.updateParameter(eventItemParameter)
+    }
+
+    private val onParameterDateEditDayClicked: (EventItemEntry, Date) -> Unit = { event, d ->
+        val c = Calendar.getInstance()
+        c.time = d
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                // update event when dialog is done
+                c.set(Calendar.YEAR, year)
+                c.set(Calendar.MONTH, month)
+                c.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                registrationViewModel.updateEvent(event.copy(date = c.time))
+            },
+            c.get(Calendar.YEAR),
+            c.get(Calendar.MONTH),
+            c.get(Calendar.DAY_OF_MONTH),
+        ).show()
+    }
+
+    private val onParameterDateEditTimeClicked: (EventItemEntry, Date) -> Unit = { event, d ->
+        val c = Calendar.getInstance()
+        c.time = d
+        TimePickerDialog(
+            requireContext(),
+            { _, hoursOfDay, minute ->
+                c.set(Calendar.HOUR_OF_DAY, hoursOfDay)
+                c.set(Calendar.MINUTE, minute)
+                registrationViewModel.updateEvent(event.copy(date = c.time))
+            },
+            c.get(Calendar.HOUR_OF_DAY),
+            c.get(Calendar.MINUTE),
+            true
+        ).show()
     }
 
     private val onSwipeListener =

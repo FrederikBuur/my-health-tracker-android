@@ -92,6 +92,9 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
             }
         }
 
+    suspend fun updateRegistration(registration: Registration) =
+        trackingDAO.updateRegistration(registration)
+
     // suspend delete
     suspend fun deleteTemplateById(id: Long) =
         trackingDAO.deleteTemplateById(id)

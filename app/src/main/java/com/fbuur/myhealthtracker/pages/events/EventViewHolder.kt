@@ -23,7 +23,7 @@ class EventViewHolder(
     private val onCreateParameterNoteBinding: () -> ItemParameterNoteBinding,
     private val onCreateParameterSliderBinding: () -> ItemParameterSliderBinding,
     private val editDateBinding: ItemParameterDateBinding,
-    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
+    private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit,
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     fun bind(
@@ -31,7 +31,9 @@ class EventViewHolder(
         onAddParameterClicked: (Long, Long) -> Unit,
         onParameterChanged: (EventItemParameter) -> Unit,
         onParameterNoteClicked: (EventItemParameter.Note) -> Unit,
-        onParameterTitleRenameClicked: (EventItemParameter) -> Unit
+        onParameterTitleRenameClicked: (EventItemParameter) -> Unit,
+        onParameterDateEditDayClicked: (Date) -> Unit,
+        onParameterDateEditTimeClicked: (Date) -> Unit
     ) {
         itemBinding.apply {
             expansionCollapseView(eventItemEntry.isExpanded)
@@ -55,8 +57,8 @@ class EventViewHolder(
             // add edit date field
             itemBinding.eventParameters.addView(setupEditDate(
                 date = eventItemEntry.date,
-                onEditDayClicked = {},
-                onEditTimeClicked = {}
+                onEditDayClicked = onParameterDateEditDayClicked,
+                onEditTimeClicked = onParameterDateEditTimeClicked
             ))
             eventParameters.requestLayout()
 
