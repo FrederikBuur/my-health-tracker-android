@@ -27,23 +27,44 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/calenderGridView"
+        app:layout_constraintBottom_toTopOf="@id/calendarViewWrapper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/monthPicker" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calenderGridView"
+    <FrameLayout
+        android:id="@+id/calendarViewWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/mth_white"
-        android:scrollbars="none"
-        android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@id/selectedDayEvents"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weekdays"
-        tools:layout_height="300dp" />
+        app:layout_constraintTop_toBottomOf="@id/weekdays">
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:background="@color/mth_white">
+
+            <ProgressBar
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center" />
+        </FrameLayout>
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calenderGridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mth_white"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            tools:layout_height="300dp" />
+
+    </FrameLayout>
+
 
     <!--    <ProgressBar-->
     <!--        android:id="@+id/calendarViewSpinner"-->
@@ -66,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calenderGridView"
+        app:layout_constraintTop_toBottomOf="@id/calendarViewWrapper"
         tools:listitem="@layout/item_calendar_selected_day" />
 
     <!--    <include-->
