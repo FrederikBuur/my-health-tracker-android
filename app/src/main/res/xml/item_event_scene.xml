@@ -51,5 +51,14 @@
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/eventDate"
+            motion:layout_constraintStart_toEndOf="@id/eventIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@id/eventIcon"
+            motion:layout_constraintTop_toBottomOf="@id/eventName"
+            android:layout_marginStart="16dp"
+            android:visibility="gone" />
     </ConstraintSet>
 </MotionScene>

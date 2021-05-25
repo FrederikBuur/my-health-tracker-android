@@ -2,21 +2,27 @@ package com.fbuur.myhealthtracker.pages.events
 
 import android.graphics.Color
 import android.view.View
+import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.databinding.ItemEventBinding
+import com.fbuur.myhealthtracker.databinding.ItemParameterDateBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
 import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.util.getInitials
 import com.fbuur.myhealthtracker.util.toDateString
+import com.fbuur.myhealthtracker.util.toDayMonthYearString
+import com.fbuur.myhealthtracker.util.toHourMinString
 import com.google.android.material.slider.Slider
+import java.util.*
 
 class EventViewHolder(
     private val itemBinding: ItemEventBinding,
     private val onCreateParameterNoteBinding: () -> ItemParameterNoteBinding,
     private val onCreateParameterSliderBinding: () -> ItemParameterSliderBinding,
+    private val editDateBinding: ItemParameterDateBinding,
     private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
@@ -45,6 +51,14 @@ class EventViewHolder(
 
             // make sure parameter view is clear when reusing
             itemBinding.eventParameters.removeAllViews()
+
+            // add edit date field
+            itemBinding.eventParameters.addView(setupEditDate(
+                date = eventItemEntry.date,
+                onEditDayClicked = {},
+                onEditTimeClicked = {}
+            ))
+            eventParameters.requestLayout()
 
             //add parameter views to linear layout
             eventItemEntry.eventParameterList.forEach { p ->
@@ -141,6 +155,23 @@ class EventViewHolder(
                 )
 
             }.root
+    }
+
+    private fun setupEditDate(
+        date: Date,
+        onEditDayClicked: (Date) -> Unit,
+        onEditTimeClicked: (Date) -> Unit
+    ): View {
+        return this.editDateBinding.apply {
+            dayTitle.text = date.toDayMonthYearString()
+            timeTitle.text = date.toHourMinString()
+            dayContainer.setOnClickListener {
+                onEditDayClicked(date)
+            }
+            timeContainer.setOnClickListener {
+                onEditTimeClicked(date)
+            }
+        }.root
     }
 
 }

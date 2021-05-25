@@ -6,10 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.data.model.ParameterType
 import com.fbuur.myhealthtracker.data.model.RegistrationType
-import com.fbuur.myhealthtracker.databinding.ItemEventBinding
-import com.fbuur.myhealthtracker.databinding.ItemNoteBinding
-import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
-import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
+import com.fbuur.myhealthtracker.databinding.*
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 
@@ -48,6 +45,11 @@ class EventsListAdapter(
                             false
                         )
                     },
+                    editDateBinding = ItemParameterDateBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
                     onRemoveParameterClicked = onRemoveParameterClicked
                 )
             }
