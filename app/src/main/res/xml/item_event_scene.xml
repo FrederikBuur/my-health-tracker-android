@@ -45,9 +45,9 @@
         <Constraint
             android:id="@+id/view"
             android:layout_width="0dp"
-            android:layout_height="0.5dp"
+            android:layout_height="1dp"
             android:layout_marginStart="0dp"
-            android:alpha="0.8"
+            android:alpha="0.1"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
