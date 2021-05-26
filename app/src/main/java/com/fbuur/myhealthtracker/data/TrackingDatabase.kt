@@ -10,8 +10,10 @@ import com.fbuur.myhealthtracker.data.registration.TrackingTypeConverters
 import java.util.*
 
 @Database(
-    entities = [Registration::class, Parameter.Note::class, Parameter.Slider::class,
-        Template::class, TemplateType::class],
+    entities = [
+        Registration::class, Template::class, TemplateType::class,
+        Parameter.Note::class, Parameter.Slider::class, Parameter.Number::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -71,7 +73,7 @@ abstract class TrackingDatabase : RoomDatabase() {
             return values
         }
 
-        private fun addNoteParameterTemplate() : ContentValues {
+        private fun addNoteParameterTemplate(): ContentValues {
             val values = ContentValues()
 
             values.put("id", -1L)

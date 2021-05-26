@@ -1,14 +1,14 @@
 package com.fbuur.myhealthtracker.pages.events
 
 import android.graphics.Color
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.fbuur.myhealthtracker.data.model.ParameterType
-import com.fbuur.myhealthtracker.databinding.ItemEventBinding
-import com.fbuur.myhealthtracker.databinding.ItemParameterDateBinding
-import com.fbuur.myhealthtracker.databinding.ItemParameterNoteBinding
-import com.fbuur.myhealthtracker.databinding.ItemParameterSliderBinding
+import com.fbuur.myhealthtracker.databinding.*
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemEntry
 import com.fbuur.myhealthtracker.pages.events.eventsentry.EventItemParameter
 import com.fbuur.myhealthtracker.util.getInitials
@@ -22,6 +22,7 @@ class EventViewHolder(
     private val itemBinding: ItemEventBinding,
     private val onCreateParameterNoteBinding: () -> ItemParameterNoteBinding,
     private val onCreateParameterSliderBinding: () -> ItemParameterSliderBinding,
+    private val onCreateParameterNumberBinding: () -> ItemParameterNumberBinding,
     private val editDateBinding: ItemParameterDateBinding,
     private val onRemoveParameterClicked: (Long, Long, ParameterType) -> Unit,
 ) : RecyclerView.ViewHolder(itemBinding.root) {
@@ -55,11 +56,13 @@ class EventViewHolder(
             itemBinding.eventParameters.removeAllViews()
 
             // add edit date field
-            itemBinding.eventParameters.addView(setupEditDate(
-                date = eventItemEntry.date,
-                onEditDayClicked = onParameterDateEditDayClicked,
-                onEditTimeClicked = onParameterDateEditTimeClicked
-            ))
+            itemBinding.eventParameters.addView(
+                setupEditDate(
+                    date = eventItemEntry.date,
+                    onEditDayClicked = onParameterDateEditDayClicked,
+                    onEditTimeClicked = onParameterDateEditTimeClicked
+                )
+            )
             eventParameters.requestLayout()
 
             //add parameter views to linear layout
@@ -82,11 +85,54 @@ class EventViewHolder(
                             onParameterTitleRenameClicked
                         )
                     }
+                    is EventItemParameter.Number -> {
+                        setupAsNumber(
+                            p,
+                            this@EventViewHolder.onCreateParameterNumberBinding(),
+                            onParameterChanged,
+                            onParameterTitleRenameClicked
+                        )
+                    }
                 }
                 itemBinding.eventParameters.addView(view)
             }
 
         }
+    }
+
+    private fun setupAsNumber(
+        number: EventItemParameter.Number,
+        binding: ItemParameterNumberBinding,
+        onParameterChanged: (EventItemParameter) -> Unit,
+        onParameterTitleRenameClicked: (EventItemParameter) -> Unit
+    ): View {
+        return binding.apply {
+            parameterHeader.text = number.title
+            parameterNumberContainer.editText?.setText(
+                number.value.toString(),
+                TextView.BufferType.EDITABLE
+            )
+            parameterNumber.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    parameterNumberContainer.editText?.text.toString().let {
+                        if (it.isNotBlank()) {
+                            onParameterChanged(number.copy(value = it.toInt()))
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                } else {
+                    false
+                }
+            }
+            removeParameterIcon.setOnClickListener {
+                onRemoveParameterClicked(number.id, number.regId, number.type)
+            }
+            editParameterTitleIcon.setOnClickListener {
+                onParameterTitleRenameClicked(number)
+            }
+        }.root
     }
 
     private fun expansionCollapseView(isExpanded: Boolean) {

@@ -222,8 +222,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                         is EventItemParameter.Slider -> {
                             parameter.copy(title = newTitle)
                         }
-                        else -> {
-                            throw NotImplementedError("Parameter type not implemented: $parameter")
+                        is EventItemParameter.Number -> {
+                            parameter.copy(title = newTitle)
                         }
                     }
                 )
@@ -233,6 +233,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val onParameterChanged: (EventItemParameter) -> Unit = { eventItemParameter ->
         registrationViewModel.updateParameter(eventItemParameter)
+        hideKeyboard()
     }
 
     private val onParameterDateEditDayClicked: (EventItemEntry, Date) -> Unit = { event, d ->

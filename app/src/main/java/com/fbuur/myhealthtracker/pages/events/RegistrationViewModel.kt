@@ -145,8 +145,8 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
                     is EventItemParameter.Slider -> {
                         eventItemParameter.toParameter()
                     }
-                    else -> {
-                        throw NotImplementedError("parameter not implemented: $eventItemParameter")
+                    is EventItemParameter.Number -> {
+                        eventItemParameter.toParameter()
                     }
                 }
             )

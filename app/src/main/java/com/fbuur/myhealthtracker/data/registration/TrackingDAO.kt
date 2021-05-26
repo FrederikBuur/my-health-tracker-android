@@ -20,6 +20,8 @@ interface TrackingDAO {
     suspend fun addParameterNote(parameter: Parameter.Note): Long
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addParameterSlider(parameter: Parameter.Slider): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addParameterNumber(parameter: Parameter.Number): Long
 
     // read
     @Query("SELECT * FROM registration ORDER BY date DESC")
@@ -55,11 +57,15 @@ interface TrackingDAO {
     suspend fun readAllSliderByRegId(regId: Long): List<Parameter.Slider>
     @Query("SELECT * FROM note WHERE regId=:regId")
     suspend fun readAllNoteByRegId(regId: Long): List<Parameter.Note>
+    @Query("SELECT * FROM number WHERE regId=:regId")
+    suspend fun readAllNumberByRegId(regId: Long): List<Parameter.Number>
 
     @Query("SELECT * FROM slider WHERE regId=:regId AND title=:name")
     suspend fun readAllSliderByRegIdAndParameterName(regId: Long, name: String): List<Parameter.Slider>
     @Query("SELECT * FROM note WHERE regId=:regId AND title=:name")
     suspend fun readAllNoteByRegIdParameterName(regId: Long, name: String): List<Parameter.Note>
+    @Query("SELECT * FROM number WHERE regId=:regId AND title=:name")
+    suspend fun readAllNumberByRegIdParameterName(regId: Long, name: String): List<Parameter.Number>
 
     // update
     @Update
@@ -71,6 +77,8 @@ interface TrackingDAO {
     suspend fun updateParameterNote(note: Parameter.Note)
     @Update
     suspend fun updateParameterSlider(slider: Parameter.Slider)
+    @Update
+    suspend fun updateParameterNumber(number: Parameter.Number)
 
     // delete
     @Query("DELETE FROM template WHERE id= :id")
@@ -82,5 +90,7 @@ interface TrackingDAO {
     suspend fun deleteParameterNote(id: Long)
     @Query("DELETE FROM slider WHERE id= :id")
     suspend fun deleteParameterSlider(id: Long)
+    @Query("DELETE FROM number WHERE id= :id")
+    suspend fun deleteParameterNumber(id: Long)
 
 }

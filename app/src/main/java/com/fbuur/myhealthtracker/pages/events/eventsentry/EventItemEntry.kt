@@ -39,6 +39,14 @@ sealed class EventItemParameter(
         val value: Int
     ) : EventItemParameter(id, regId, title, type)
 
+    data class Number(
+        override val id: Long,
+        override val regId: Long,
+        override val title: String,
+        override val type: ParameterType,
+        val value: Int
+    ) : EventItemParameter(id, regId, title, type)
+
 }
 
 fun EventItemParameter.Note.toParameter() : Parameter.Note =
@@ -57,6 +65,15 @@ fun EventItemParameter.Slider.toParameter() : Parameter.Slider =
         value = value,
         lowestValue = lowest,
         highestValue = highest
+    ).also {
+        it.id = id
+    }
+
+fun EventItemParameter.Number.toParameter() : Parameter.Number =
+    Parameter.Number(
+        regId = regId,
+        title = title,
+        value = value
     ).also {
         it.id = id
     }

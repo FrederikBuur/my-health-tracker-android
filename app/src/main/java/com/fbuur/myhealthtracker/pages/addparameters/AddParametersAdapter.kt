@@ -50,14 +50,14 @@ class AddParametersAdapter(
             ParameterType.SLIDER -> {
                 R.drawable.ic_linear_scale
             }
-            ParameterType.BINARY -> {
-                R.drawable.ic_thumbs_up_down
+            ParameterType.NUMBER -> {
+                R.drawable.ic_dialpad
             }
-            ParameterType.LOCATION -> {
-                R.drawable.ic_location
-            }
-//            else -> {
-//                android.R.drawable.stat_notify_error
+//            ParameterType.BINARY -> {
+//                R.drawable.ic_thumbs_up_down
+//            }
+//            ParameterType.LOCATION -> {
+//                R.drawable.ic_location
 //            }
         }
 

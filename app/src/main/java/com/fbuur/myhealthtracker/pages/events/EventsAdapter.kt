@@ -48,6 +48,13 @@ class EventsListAdapter(
                             false
                         )
                     },
+                    onCreateParameterNumberBinding = {
+                        ItemParameterNumberBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                        )
+                    },
                     editDateBinding = ItemParameterDateBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,

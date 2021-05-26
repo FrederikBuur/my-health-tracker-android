@@ -60,6 +60,30 @@ sealed class Parameter(
         }
     }
 
+    @Entity(
+        foreignKeys = [ForeignKey(
+            entity = Registration::class,
+            parentColumns = ["id"],
+            childColumns = ["regId"],
+            onDelete = ForeignKey.CASCADE
+        )]
+    )
+    data class Number(
+        @ColumnInfo(name = "regId", index = true)
+        override val regId: Long,
+        override val title: String,
+        val value: Int
+    ) : Parameter(title, regId) {
+
+        constructor() : this(0L, "", 0)
+
+        override fun getValueOfInterest() = value
+
+        override fun toString(): String {
+            return "$title: $value"
+        }
+    }
+
 }
 
 fun List<Parameter>.mapToEventParameterList(): List<EventItemParameter> {
@@ -83,6 +107,15 @@ fun List<Parameter>.mapToEventParameterList(): List<EventItemParameter> {
                     value = p.value,
                     lowest = p.lowestValue,
                     highest = p.highestValue
+                )
+            }
+            is Parameter.Number -> {
+                EventItemParameter.Number(
+                    id = p.id,
+                    regId = p.regId,
+                    title = p.title,
+                    type = ParameterType.NUMBER,
+                    value = p.value
                 )
             }
         }

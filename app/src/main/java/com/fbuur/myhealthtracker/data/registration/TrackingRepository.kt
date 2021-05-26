@@ -34,10 +34,12 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
     suspend fun readAllParametersByRegId(regId: Long): List<Parameter> {
         val notes = trackingDAO.readAllNoteByRegId(regId)
         val sliders = trackingDAO.readAllSliderByRegId(regId)
+        val numbers = trackingDAO.readAllNumberByRegId(regId)
 
         val parameterList = ArrayList<Parameter>()
         parameterList.addAll(sliders)
         parameterList.addAll(notes)
+        parameterList.addAll(numbers)
 
         return parameterList.toList()
     }
@@ -45,10 +47,12 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
     suspend fun readAllParametersByRegIdAndParameterName(regId: Long, name: String): List<Parameter> {
         val notes = trackingDAO.readAllNoteByRegIdParameterName(regId, name)
         val sliders = trackingDAO.readAllSliderByRegIdAndParameterName(regId, name)
+        val numbers = trackingDAO.readAllNumberByRegIdParameterName(regId, name)
 
         val parameterList = ArrayList<Parameter>()
         parameterList.addAll(sliders)
         parameterList.addAll(notes)
+        parameterList.addAll(numbers)
 
         return parameterList
     }
@@ -87,8 +91,8 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
             is Parameter.Slider -> {
                 trackingDAO.updateParameterSlider(parameter)
             }
-            else -> {
-                throw NotImplementedError("parameter type not implemented: $parameter")
+            is Parameter.Number -> {
+                trackingDAO.updateParameterNumber(parameter)
             }
         }
 
@@ -106,8 +110,7 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
         when(type) {
             ParameterType.SLIDER -> trackingDAO.deleteParameterSlider(id)
             ParameterType.NOTE -> trackingDAO.deleteParameterNote(id)
-            ParameterType.LOCATION -> throw NotImplementedError("location not added")
-            ParameterType.BINARY -> throw NotImplementedError("binary not added")
+            ParameterType.NUMBER -> trackingDAO.deleteParameterNumber(id)
         }
 
     // suspend write
@@ -124,6 +127,9 @@ class TrackingRepository(private val trackingDAO: TrackingDAO) {
             }
             is Parameter.Slider -> {
                 trackingDAO.addParameterSlider(parameter)
+            }
+            is Parameter.Number -> {
+                trackingDAO.addParameterNumber(parameter)
             }
         }
     }

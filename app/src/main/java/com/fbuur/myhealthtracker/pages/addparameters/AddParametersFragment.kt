@@ -50,16 +50,11 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
                 "A slider can allow you to make a selection from a range of values",
                 ParameterType.SLIDER
             ),
-//            AddParameterEntry( // todo not supported
-//                "Binary",
-//                "An either/or type of information",
-//                ParameterType.BINARY
-//            ),
-//            AddParameterEntry(
-//                "Location",
-//                "This will attach a GPS location",
-//                ParameterType.LOCATION
-//            ),
+            AddParameterEntry(
+                "Number",
+                "A number could be related to weight, distance, time, repetitions, an amount etc.",
+                ParameterType.NUMBER
+            )
         )
 
         context?.let {
@@ -91,7 +86,7 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
 
     private fun addParameters(paramList: List<AddParameterEntry>) {
         paramList.forEach { item ->
-            val parameter: Parameter? = when (item.type) {
+            val parameter: Parameter = when (item.type) {
                 ParameterType.NOTE -> {
                     Parameter.Note(
                         regId = this.args.regId,
@@ -108,16 +103,15 @@ class AddParametersFragment : Fragment(R.layout.fragment_add_parameters) {
                         highestValue = 5
                     )
                 }
-                ParameterType.BINARY -> {
-                    null
-                }
-                ParameterType.LOCATION -> {
-                    null
+                ParameterType.NUMBER -> {
+                    Parameter.Number(
+                        regId = this.args.regId,
+                        title = "Number",
+                        value = 0,
+                    )
                 }
             }
-            parameter?.let {
-                registrationViewModel.addParameter(it)
-            }
+            registrationViewModel.addParameter(parameter)
         }
     }
 

@@ -30,5 +30,5 @@ enum class RegistrationType {
 }
 
 enum class ParameterType {
-    NOTE, SLIDER, LOCATION, BINARY
+    NOTE, SLIDER, NUMBER
 }
