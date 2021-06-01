@@ -91,12 +91,10 @@ class DataViewModel(
                 }
             }
         }
-    val templatesByScope: LiveData<List<Template>> =
+    val templates: LiveData<List<Template>> =
         Transformations.switchMap(selectedScopeDate) {
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                val c = Calendar.getInstance()
-                val (fromDate, toDate) = getFromAndToDate(c)
-                emit(repository.readAllTemplatesByTime(fromDate.time, toDate.time))
+                emit(repository.readAllTemplates())
             }
 
 
@@ -613,18 +611,15 @@ class DataViewModel(
 
             // read all registrations in time period with given primary template
             eventPair.first.first?.let { temId ->
-                val test1 = repository.readAllRegistrationsByTemplateAndTime(
+                repository.readAllRegistrationsByTemplateAndTime(
                     temId,
                     fromDate.time,
                     toDate.time
-                )
-
-                test1.forEach { r ->
+                ).forEach { r ->
                     // get all related parameters
-                    val test2 = repository.readAllParametersByRegId(
+                    repository.readAllParametersByRegId(
                         r.id
-                    )
-                    test2.forEach { p ->
+                    ).forEach { p ->
                         // add parameter title to list as unique values
                         if (!parameterListPrimary.contains(p.title)) {
                             parameterListPrimary.add(p.title)

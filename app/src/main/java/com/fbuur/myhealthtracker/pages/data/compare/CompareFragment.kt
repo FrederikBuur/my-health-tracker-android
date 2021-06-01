@@ -57,7 +57,7 @@ class CompareFragment : Fragment(R.layout.fragment_compare) {
                 binding.compareGraphView.compareGraphData = it
             }
         }
-        dataViewModel.templatesByScope.observe(viewLifecycleOwner) { templates ->
+        dataViewModel.templates.observe(viewLifecycleOwner) { templates ->
             setupSelectEventDropDown(
                 arrayListOf<Any?>("Select").apply {
                     addAll(templates)
